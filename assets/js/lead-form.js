@@ -1,4 +1,7 @@
 const LEAD_DETAILS_STORAGE_KEY = "joinSlssaLeadDetails";
+const LEAD_API_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+  ? "http://localhost:7071/api/lead"
+  : "/api/lead";
 
 function getLeadModal() {
   return document.querySelector("[data-lead-modal]");
@@ -137,6 +140,17 @@ function clearLeadMessage() {
   messageElement.hidden = true;
 }
 
+function setSubmitState(form, isSubmitting) {
+  const submitButton = form.querySelector("button[type='submit']");
+
+  if (!submitButton) {
+    return;
+  }
+
+  submitButton.disabled = isSubmitting;
+  submitButton.textContent = isSubmitting ? "Sending..." : "Send my details";
+}
+
 function openLeadForm(context) {
   const modal = getLeadModal();
   const form = getLeadForm();
@@ -198,7 +212,29 @@ function buildLeadPayload(form) {
   };
 }
 
-function handleLeadSubmit(event) {
+async function submitLeadPayload(payload) {
+  const response = await fetch(LEAD_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const result = await response.json().catch(function () {
+    return {};
+  });
+
+  if (!response.ok || !result.ok) {
+    const error = new Error(result.message || "The enquiry could not be submitted.");
+    error.details = result.errors || [];
+    throw error;
+  }
+
+  return result;
+}
+
+async function handleLeadSubmit(event) {
   event.preventDefault();
 
   const form = event.target;
@@ -211,13 +247,28 @@ function handleLeadSubmit(event) {
   const payload = buildLeadPayload(form);
 
   saveReusableLeadDetails(form);
+  clearLeadMessage();
+  setSubmitState(form, true);
 
-  console.log("Lead form payload for future Azure submission:", payload);
+  try {
+    const result = await submitLeadPayload(payload);
 
-  showLeadMessage(
-    "Form captured locally for testing. The next step will send this to Azure so the selected club receives an email.",
-    "success"
-  );
+    showLeadMessage(
+      "Thanks — your details have been captured for " + result.clubName + ". You can send your details to another club without retyping them.",
+      "success"
+    );
+  } catch (error) {
+    const detailText = error.details && error.details.length
+      ? " " + error.details.join(" ")
+      : "";
+
+    showLeadMessage(
+      error.message + detailText,
+      "error"
+    );
+  } finally {
+    setSubmitState(form, false);
+  }
 }
 
 document.addEventListener("click", function (event) {
