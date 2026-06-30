@@ -1,5 +1,11 @@
 ﻿const CURRENT_LOCATION_STORAGE_KEY = "joinSlssaCurrentLocation";
 
+const helperState = {
+  age: null,
+  interest: null,
+  location: null
+};
+
 function normaliseValue(value) {
   return String(value || "").trim().toLowerCase();
 }
@@ -61,6 +67,69 @@ function formatDistance(distanceKm) {
   return Math.round(distanceKm) + " km";
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function getSaLocations() {
+  if (Array.isArray(window.SA_LOCATIONS)) {
+    return window.SA_LOCATIONS;
+  }
+
+  const dataElement = document.getElementById("sa-locations-data");
+
+  if (!dataElement) {
+    return [];
+  }
+
+  try {
+    const locations = JSON.parse(dataElement.textContent);
+    return Array.isArray(locations) ? locations : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function populateNativeLocationDatalist() {
+  const datalist = document.getElementById("sa-location-options");
+
+  if (!datalist) {
+    return;
+  }
+
+  datalist.innerHTML = "";
+
+  getSaLocations().forEach(function (location) {
+    if (!location || !location.label) {
+      return;
+    }
+
+    const option = document.createElement("option");
+    option.value = location.label;
+    datalist.appendChild(option);
+  });
+}
+
+function updateLocationAutocompleteState(field) {
+  const listId = field.getAttribute("data-location-list-id");
+  const value = field.value.trim();
+
+  if (!listId) {
+    return;
+  }
+
+  if (value.length >= 4 && normaliseValue(value) !== "current location") {
+    field.setAttribute("list", listId);
+  } else {
+    field.removeAttribute("list");
+  }
+}
+
 function getStoredCurrentLocation() {
   try {
     const stored = window.sessionStorage.getItem(CURRENT_LOCATION_STORAGE_KEY);
@@ -115,7 +184,7 @@ function setLocationStatus(message, type) {
 }
 
 function getSelectedValues(name) {
-  const selected = Array.from(
+  return Array.from(
     document.querySelectorAll(
       "input[name='" + name + "'][data-filter-check]:checked"
     )
@@ -124,18 +193,16 @@ function getSelectedValues(name) {
       return normaliseValue(input.value);
     })
     .filter(Boolean);
-
-  return selected;
 }
 
-function getSelectedOrigin() {
-  const originField = document.querySelector("[data-filter='origin']");
+function findLocationByInput(value) {
+  const query = normaliseValue(value);
 
-  if (!originField || !originField.value) {
+  if (!query) {
     return null;
   }
 
-  if (originField.value === "current") {
+  if (query === "current location") {
     const storedLocation = getStoredCurrentLocation();
 
     if (storedLocation) {
@@ -149,24 +216,43 @@ function getSelectedOrigin() {
     return null;
   }
 
-  const selectedOption = originField.options[originField.selectedIndex];
+  const locations = getSaLocations();
 
-  if (!selectedOption) {
+  const exactLabelMatch = locations.find(function (location) {
+    return normaliseValue(location.label) === query;
+  });
+
+  if (exactLabelMatch) {
+    return {
+      label: exactLabelMatch.label,
+      latitude: Number(exactLabelMatch.latitude),
+      longitude: Number(exactLabelMatch.longitude)
+    };
+  }
+
+  const exactSuburbMatch = locations.find(function (location) {
+    return normaliseValue(location.suburb) === query;
+  });
+
+  if (exactSuburbMatch) {
+    return {
+      label: exactSuburbMatch.label,
+      latitude: Number(exactSuburbMatch.latitude),
+      longitude: Number(exactSuburbMatch.longitude)
+    };
+  }
+
+  return null;
+}
+
+function getSelectedOrigin() {
+  const originField = document.querySelector("[data-filter='origin']");
+
+  if (!originField || !originField.value) {
     return null;
   }
 
-  const latitude = toNumber(selectedOption.dataset.latitude);
-  const longitude = toNumber(selectedOption.dataset.longitude);
-
-  if (latitude === null || longitude === null) {
-    return null;
-  }
-
-  return {
-    label: selectedOption.textContent.trim(),
-    latitude: latitude,
-    longitude: longitude
-  };
+  return findLocationByInput(originField.value);
 }
 
 function getCurrentFilters() {
@@ -177,7 +263,7 @@ function getCurrentFilters() {
     age: getSelectedValues("age"),
     interest: getSelectedValues("interest"),
     facility: getSelectedValues("facility"),
-    origin: origin ? origin.value : "",
+    origin: origin ? origin.value.trim() : "",
     radius: radius ? toNumber(radius.value) : null
   };
 }
@@ -234,7 +320,7 @@ function updateCardDistance(card, origin) {
   const formatted = formatDistance(distanceKm);
 
   if (inlineLabel) {
-    inlineLabel.textContent = formatted + " from you";
+    inlineLabel.textContent = formatted + " from " + origin.label;
     inlineLabel.hidden = false;
   }
 
@@ -321,15 +407,23 @@ function updateFilterUrl(filters) {
 function updateLocationStatus(origin, filters) {
   if (!filters.origin) {
     setLocationStatus(
-      "Select a location or use your current location to filter by distance.",
+      "Type at least 4 characters to search by suburb or town, or use your current location.",
       "info"
     );
     return;
   }
 
-  if (filters.origin === "current" && !origin) {
+  if (filters.origin && !origin) {
+    if (filters.origin.length < 4) {
+      setLocationStatus(
+        "Type at least 4 characters to search by suburb or town.",
+        "info"
+      );
+      return;
+    }
+
     setLocationStatus(
-      "Current location has not been set yet. Use the button above to allow location access.",
+      "Select a suburb or area from the suggestions so we can calculate distance.",
       "warning"
     );
     return;
@@ -366,7 +460,9 @@ function sortCards(cards, sortMode) {
       const bDistance = toNumber(b.dataset.distance);
 
       if (aDistance === null && bDistance === null) {
-        return 0;
+        return String(a.dataset.title || "").localeCompare(
+          String(b.dataset.title || "")
+        );
       }
 
       if (aDistance === null) {
@@ -380,15 +476,9 @@ function sortCards(cards, sortMode) {
       return aDistance - bDistance;
     }
 
-    if (sortMode === "members-desc") {
-      return (toNumber(b.dataset.members) || 0) - (toNumber(a.dataset.members) || 0);
-    }
-
-    if (sortMode === "name-asc") {
-      return String(a.dataset.title || "").localeCompare(String(b.dataset.title || ""));
-    }
-
-    return 0;
+    return String(a.dataset.title || "").localeCompare(
+      String(b.dataset.title || "")
+    );
   });
 
   sorted.forEach(function (card) {
@@ -456,10 +546,16 @@ function setCheckboxesFromUrl(name, values) {
 
 function setFiltersFromUrl() {
   const params = new URLSearchParams(window.location.search);
+  const originField = document.querySelector("[data-filter='origin']");
 
   setCheckboxesFromUrl("age", params.getAll("age"));
   setCheckboxesFromUrl("interest", params.getAll("interest"));
   setCheckboxesFromUrl("facility", params.getAll("facility"));
+
+  if (originField && params.get("origin")) {
+    originField.value = params.get("origin");
+    updateLocationAutocompleteState(originField);
+  }
 
   document.querySelectorAll("select[data-filter]").forEach(function (field) {
     const key = field.getAttribute("data-filter");
@@ -472,6 +568,13 @@ function setFiltersFromUrl() {
 }
 
 function clearFilters() {
+  const originField = document.querySelector("[data-filter='origin']");
+
+  if (originField) {
+    originField.value = "";
+    updateLocationAutocompleteState(originField);
+  }
+
   document.querySelectorAll("select[data-filter]").forEach(function (field) {
     field.value = "";
   });
@@ -518,14 +621,19 @@ function handleCheckboxChange(input) {
   }
 }
 
-function useCurrentLocation() {
+function useCurrentLocation(callback) {
   const originField = document.querySelector("[data-filter='origin']");
 
   if (!navigator.geolocation) {
     setLocationStatus(
-      "This browser does not support location access. Select a location from the list instead.",
+      "This browser does not support location access. Type a suburb or town instead.",
       "warning"
     );
+
+    if (typeof callback === "function") {
+      callback(false);
+    }
+
     return;
   }
 
@@ -541,7 +649,8 @@ function useCurrentLocation() {
       setStoredCurrentLocation(location);
 
       if (originField) {
-        originField.value = "current";
+        originField.value = "Current location";
+        updateLocationAutocompleteState(originField);
       }
 
       setLocationStatus(
@@ -550,12 +659,20 @@ function useCurrentLocation() {
       );
 
       applyFilters();
+
+      if (typeof callback === "function") {
+        callback(true);
+      }
     },
     function () {
       setLocationStatus(
-        "Location access was not allowed. Select a location from the list instead.",
+        "Location access was not allowed. Type a suburb or town instead.",
         "warning"
       );
+
+      if (typeof callback === "function") {
+        callback(false);
+      }
     },
     {
       enableHighAccuracy: false,
@@ -566,6 +683,12 @@ function useCurrentLocation() {
 }
 
 function getLeadClubTitle(button) {
+  const helperTitle = button.getAttribute("data-helper-club-title");
+
+  if (helperTitle) {
+    return helperTitle;
+  }
+
   const card = button.closest("[data-club-card]");
 
   if (card) {
@@ -582,18 +705,476 @@ function getLeadClubTitle(button) {
     return pageHeading.textContent.trim();
   }
 
-  return "Selected surf life saving club";
+  return "Selected Surf Life Saving SA club";
 }
 
-document.addEventListener("change", function (event) {
-  if (event.target.matches("select[data-filter]")) {
-    if (
-      event.target.getAttribute("data-filter") === "origin" &&
-      event.target.value !== "current"
-    ) {
-      clearStoredCurrentLocation();
+function setCheckedValues(name, values) {
+  const normalisedValues = values.map(function (value) {
+    return normaliseValue(value);
+  });
+
+  document.querySelectorAll("input[name='" + name + "'][data-filter-check]").forEach(function (input) {
+    if (input.value === "") {
+      input.checked = normalisedValues.length === 0;
+      return;
     }
 
+    input.checked = normalisedValues.includes(normaliseValue(input.value));
+  });
+}
+
+function setInterestValues(values) {
+  const normalisedValues = values.map(function (value) {
+    return normaliseValue(value);
+  });
+
+  document.querySelectorAll("input[name='interest'][data-filter-check]").forEach(function (input) {
+    input.checked = normalisedValues.includes(normaliseValue(input.value));
+  });
+}
+
+function getHelperAgeFilters() {
+  if (helperState.age === "child") {
+    return ["nippers", "families"];
+  }
+
+  if (helperState.age === "youth") {
+    return ["youth"];
+  }
+
+  if (helperState.age === "adult") {
+    return ["adults"];
+  }
+
+  if (helperState.age === "family") {
+    return ["families", "nippers"];
+  }
+
+  return [];
+}
+
+function getHelperInterestFilters() {
+  if (helperState.interest === "nippers") {
+    return ["nippers"];
+  }
+
+  if (helperState.interest === "patrol") {
+    return ["lifesaving-patrols", "training"];
+  }
+
+  if (helperState.interest === "sport") {
+    return ["surf-sports"];
+  }
+
+  if (helperState.interest === "volunteer") {
+    return ["volunteering", "community"];
+  }
+
+  if (helperState.interest === "training") {
+    return ["training", "lifesaving-patrols"];
+  }
+
+  if (helperState.interest === "community") {
+    return ["community", "volunteering"];
+  }
+
+  return [];
+}
+
+function applyHelperFilters() {
+  const ageFilters = getHelperAgeFilters();
+  const interestFilters = getHelperInterestFilters();
+
+  setCheckedValues("age", ageFilters);
+  setInterestValues(interestFilters);
+
+  const radiusField = document.querySelector("[data-filter='radius']");
+  const origin = getSelectedOrigin();
+
+  if (origin && radiusField && !radiusField.value) {
+    radiusField.value = "25";
+  }
+
+  const sortField = document.querySelector("[data-sort-clubs]");
+
+  if (origin && sortField) {
+    sortField.value = "distance";
+  }
+
+  applyFilters();
+}
+
+function resetHelperState() {
+  helperState.age = null;
+  helperState.interest = null;
+  helperState.location = null;
+}
+
+function getHelperContentElement() {
+  return document.querySelector("[data-helper-content]");
+}
+
+function getHelperPanelElement() {
+  return document.querySelector("[data-helper-panel]");
+}
+
+function getHelperStepLabel(stepNumber) {
+  return `
+    <div class="club-helper__progress" aria-label="Step ${stepNumber} of 3">
+      <span class="${stepNumber >= 1 ? "is-active" : ""}"></span>
+      <span class="${stepNumber >= 2 ? "is-active" : ""}"></span>
+      <span class="${stepNumber >= 3 ? "is-active" : ""}"></span>
+    </div>
+  `;
+}
+
+function renderHelperStart() {
+  resetHelperState();
+  renderHelperAgeStep();
+}
+
+function renderHelperAgeStep() {
+  const content = getHelperContentElement();
+
+  if (!content) {
+    return;
+  }
+
+  content.innerHTML = `
+    ${getHelperStepLabel(1)}
+    <p class="club-helper__message">I will ask a few quick questions and narrow the club list for you.</p>
+    <h3 class="club-helper__question">Who is joining?</h3>
+
+    <div class="club-helper__options club-helper__options--cards">
+      <button type="button" data-helper-answer="age:child">
+        <strong>My child</strong>
+        <span>Nippers, surf awareness and family involvement.</span>
+      </button>
+
+      <button type="button" data-helper-answer="age:youth">
+        <strong>A teenager or young person</strong>
+        <span>Skills, leadership, sport and lifesaving pathways.</span>
+      </button>
+
+      <button type="button" data-helper-answer="age:adult">
+        <strong>Me as an adult</strong>
+        <span>Volunteering, patrols, training, sport or community.</span>
+      </button>
+
+      <button type="button" data-helper-answer="age:family">
+        <strong>Our family</strong>
+        <span>A club that feels welcoming for parents and children.</span>
+      </button>
+
+      <button type="button" data-helper-answer="age:any">
+        <strong>I am not sure yet</strong>
+        <span>Show me a broad range of options.</span>
+      </button>
+    </div>
+  `;
+}
+
+function renderHelperInterestStep() {
+  const content = getHelperContentElement();
+
+  if (!content) {
+    return;
+  }
+
+  content.innerHTML = `
+    ${getHelperStepLabel(2)}
+    <h3 class="club-helper__question">What sounds most interesting?</h3>
+    <p class="club-helper__message">You can still change the filters afterwards. This just helps us start in the right place.</p>
+
+    <div class="club-helper__options club-helper__options--cards">
+      <button type="button" data-helper-answer="interest:nippers">
+        <strong>Nippers and family activities</strong>
+        <span>For children learning beach safety and surf awareness.</span>
+      </button>
+
+      <button type="button" data-helper-answer="interest:patrol">
+        <strong>Beach patrols and lifesaving</strong>
+        <span>Learn rescue, first aid and beach safety skills.</span>
+      </button>
+
+      <button type="button" data-helper-answer="interest:sport">
+        <strong>Surf sports and fitness</strong>
+        <span>Training, competition and staying active.</span>
+      </button>
+
+      <button type="button" data-helper-answer="interest:volunteer">
+        <strong>Volunteering</strong>
+        <span>Help your local club on or off the beach.</span>
+      </button>
+
+      <button type="button" data-helper-answer="interest:training">
+        <strong>Training and new skills</strong>
+        <span>First aid, rescue skills, radios, leadership and more.</span>
+      </button>
+
+      <button type="button" data-helper-answer="interest:community">
+        <strong>Community and social connection</strong>
+        <span>Be part of a local club and support its activities.</span>
+      </button>
+    </div>
+
+    <div class="club-helper__actions">
+      <button type="button" class="club-helper__text-button" data-helper-back="age">Back</button>
+    </div>
+  `;
+}
+
+function renderHelperLocationStep() {
+  const content = getHelperContentElement();
+
+  if (!content) {
+    return;
+  }
+
+  const existingOriginField = document.querySelector("[data-location-field]");
+  const existingOrigin = existingOriginField ? existingOriginField.value : "";
+
+  content.innerHTML = `
+    ${getHelperStepLabel(3)}
+    <h3 class="club-helper__question">Where should we search from?</h3>
+    <p class="club-helper__message">Location helps sort clubs by distance. You can skip this if you want to browse all matching clubs.</p>
+
+    <label class="club-helper__field">
+      <span>Suburb or town</span>
+      <input
+        type="text"
+        data-helper-location-input
+        data-location-list-id="sa-location-options"
+        placeholder="Start typing, for example Glenelg"
+        autocomplete="off"
+        value="${escapeHtml(existingOrigin)}"
+      >
+    </label>
+
+    <div class="club-helper__options">
+      <button type="button" data-helper-location-continue>
+        Use this suburb or town
+      </button>
+
+      <button type="button" data-helper-location-current>
+        Use my current location
+      </button>
+
+      <button type="button" data-helper-location-skip>
+        Skip location for now
+      </button>
+    </div>
+
+    <p class="club-helper__hint" data-helper-location-message>
+      Type at least 4 characters, then select a matching suburb or town.
+    </p>
+
+    <div class="club-helper__actions">
+      <button type="button" class="club-helper__text-button" data-helper-back="interest">Back</button>
+    </div>
+  `;
+
+  const helperLocationInput = content.querySelector("[data-helper-location-input]");
+
+  if (helperLocationInput) {
+    updateLocationAutocompleteState(helperLocationInput);
+    helperLocationInput.focus();
+  }
+}
+
+function getVisibleClubRecommendations(limit) {
+  const cards = Array.from(document.querySelectorAll("[data-club-card]"))
+    .filter(function (card) {
+      return !card.hidden;
+    });
+
+  const origin = getSelectedOrigin();
+
+  const sorted = cards.slice().sort(function (a, b) {
+    if (origin) {
+      const aDistance = toNumber(a.dataset.distance);
+      const bDistance = toNumber(b.dataset.distance);
+
+      if (aDistance === null && bDistance === null) {
+        return String(a.dataset.title || "").localeCompare(String(b.dataset.title || ""));
+      }
+
+      if (aDistance === null) {
+        return 1;
+      }
+
+      if (bDistance === null) {
+        return -1;
+      }
+
+      return aDistance - bDistance;
+    }
+
+    return String(a.dataset.title || "").localeCompare(String(b.dataset.title || ""));
+  });
+
+  return sorted.slice(0, limit || 3);
+}
+
+function getCardRecommendationData(card) {
+  const title = card.dataset.title || "Surf Life Saving club";
+  const summaryElement = card.querySelector(".club-card__summary");
+  const distanceElement = card.querySelector("[data-card-distance]");
+  const profileLink = card.querySelector(".club-card__actions a[href], .club-card__body h2 a[href]");
+  const leadButton = card.querySelector("[data-lead-club]");
+
+  return {
+    title: title,
+    summary: summaryElement ? summaryElement.textContent.trim() : "",
+    distance: distanceElement ? distanceElement.textContent.trim() : "",
+    profileUrl: profileLink ? profileLink.getAttribute("href") : "#",
+    clubSlug: leadButton ? leadButton.getAttribute("data-lead-club") : ""
+  };
+}
+
+function renderHelperResults() {
+  applyHelperFilters();
+
+  const content = getHelperContentElement();
+
+  if (!content) {
+    return;
+  }
+
+  const visibleCards = getVisibleClubRecommendations(3);
+  const countElement = document.querySelector("[data-results-count]");
+  const visibleCount = countElement ? countElement.textContent : String(visibleCards.length);
+  const origin = getSelectedOrigin();
+
+  if (visibleCards.length === 0) {
+    content.innerHTML = `
+      <div class="club-helper__result-header">
+        <p class="eyebrow">Recommended next step</p>
+        <h3 class="club-helper__question">No close match yet</h3>
+      </div>
+
+      <p class="club-helper__message">
+        I could not find a club that matches all of those answers. Try broadening the distance or clearing one of the filters.
+      </p>
+
+      <div class="club-helper__options">
+        <button type="button" data-helper-broaden-search>Broaden the search</button>
+        <button type="button" data-helper-start-over>Start again</button>
+      </div>
+    `;
+
+    return;
+  }
+
+  const recommendationHtml = visibleCards
+    .map(function (card) {
+      const data = getCardRecommendationData(card);
+      const distanceText =
+        origin && data.distance && data.distance !== "Distance unavailable"
+          ? `<span>${escapeHtml(data.distance)}</span>`
+          : "";
+
+      return `
+        <article class="club-helper__recommendation">
+          <div>
+            <h4>${escapeHtml(data.title)}</h4>
+            ${distanceText}
+            <p>${escapeHtml(data.summary)}</p>
+          </div>
+
+          <div class="club-helper__recommendation-actions">
+            <a href="${escapeHtml(data.profileUrl)}">View profile</a>
+            <button
+              type="button"
+              data-lead-club="${escapeHtml(data.clubSlug)}"
+              data-helper-club-title="${escapeHtml(data.title)}"
+            >
+              Send details
+            </button>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  content.innerHTML = `
+    <div class="club-helper__result-header">
+      <p class="eyebrow">Recommended clubs</p>
+      <h3 class="club-helper__question">Here are some good starting points</h3>
+    </div>
+
+    <p class="club-helper__message">
+      I have applied your answers to the club list. Showing ${escapeHtml(visibleCount)} matching clubs on the page.
+    </p>
+
+    <div class="club-helper__recommendations">
+      ${recommendationHtml}
+    </div>
+
+    <div class="club-helper__actions club-helper__actions--split">
+      <button type="button" class="club-helper__text-button" data-helper-back="location">Back</button>
+      <button type="button" class="club-helper__text-button" data-helper-start-over>Start again</button>
+    </div>
+  `;
+}
+
+function broadenHelperSearch() {
+  const radiusField = document.querySelector("[data-filter='radius']");
+
+  if (radiusField) {
+    radiusField.value = "100";
+  }
+
+  applyFilters();
+  renderHelperResults();
+}
+
+function openClubHelperFromHeader() {
+  const panel = getHelperPanelElement();
+  const targetUrlButton = document.querySelector("[data-open-club-helper]");
+  const targetUrl = targetUrlButton
+    ? targetUrlButton.getAttribute("data-helper-target-url")
+    : "/?helper=open#clubs";
+
+  if (!panel) {
+    window.location.href = targetUrl || "/?helper=open#clubs";
+    return;
+  }
+
+  panel.hidden = false;
+  renderHelperStart();
+}
+
+document.addEventListener("input", function (event) {
+  if (event.target.matches("[data-location-field]")) {
+    clearStoredCurrentLocation();
+    updateLocationAutocompleteState(event.target);
+    applyFilters();
+    return;
+  }
+
+  if (event.target.matches("[data-helper-location-input]")) {
+    updateLocationAutocompleteState(event.target);
+  }
+});
+
+document.addEventListener("focusin", function (event) {
+  if (
+    event.target.matches("[data-location-field]") ||
+    event.target.matches("[data-helper-location-input]")
+  ) {
+    updateLocationAutocompleteState(event.target);
+  }
+});
+
+document.addEventListener("change", function (event) {
+  if (event.target.matches("[data-location-field]")) {
+    updateLocationAutocompleteState(event.target);
+    applyFilters();
+    return;
+  }
+
+  if (event.target.matches("select[data-filter]")) {
     applyFilters();
     return;
   }
@@ -610,6 +1191,14 @@ document.addEventListener("change", function (event) {
 });
 
 document.addEventListener("click", function (event) {
+  const openHelperButton = event.target.closest("[data-open-club-helper]");
+
+  if (openHelperButton) {
+    event.preventDefault();
+    openClubHelperFromHeader();
+    return;
+  }
+
   const clearButton = event.target.closest("[data-clear-filters]");
 
   if (clearButton) {
@@ -621,6 +1210,142 @@ document.addEventListener("click", function (event) {
 
   if (currentLocationButton) {
     useCurrentLocation();
+    return;
+  }
+
+  const helperAnswer = event.target.closest("[data-helper-answer]");
+
+  if (helperAnswer) {
+    const answer = helperAnswer.getAttribute("data-helper-answer");
+    const parts = answer.split(":");
+    const key = parts[0];
+    const value = parts[1];
+
+    if (key === "age") {
+      helperState.age = value;
+      renderHelperInterestStep();
+      return;
+    }
+
+    if (key === "interest") {
+      helperState.interest = value;
+      renderHelperLocationStep();
+      return;
+    }
+  }
+
+  const helperBack = event.target.closest("[data-helper-back]");
+
+  if (helperBack) {
+    const step = helperBack.getAttribute("data-helper-back");
+
+    if (step === "age") {
+      renderHelperAgeStep();
+      return;
+    }
+
+    if (step === "interest") {
+      renderHelperInterestStep();
+      return;
+    }
+
+    if (step === "location") {
+      renderHelperLocationStep();
+      return;
+    }
+  }
+
+  const helperLocationContinue = event.target.closest("[data-helper-location-continue]");
+
+  if (helperLocationContinue) {
+    const helperLocationInput = document.querySelector("[data-helper-location-input]");
+    const originField = document.querySelector("[data-location-field]");
+    const message = document.querySelector("[data-helper-location-message]");
+    const value = helperLocationInput ? helperLocationInput.value.trim() : "";
+
+    if (!value) {
+      if (message) {
+        message.textContent = "Enter a suburb or town, or skip location for now.";
+        message.dataset.statusType = "warning";
+      }
+
+      return;
+    }
+
+    if (!findLocationByInput(value)) {
+      if (message) {
+        message.textContent = "Select a suburb or town from the suggestions so distance can be calculated.";
+        message.dataset.statusType = "warning";
+      }
+
+      return;
+    }
+
+    clearStoredCurrentLocation();
+
+    if (originField) {
+      originField.value = value;
+      updateLocationAutocompleteState(originField);
+    }
+
+    const radiusField = document.querySelector("[data-filter='radius']");
+
+    if (radiusField && !radiusField.value) {
+      radiusField.value = "25";
+    }
+
+    helperState.location = "suburb";
+    renderHelperResults();
+    return;
+  }
+
+  const helperLocationCurrent = event.target.closest("[data-helper-location-current]");
+
+  if (helperLocationCurrent) {
+    helperState.location = "current";
+
+    useCurrentLocation(function (success) {
+      if (success) {
+        const radiusField = document.querySelector("[data-filter='radius']");
+
+        if (radiusField && !radiusField.value) {
+          radiusField.value = "25";
+        }
+
+        renderHelperResults();
+      }
+    });
+
+    return;
+  }
+
+  const helperLocationSkip = event.target.closest("[data-helper-location-skip]");
+
+  if (helperLocationSkip) {
+    const originField = document.querySelector("[data-location-field]");
+
+    if (originField) {
+      originField.value = "";
+      updateLocationAutocompleteState(originField);
+    }
+
+    clearStoredCurrentLocation();
+    helperState.location = "any";
+    renderHelperResults();
+    return;
+  }
+
+  const broadenSearchButton = event.target.closest("[data-helper-broaden-search]");
+
+  if (broadenSearchButton) {
+    broadenHelperSearch();
+    return;
+  }
+
+  const helperStartOver = event.target.closest("[data-helper-start-over]");
+
+  if (helperStartOver) {
+    renderHelperStart();
     return;
   }
 
@@ -636,10 +1361,62 @@ document.addEventListener("click", function (event) {
         clubTitle: clubTitle
       });
     }
+
+    return;
+  }
+
+  const helperToggle = event.target.closest("[data-helper-toggle]");
+
+  if (helperToggle) {
+    const panel = getHelperPanelElement();
+
+    if (panel) {
+      panel.hidden = !panel.hidden;
+
+      if (!panel.hidden) {
+        renderHelperStart();
+      }
+    }
+
+    return;
+  }
+
+  const helperClose = event.target.closest("[data-helper-close]");
+
+  if (helperClose) {
+    const panel = getHelperPanelElement();
+
+    if (panel) {
+      panel.hidden = true;
+    }
+  }
+});
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+    const panel = getHelperPanelElement();
+
+    if (panel && !panel.hidden) {
+      panel.hidden = true;
+    }
   }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+  const initialParams = new URLSearchParams(window.location.search);
+
+  populateNativeLocationDatalist();
+
+  const originField = document.querySelector("[data-location-field]");
+
+  if (originField) {
+    updateLocationAutocompleteState(originField);
+  }
+
   setFiltersFromUrl();
   applyFilters();
+
+  if (initialParams.get("helper") === "open") {
+    openClubHelperFromHeader();
+  }
 });
