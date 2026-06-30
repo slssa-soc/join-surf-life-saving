@@ -1,164 +1,19 @@
 ---
 layout: default
-title: Browse clubs
-description: Browse Surf Life Saving clubs in South Australia.
+title: Browse Surf Life Saving clubs
 permalink: /browse/
 ---
 
-<section class="page-header">
-  <div class="container">
-    <p class="eyebrow">Browse clubs</p>
-    <h1>Find a club that suits you.</h1>
-    <p class="lead">
-      Filter clubs by location, age group, interests, facilities, programs and the amount of time you may be able to commit.
-    </p>
-  </div>
+<section class="redirect-page">
+  <h1>Browse Surf Life Saving clubs</h1>
+  <p>This page has moved to the home page.</p>
+  <p>
+    <a class="button button--primary" href="{{ '/' | relative_url }}">
+      Go to club browse
+    </a>
+  </p>
 </section>
 
-<section class="section">
-  <div class="container browse-layout">
-    <aside class="filter-panel" id="club-finder">
-      <div class="filter-panel__heading">
-        <h2>Filters</h2>
-        <button class="text-button" type="button" data-clear-filters>Clear</button>
-      </div>
-
-      <fieldset class="filter-group">
-        <legend>Location</legend>
-
-        <label for="filter-origin">Start from</label>
-        <select id="filter-origin" data-filter="origin">
-          <option value="">Any location</option>
-          <option value="current">Current location</option>
-          {% for location in site.data.locations %}
-            <option
-              value="{{ location.slug | escape }}"
-              data-latitude="{{ location.latitude }}"
-              data-longitude="{{ location.longitude }}"
-            >
-              {{ location.name }}
-            </option>
-          {% endfor %}
-        </select>
-
-        <button class="button button-secondary button-full" type="button" data-use-current-location>
-          Use my current location
-        </button>
-
-        <p class="location-status" data-location-status>
-          Select a location or use your current location to filter by distance.
-        </p>
-
-        <label for="filter-radius">Maximum distance</label>
-        <select id="filter-radius" data-filter="radius">
-          <option value="">Any distance</option>
-          <option value="5">Within 5 km</option>
-          <option value="10">Within 10 km</option>
-          <option value="15">Within 15 km</option>
-          <option value="25">Within 25 km</option>
-          <option value="50">Within 50 km</option>
-          <option value="100">Within 100 km</option>
-        </select>
-      </fieldset>
-
-      <label for="filter-age">Age group</label>
-      <select id="filter-age" data-filter="age">
-        <option value="">Any age group</option>
-        {% for item in site.data.taxonomy.age_groups %}
-          <option value="{{ item | escape }}">{{ item }}</option>
-        {% endfor %}
-      </select>
-
-      <label for="filter-interest">Interest</label>
-      <select id="filter-interest" data-filter="interest">
-        <option value="">Any interest</option>
-        {% for item in site.data.taxonomy.interests %}
-          <option value="{{ item | escape }}">{{ item }}</option>
-        {% endfor %}
-      </select>
-
-      <label for="filter-facility">Facilities and programs</label>
-      <select id="filter-facility" data-filter="facility">
-        <option value="">Any facility or program</option>
-        {% for item in site.data.taxonomy.facilities %}
-          <option value="{{ item | escape }}">{{ item }}</option>
-        {% endfor %}
-      </select>
-
-      <label for="filter-commitment">Commitment</label>
-      <select id="filter-commitment" data-filter="commitment">
-        <option value="">Any commitment level</option>
-        {% for item in site.data.taxonomy.commitment %}
-          <option value="{{ item | escape }}">{{ item }}</option>
-        {% endfor %}
-      </select>
-
-      <p class="filter-help">
-        Distance is calculated in a straight line from the selected starting location to each club.
-      </p>
-    </aside>
-
-    <div class="club-results">
-      <div class="results-heading">
-        <h2><span data-results-count>{{ site.clubs | size }}</span> clubs</h2>
-        <p data-results-summary>Showing available club profiles.</p>
-      </div>
-
-      <div class="club-card-grid" data-club-results>
-        {% assign clubs = site.clubs | sort: 'title' %}
-
-        {% for club in clubs %}
-          <article
-            class="club-card"
-            data-club-card
-            data-title="{{ club.title | escape }}"
-            data-latitude="{{ club.latitude }}"
-            data-longitude="{{ club.longitude }}"
-            data-age-groups="{{ club.age_groups | join: '|' | escape }}"
-            data-interests="{{ club.interests | join: '|' | escape }}"
-            data-facilities="{{ club.facilities | join: '|' | escape }}"
-            data-commitment="{{ club.commitment.level | escape }}"
-          >
-            <div class="club-card__content">
-              <p class="club-card__region">{{ club.region }}</p>
-              <h3>{{ club.title }}</h3>
-              <p>{{ club.summary }}</p>
-
-              <div class="club-card__meta">
-                <span>{{ club.suburb }}</span>
-                <span>{{ club.club_size }}</span>
-                <span>{{ club.commitment.level }} commitment</span>
-                <span data-distance-label hidden></span>
-              </div>
-
-              <h4>Age groups</h4>
-              <ul class="tag-list">
-                {% for item in club.age_groups %}
-                  <li>{{ item }}</li>
-                {% endfor %}
-              </ul>
-
-              <h4>Interests</h4>
-              <ul class="tag-list">
-                {% for item in club.interests limit: 5 %}
-                  <li>{{ item }}</li>
-                {% endfor %}
-              </ul>
-            </div>
-
-            <div class="club-card__actions">
-              <a class="button button-secondary" href="{{ club.url | relative_url }}">View profile</a>
-              <button class="button button-primary" type="button" data-lead-club="{{ club.slug }}">Send my details</button>
-            </div>
-          </article>
-        {% endfor %}
-      </div>
-
-      <div class="empty-state" data-empty-state hidden>
-        <h2>No clubs match those filters yet.</h2>
-        <p>Try removing one filter, increasing the distance, or using broader options to see more clubs.</p>
-        <button class="button button-secondary" type="button" data-clear-filters>Clear filters</button>
-      </div>
-    </div>
-  </div>
-</section>
+<script>
+  window.location.replace("{{ '/' | relative_url }}");
+</script>
