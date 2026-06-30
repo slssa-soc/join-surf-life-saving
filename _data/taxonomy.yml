@@ -1,0 +1,27 @@
+age_groups:
+  - Nippers
+  - Youth
+  - Adults
+  - Families
+
+interests:
+  - Lifesaving patrols
+  - Surf sports
+  - Nippers
+  - Youth programs
+  - Training and education
+  - IRB
+  - Volunteering
+  - Community events
+
+facilities:
+  - Adaptive program
+  - Multicultural program
+  - Gym facilities
+  - Family-friendly
+  - Beginner-friendly
+
+commitment:
+  - Low: 1-2 hours per month
+  - Medium: 3-6 hours per month
+  - High: 7+ hours per month

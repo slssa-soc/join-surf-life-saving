@@ -1,0 +1,73 @@
+---
+layout: default
+---
+
+<section class="club-hero">
+  <div class="container club-hero__grid">
+    <div>
+      <p class="eyebrow">Surf Life Saving Club</p>
+      <h1>{{ page.title }}</h1>
+      <p class="lead">{{ page.summary }}</p>
+
+      <div class="button-row">
+        <button class="button button-primary" type="button" data-lead-club="{{ page.slug }}">Send my details</button>
+        <a class="button button-secondary" href="{{ '/browse/' | relative_url }}">Back to browse</a>
+      </div>
+    </div>
+
+    <div class="club-hero__card">
+      <h2>Club snapshot</h2>
+      <dl class="snapshot-list">
+        <div>
+          <dt>Suburb</dt>
+          <dd>{{ page.suburb }}</dd>
+        </div>
+        <div>
+          <dt>Region</dt>
+          <dd>{{ page.region }}</dd>
+        </div>
+        <div>
+          <dt>Typical commitment</dt>
+          <dd>{{ page.commitment.typical_hours_per_month }} hours/month</dd>
+        </div>
+        <div>
+          <dt>Club size</dt>
+          <dd>{{ page.club_size }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container content-grid">
+    <article class="prose">
+      {{ content }}
+    </article>
+
+    <aside class="side-panel">
+      <h2>What you can do here</h2>
+
+      <h3>Age groups</h3>
+      <ul class="tag-list">
+        {% for item in page.age_groups %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+
+      <h3>Interests</h3>
+      <ul class="tag-list">
+        {% for item in page.interests %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+
+      <h3>Facilities and programs</h3>
+      <ul class="tag-list">
+        {% for item in page.facilities %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </aside>
+  </div>
+</section>
