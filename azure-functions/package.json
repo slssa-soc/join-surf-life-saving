@@ -1,0 +1,14 @@
+{
+  "name": "join-surf-life-saving-api",
+  "version": "0.1.0",
+  "description": "Azure Functions API for Join Surf Life Saving SA.",
+  "main": "src/functions/*.js",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests configured yet\""
+  },
+  "dependencies": {
+    "@azure/functions": "^4.7.0"
+  },
+  "devDependencies": {}
+}
