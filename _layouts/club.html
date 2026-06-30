@@ -2,72 +2,166 @@
 layout: default
 ---
 
-<section class="club-hero">
-  <div class="container club-hero__grid">
-    <div>
-      <p class="eyebrow">Surf Life Saving Club</p>
-      <h1>{{ page.title }}</h1>
-      <p class="lead">{{ page.summary }}</p>
+{% assign club_slug = page.slug | default: page.title | slugify %}
+{% assign club_image = page.image | default: "/assets/img/club-placeholder.jpg" %}
+{% assign club_members = page.members | default: 0 %}
 
-      <div class="button-row">
-        <button class="button button-primary" type="button" data-lead-club="{{ page.slug }}">Send my details</button>
-        <a class="button button-secondary" href="{{ '/browse/' | relative_url }}">Back to browse</a>
+<section class="club-profile">
+  <div class="club-profile__hero">
+    <div class="club-profile__image">
+      <img src="{{ club_image | relative_url }}" alt="{{ page.title }}">
+    </div>
+
+    <div class="club-profile__intro">
+      <p class="eyebrow">Club profile</p>
+      <h1>{{ page.title }}</h1>
+
+      <p class="club-profile__summary">
+        {{ page.summary | default: page.excerpt | strip_html }}
+      </p>
+
+      <div class="club-profile__meta">
+        {% if club_members and club_members != 0 %}
+          <span>👤 Members: {{ club_members }}</span>
+        {% endif %}
+
+        {% if page.suburb or page.region %}
+          <span>📍 {{ page.suburb | default: page.region }}</span>
+        {% endif %}
+
+        {% if page.commitment.label %}
+          <span>⏱ {{ page.commitment.label }} commitment</span>
+        {% endif %}
+      </div>
+
+      <div class="club-profile__actions">
+        <button class="button button--primary" type="button" data-lead-club="{{ club_slug }}">
+          Send my details
+        </button>
+
+        <a class="button button--outline" href="{{ '/' | relative_url }}">
+          Back to club browse
+        </a>
       </div>
     </div>
-
-    <div class="club-hero__card">
-      <h2>Club snapshot</h2>
-      <dl class="snapshot-list">
-        <div>
-          <dt>Suburb</dt>
-          <dd>{{ page.suburb }}</dd>
-        </div>
-        <div>
-          <dt>Region</dt>
-          <dd>{{ page.region }}</dd>
-        </div>
-        <div>
-          <dt>Typical commitment</dt>
-          <dd>{{ page.commitment.typical_hours_per_month }} hours/month</dd>
-        </div>
-        <div>
-          <dt>Club size</dt>
-          <dd>{{ page.club_size }}</dd>
-        </div>
-      </dl>
-    </div>
   </div>
-</section>
 
-<section class="section">
-  <div class="container content-grid">
-    <article class="prose">
-      {{ content }}
-    </article>
+  <div class="club-profile__content">
+    <section class="club-profile__section">
+      <h2>About the club</h2>
+      <div class="prose">
+        {{ content }}
+      </div>
+    </section>
 
-    <aside class="side-panel">
-      <h2>What you can do here</h2>
+    <aside class="club-profile__panel">
+      <h2>What this club offers</h2>
 
-      <h3>Age groups</h3>
-      <ul class="tag-list">
-        {% for item in page.age_groups %}
-          <li>{{ item }}</li>
+      <div class="tag-list tag-list--large">
+        {% for interest_id in page.interests %}
+          {% assign interest_label = interest_id %}
+          {% for interest in site.data.taxonomy.interests %}
+            {% assign taxonomy_interest_id = interest.id | default: interest.value | default: interest %}
+            {% if taxonomy_interest_id == interest_id %}
+              {% assign interest_label = interest.label | default: interest.name | default: interest.title | default: interest_id %}
+            {% endif %}
+          {% endfor %}
+          <span>{{ interest_label }}</span>
         {% endfor %}
-      </ul>
+      </div>
 
-      <h3>Interests</h3>
-      <ul class="tag-list">
-        {% for item in page.interests %}
-          <li>{{ item }}</li>
-        {% endfor %}
-      </ul>
-
-      <h3>Facilities and programs</h3>
-      <ul class="tag-list">
-        {% for item in page.facilities %}
-          <li>{{ item }}</li>
-        {% endfor %}
-      </ul>
+      <div class="club-features club-features--profile">
+        <div>
+          <span class="feature-icon">♿</span>
+          <span>Adaptive program</span>
+          <strong>{{ page.adaptive_program | default: "Available" }}</strong>
+        </div>
+        <div>
+          <span class="feature-icon">◎</span>
+          <span>Multicultural program</span>
+          <strong>{{ page.multicultural_program | default: "Available" }}</strong>
+        </div>
+        <div>
+          <span class="feature-icon">⚙</span>
+          <span>Gym facilities</span>
+          <strong>{{ page.gym_facilities | default: "On site" }}</strong>
+        </div>
+        <div>
+          <span class="feature-icon">⚑</span>
+          <span>Family-friendly</span>
+          <strong>{{ page.family_friendly | default: "Yes" }}</strong>
+        </div>
+      </div>
     </aside>
   </div>
 </section>
+
+<div class="lead-modal" data-lead-modal hidden>
+  <div class="lead-modal__backdrop" data-lead-close></div>
+
+  <div class="lead-modal__panel" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
+    <button class="lead-modal__close" type="button" data-lead-close aria-label="Close">
+      ×
+    </button>
+
+    <div class="lead-modal__header">
+      <p class="eyebrow">Send your details</p>
+      <h2 id="lead-modal-title">Connect with <span data-lead-club-name>{{ page.title }}</span></h2>
+      <p>
+        We will capture your details and help connect you with the selected club.
+      </p>
+    </div>
+
+    <form class="lead-form" data-lead-form>
+      <input type="hidden" name="clubSlug" value="{{ club_slug }}" data-lead-club-slug>
+
+      <div class="form-grid">
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" autocomplete="name" required>
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+
+        <label>
+          <span>Phone</span>
+          <input type="tel" name="phone" autocomplete="tel">
+        </label>
+
+        <label>
+          <span>Suburb</span>
+          <input type="text" name="suburb" autocomplete="address-level2">
+        </label>
+      </div>
+
+      <label>
+        <span>What are you interested in?</span>
+        <textarea name="about" rows="4"></textarea>
+      </label>
+
+      <div class="lead-filter-summary" data-lead-filter-summary hidden>
+        <h3>Your selected filters</h3>
+        <ul data-lead-filter-list></ul>
+      </div>
+
+      <label class="consent-row">
+        <input type="checkbox" name="consent" required>
+        <span>I agree for my details to be captured and used to respond to this enquiry.</span>
+      </label>
+
+      <p class="lead-message" data-lead-message hidden></p>
+
+      <div class="lead-form__actions">
+        <button class="button button--outline" type="button" data-lead-close>
+          Cancel
+        </button>
+        <button class="button button--primary" type="submit">
+          Send my details
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

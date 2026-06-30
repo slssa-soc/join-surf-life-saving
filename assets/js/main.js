@@ -50,11 +50,15 @@ function calculateDistanceKm(origin, destination) {
 }
 
 function formatDistance(distanceKm) {
-  if (distanceKm < 10) {
-    return distanceKm.toFixed(1) + " km away";
+  if (distanceKm === null) {
+    return "Distance unavailable";
   }
 
-  return Math.round(distanceKm) + " km away";
+  if (distanceKm < 10) {
+    return distanceKm.toFixed(1) + " km";
+  }
+
+  return Math.round(distanceKm) + " km";
 }
 
 function getStoredCurrentLocation() {
@@ -87,7 +91,7 @@ function setStoredCurrentLocation(location) {
       JSON.stringify(location)
     );
   } catch (error) {
-    // Ignore storage errors. Distance filtering still works for the current page load.
+    // Ignore storage errors.
   }
 }
 
@@ -110,6 +114,20 @@ function setLocationStatus(message, type) {
   status.dataset.statusType = type || "info";
 }
 
+function getSelectedValues(name) {
+  const selected = Array.from(
+    document.querySelectorAll(
+      "input[name='" + name + "'][data-filter-check]:checked"
+    )
+  )
+    .map(function (input) {
+      return normaliseValue(input.value);
+    })
+    .filter(Boolean);
+
+  return selected;
+}
+
 function getSelectedOrigin() {
   const originField = document.querySelector("[data-filter='origin']");
 
@@ -122,7 +140,7 @@ function getSelectedOrigin() {
 
     if (storedLocation) {
       return {
-        label: "Current location",
+        label: "your current location",
         latitude: storedLocation.latitude,
         longitude: storedLocation.longitude
       };
@@ -152,18 +170,13 @@ function getSelectedOrigin() {
 }
 
 function getCurrentFilters() {
-  const age = document.querySelector("[data-filter='age']");
-  const interest = document.querySelector("[data-filter='interest']");
-  const facility = document.querySelector("[data-filter='facility']");
-  const commitment = document.querySelector("[data-filter='commitment']");
   const origin = document.querySelector("[data-filter='origin']");
   const radius = document.querySelector("[data-filter='radius']");
 
   return {
-    age: age ? normaliseValue(age.value) : "",
-    interest: interest ? normaliseValue(interest.value) : "",
-    facility: facility ? normaliseValue(facility.value) : "",
-    commitment: commitment ? normaliseValue(commitment.value) : "",
+    age: getSelectedValues("age"),
+    interest: getSelectedValues("interest"),
+    facility: getSelectedValues("facility"),
     origin: origin ? origin.value : "",
     radius: radius ? toNumber(radius.value) : null
   };
@@ -184,54 +197,85 @@ function getClubCoordinates(card) {
 }
 
 function updateCardDistance(card, origin) {
-  const label = card.querySelector("[data-distance-label]");
-
-  if (!label) {
-    return null;
-  }
+  const inlineLabel = card.querySelector("[data-distance-label]");
+  const actionLabel = card.querySelector("[data-card-distance]");
+  const fallback = card.querySelector("[data-location-fallback]");
 
   if (!origin) {
-    label.hidden = true;
-    label.textContent = "";
+    if (inlineLabel) {
+      inlineLabel.hidden = true;
+      inlineLabel.textContent = "";
+    }
+
+    if (fallback) {
+      fallback.hidden = false;
+    }
+
+    if (actionLabel) {
+      actionLabel.textContent = "Distance unavailable";
+    }
+
+    card.dataset.distance = "";
     return null;
   }
 
   const clubCoordinates = getClubCoordinates(card);
 
   if (!clubCoordinates) {
-    label.hidden = true;
-    label.textContent = "";
+    if (actionLabel) {
+      actionLabel.textContent = "Distance unavailable";
+    }
+
+    card.dataset.distance = "";
     return null;
   }
 
   const distanceKm = calculateDistanceKm(origin, clubCoordinates);
+  const formatted = formatDistance(distanceKm);
 
-  label.textContent = formatDistance(distanceKm);
-  label.hidden = false;
+  if (inlineLabel) {
+    inlineLabel.textContent = formatted + " from you";
+    inlineLabel.hidden = false;
+  }
+
+  if (fallback) {
+    fallback.hidden = true;
+  }
+
+  if (actionLabel) {
+    actionLabel.textContent = formatted;
+  }
+
+  card.dataset.distance = String(distanceKm);
 
   return distanceKm;
+}
+
+function hasAnyMatch(selectedValues, availableValues) {
+  if (selectedValues.length === 0) {
+    return true;
+  }
+
+  return selectedValues.some(function (value) {
+    return availableValues.includes(value);
+  });
 }
 
 function clubMatchesFilters(card, filters, origin) {
   const ageGroups = splitDataList(card.dataset.ageGroups);
   const interests = splitDataList(card.dataset.interests);
   const facilities = splitDataList(card.dataset.facilities);
-  const commitment = normaliseValue(card.dataset.commitment);
   const distanceKm = updateCardDistance(card, origin);
 
-  if (filters.age && !ageGroups.includes(filters.age)) {
+  if (!hasAnyMatch(filters.age, ageGroups)) {
     return false;
   }
 
-  if (filters.interest && !interests.includes(filters.interest)) {
+  if (!hasAnyMatch(filters.interest, interests)) {
     return false;
   }
 
-  if (filters.facility && !facilities.includes(filters.facility)) {
-    return false;
-  }
-
-  if (filters.commitment && commitment !== filters.commitment) {
+  if (!hasAnyMatch(filters.facility, facilities)) {
     return false;
   }
 
@@ -247,21 +291,17 @@ function clubMatchesFilters(card, filters, origin) {
 function updateFilterUrl(filters) {
   const params = new URLSearchParams();
 
-  if (filters.age) {
-    params.set("age", filters.age);
-  }
+  filters.age.forEach(function (value) {
+    params.append("age", value);
+  });
 
-  if (filters.interest) {
-    params.set("interest", filters.interest);
-  }
+  filters.interest.forEach(function (value) {
+    params.append("interest", value);
+  });
 
-  if (filters.facility) {
-    params.set("facility", filters.facility);
-  }
-
-  if (filters.commitment) {
-    params.set("commitment", filters.commitment);
-  }
+  filters.facility.forEach(function (value) {
+    params.append("facility", value);
+  });
 
   if (filters.origin) {
     params.set("origin", filters.origin);
@@ -313,11 +353,55 @@ function updateLocationStatus(origin, filters) {
   }
 }
 
+function sortCards(cards, sortMode) {
+  const list = document.querySelector("[data-club-list]");
+
+  if (!list) {
+    return;
+  }
+
+  const sorted = cards.slice().sort(function (a, b) {
+    if (sortMode === "distance") {
+      const aDistance = toNumber(a.dataset.distance);
+      const bDistance = toNumber(b.dataset.distance);
+
+      if (aDistance === null && bDistance === null) {
+        return 0;
+      }
+
+      if (aDistance === null) {
+        return 1;
+      }
+
+      if (bDistance === null) {
+        return -1;
+      }
+
+      return aDistance - bDistance;
+    }
+
+    if (sortMode === "members-desc") {
+      return (toNumber(b.dataset.members) || 0) - (toNumber(a.dataset.members) || 0);
+    }
+
+    if (sortMode === "name-asc") {
+      return String(a.dataset.title || "").localeCompare(String(b.dataset.title || ""));
+    }
+
+    return 0;
+  });
+
+  sorted.forEach(function (card) {
+    list.appendChild(card);
+  });
+}
+
 function applyFilters() {
   const cards = Array.from(document.querySelectorAll("[data-club-card]"));
   const countElement = document.querySelector("[data-results-count]");
   const summaryElement = document.querySelector("[data-results-summary]");
   const emptyState = document.querySelector("[data-empty-state]");
+  const sortField = document.querySelector("[data-sort-clubs]");
   const filters = getCurrentFilters();
   const origin = getSelectedOrigin();
 
@@ -331,6 +415,10 @@ function applyFilters() {
       visibleCount += 1;
     }
   });
+
+  if (sortField) {
+    sortCards(cards, sortField.value);
+  }
 
   if (countElement) {
     countElement.textContent = String(visibleCount);
@@ -351,10 +439,29 @@ function applyFilters() {
   updateFilterUrl(filters);
 }
 
+function setCheckboxesFromUrl(name, values) {
+  const inputs = Array.from(
+    document.querySelectorAll("input[name='" + name + "'][data-filter-check]")
+  );
+
+  inputs.forEach(function (input) {
+    if (input.value === "") {
+      input.checked = values.length === 0;
+      return;
+    }
+
+    input.checked = values.includes(input.value);
+  });
+}
+
 function setFiltersFromUrl() {
   const params = new URLSearchParams(window.location.search);
 
-  document.querySelectorAll("[data-filter]").forEach(function (field) {
+  setCheckboxesFromUrl("age", params.getAll("age"));
+  setCheckboxesFromUrl("interest", params.getAll("interest"));
+  setCheckboxesFromUrl("facility", params.getAll("facility"));
+
+  document.querySelectorAll("select[data-filter]").forEach(function (field) {
     const key = field.getAttribute("data-filter");
     const value = params.get(key);
 
@@ -365,12 +472,50 @@ function setFiltersFromUrl() {
 }
 
 function clearFilters() {
-  document.querySelectorAll("[data-filter]").forEach(function (field) {
+  document.querySelectorAll("select[data-filter]").forEach(function (field) {
     field.value = "";
+  });
+
+  document.querySelectorAll("input[data-filter-check]").forEach(function (input) {
+    input.checked = input.value === "";
   });
 
   clearStoredCurrentLocation();
   applyFilters();
+}
+
+function handleCheckboxChange(input) {
+  if (input.name !== "age") {
+    return;
+  }
+
+  const allAgesInput = document.querySelector("input[name='age'][value='']");
+
+  if (!allAgesInput) {
+    return;
+  }
+
+  if (input.value === "" && input.checked) {
+    document.querySelectorAll("input[name='age'][data-filter-check]").forEach(function (ageInput) {
+      if (ageInput !== allAgesInput) {
+        ageInput.checked = false;
+      }
+    });
+
+    return;
+  }
+
+  if (input.value !== "" && input.checked) {
+    allAgesInput.checked = false;
+  }
+
+  const selectedSpecificAges = document.querySelectorAll(
+    "input[name='age'][data-filter-check]:checked:not([value=''])"
+  );
+
+  if (selectedSpecificAges.length === 0) {
+    allAgesInput.checked = true;
+  }
 }
 
 function useCurrentLocation() {
@@ -424,7 +569,7 @@ function getLeadClubTitle(button) {
   const card = button.closest("[data-club-card]");
 
   if (card) {
-    const heading = card.querySelector("h3");
+    const heading = card.querySelector("h2");
 
     if (heading) {
       return heading.textContent.trim();
@@ -441,7 +586,7 @@ function getLeadClubTitle(button) {
 }
 
 document.addEventListener("change", function (event) {
-  if (event.target.matches("[data-filter]")) {
+  if (event.target.matches("select[data-filter]")) {
     if (
       event.target.getAttribute("data-filter") === "origin" &&
       event.target.value !== "current"
@@ -449,6 +594,17 @@ document.addEventListener("change", function (event) {
       clearStoredCurrentLocation();
     }
 
+    applyFilters();
+    return;
+  }
+
+  if (event.target.matches("input[data-filter-check]")) {
+    handleCheckboxChange(event.target);
+    applyFilters();
+    return;
+  }
+
+  if (event.target.matches("[data-sort-clubs]")) {
     applyFilters();
   }
 });

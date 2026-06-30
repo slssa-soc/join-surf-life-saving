@@ -1,54 +1,392 @@
 ---
-title: Home
-description: Find a Surf Life Saving club in South Australia.
+layout: default
+title: Browse Surf Life Saving clubs
+permalink: /
 ---
 
-<section class="hero">
-  <div class="container hero__grid">
-    <div>
-      <p class="eyebrow">Join Surf Life Saving SA</p>
-      <h1>Find the right surf life saving club for you.</h1>
-      <p class="lead">
-        Explore clubs by location, age group, interests, facilities, programs and how much time you can commit.
-      </p>
+<section class="browse-hero" id="clubs">
+  <div class="browse-hero__content">
+    <p class="eyebrow">Join Surf Life Saving SA</p>
+    <h1>Browse Surf Life Saving clubs</h1>
+    <p>
+      Compare clubs, explore what they offer, and choose the right fit for you.
+    </p>
+  </div>
+</section>
 
-      <div class="button-row">
-        <a class="button button-primary" href="{{ '/browse/' | relative_url }}">Browse clubs</a>
-        <a class="button button-secondary" href="{{ '/browse/' | relative_url }}#club-finder">Help me choose</a>
+<section class="browse-shell" aria-label="Browse clubs">
+  <aside class="filter-panel" aria-label="Filter clubs">
+    <div class="filter-panel__header">
+      <h2>Filter clubs</h2>
+      <button class="filter-reset" type="button" data-clear-filters>Reset</button>
+    </div>
+
+    <form class="filter-form" data-filter-form>
+      <section class="filter-group">
+        <div class="filter-group__title">
+          <span aria-hidden="true">📍</span>
+          <h3>Location</h3>
+        </div>
+
+        <label class="sr-only" for="filter-origin">Location</label>
+        <select id="filter-origin" data-filter="origin">
+          <option value="">All regions</option>
+          <option value="current">Use my current location</option>
+
+          {% assign sorted_clubs_for_location = site.clubs | sort: "title" %}
+          {% for club in sorted_clubs_for_location %}
+            {% if club.latitude and club.longitude %}
+              {% assign location_slug = club.slug | default: club.title | slugify %}
+              <option
+                value="{{ location_slug }}"
+                data-latitude="{{ club.latitude }}"
+                data-longitude="{{ club.longitude }}"
+              >
+                {{ club.suburb | default: club.region | default: club.title }}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+
+        <label class="sr-only" for="filter-radius">Distance</label>
+        <select id="filter-radius" data-filter="radius">
+          <option value="">Any distance</option>
+          <option value="10">Within 10 km</option>
+          <option value="25">Within 25 km</option>
+          <option value="50">Within 50 km</option>
+          <option value="100">Within 100 km</option>
+        </select>
+
+        <button class="location-button" type="button" data-use-current-location>
+          Use current location
+        </button>
+
+        <p class="location-status" data-location-status>
+          Select a location or use your current location to filter by distance.
+        </p>
+      </section>
+
+      <section class="filter-group">
+        <div class="filter-group__title">
+          <span aria-hidden="true">👥</span>
+          <h3>Age group</h3>
+        </div>
+
+        <label class="check-row">
+          <input type="checkbox" name="age" value="" data-filter-check checked>
+          <span>All ages</span>
+        </label>
+
+        {% for age in site.data.taxonomy.age_groups %}
+          {% assign age_id = age.id | default: age.value | default: age %}
+          {% assign age_label = age.label | default: age.name | default: age.title | default: age_id %}
+          <label class="check-row">
+            <input type="checkbox" name="age" value="{{ age_id | escape }}" data-filter-check>
+            <span>{{ age_label }}</span>
+          </label>
+        {% endfor %}
+      </section>
+
+      <section class="filter-group">
+        <div class="filter-group__title">
+          <span aria-hidden="true">☆</span>
+          <h3>Interests</h3>
+        </div>
+
+        {% for interest in site.data.taxonomy.interests %}
+          {% assign interest_id = interest.id | default: interest.value | default: interest %}
+          {% assign interest_label = interest.label | default: interest.name | default: interest.title | default: interest_id %}
+          <label class="check-row">
+            <input type="checkbox" name="interest" value="{{ interest_id | escape }}" data-filter-check>
+            <span>{{ interest_label }}</span>
+          </label>
+        {% endfor %}
+      </section>
+
+      <section class="filter-group">
+        <div class="filter-group__title">
+          <span aria-hidden="true">▦</span>
+          <h3>Facilities &amp; programs</h3>
+        </div>
+
+        {% for facility in site.data.taxonomy.facilities %}
+          {% assign facility_id = facility.id | default: facility.value | default: facility %}
+          {% assign facility_label = facility.label | default: facility.name | default: facility.title | default: facility_id %}
+          <label class="check-row">
+            <input type="checkbox" name="facility" value="{{ facility_id | escape }}" data-filter-check>
+            <span>{{ facility_label }}</span>
+          </label>
+        {% endfor %}
+      </section>
+    </form>
+  </aside>
+
+  <div class="browse-results">
+    <div class="results-toolbar">
+      <div>
+        <p class="results-count">
+          <strong data-results-count>{{ site.clubs | size }}</strong> clubs
+        </p>
+        <p class="results-summary" data-results-summary>
+          Showing {{ site.clubs | size }} clubs.
+        </p>
+      </div>
+
+      <div class="results-actions">
+        <label for="sort-clubs">Sort by</label>
+        <select id="sort-clubs" data-sort-clubs>
+          <option value="best-match">Best match</option>
+          <option value="distance">Distance</option>
+          <option value="members-desc">Largest club</option>
+          <option value="name-asc">Club name</option>
+        </select>
+
+        <button class="view-toggle is-active" type="button" aria-label="List view">
+          ☷
+        </button>
+        <button class="view-toggle" type="button" aria-label="Map view unavailable">
+          ⌖
+        </button>
       </div>
     </div>
 
-    <div class="hero-card">
-      <h2>How it works</h2>
-      <ol>
-        <li>Tell us what you are interested in.</li>
-        <li>Filter clubs that may suit you.</li>
-        <li>View a club profile.</li>
-        <li>Send your details to one or more clubs.</li>
-      </ol>
+    <div class="club-list" data-club-list>
+      {% assign clubs = site.clubs | sort: "title" %}
+
+      {% for club in clubs %}
+        {% assign club_slug = club.slug | default: club.title | slugify %}
+        {% assign club_image = club.image | default: "/assets/img/club-placeholder.jpg" %}
+        {% assign badge_label = club.badge_label | default: "Recommended" %}
+        {% assign badge_type = club.badge_type | default: "blue" %}
+        {% assign club_members = club.members | default: 0 %}
+
+        {% if club.age_groups %}
+          {% assign age_group_values = club.age_groups | join: "|" %}
+        {% else %}
+          {% assign age_group_values = "" %}
+        {% endif %}
+
+        {% if club.interests %}
+          {% assign interest_values = club.interests | join: "|" %}
+        {% else %}
+          {% assign interest_values = "" %}
+        {% endif %}
+
+        {% if club.facilities %}
+          {% assign facility_values = club.facilities | join: "|" %}
+        {% else %}
+          {% assign facility_values = "" %}
+        {% endif %}
+
+        {% assign commitment_value = "" %}
+        {% if club.commitment.id %}
+          {% assign commitment_value = club.commitment.id %}
+        {% elsif club.commitment.label %}
+          {% assign commitment_value = club.commitment.label | slugify %}
+        {% elsif club.commitment %}
+          {% assign commitment_value = club.commitment %}
+        {% endif %}
+
+        <article
+          class="club-card"
+          data-club-card
+          data-title="{{ club.title | escape }}"
+          data-members="{{ club_members }}"
+          data-latitude="{{ club.latitude }}"
+          data-longitude="{{ club.longitude }}"
+          data-age-groups="{{ age_group_values | escape }}"
+          data-interests="{{ interest_values | escape }}"
+          data-facilities="{{ facility_values | escape }}"
+          data-commitment="{{ commitment_value | escape }}"
+        >
+          <a class="club-card__image" href="{{ club.url | relative_url }}" aria-label="View {{ club.title }}">
+            <img src="{{ club_image | relative_url }}" alt="{{ club.title }}">
+            <span class="club-badge club-badge--{{ badge_type | escape }}">
+              {{ badge_label }}
+            </span>
+          </a>
+
+          <div class="club-card__body">
+            <h2>
+              <a href="{{ club.url | relative_url }}">{{ club.title }}</a>
+            </h2>
+
+            <p class="club-card__summary">
+              {{ club.summary | default: club.excerpt | strip_html | truncate: 155 }}
+            </p>
+
+            <div class="club-meta">
+              {% if club_members and club_members != 0 %}
+                <span>👤 Members: {{ club_members }}</span>
+              {% endif %}
+              <span>
+                📍
+                <span data-distance-label hidden></span>
+                <span data-location-fallback>{{ club.suburb | default: club.region | default: "Location available" }}</span>
+              </span>
+            </div>
+
+            <div class="tag-list" aria-label="Club activities">
+              {% for interest_id in club.interests limit: 7 %}
+                {% assign interest_label = interest_id %}
+                {% for interest in site.data.taxonomy.interests %}
+                  {% assign taxonomy_interest_id = interest.id | default: interest.value | default: interest %}
+                  {% if taxonomy_interest_id == interest_id %}
+                    {% assign interest_label = interest.label | default: interest.name | default: interest.title | default: interest_id %}
+                  {% endif %}
+                {% endfor %}
+                <span>{{ interest_label }}</span>
+              {% endfor %}
+            </div>
+
+            <div class="club-features">
+              <div>
+                <span class="feature-icon">♿</span>
+                <span>Adaptive program</span>
+                <strong>{{ club.adaptive_program | default: "Available" }}</strong>
+              </div>
+              <div>
+                <span class="feature-icon">◎</span>
+                <span>Multicultural program</span>
+                <strong>{{ club.multicultural_program | default: "Available" }}</strong>
+              </div>
+              <div>
+                <span class="feature-icon">⚙</span>
+                <span>Gym facilities</span>
+                <strong>{{ club.gym_facilities | default: "On site" }}</strong>
+              </div>
+              <div>
+                <span class="feature-icon">⚑</span>
+                <span>Family-friendly</span>
+                <strong>{{ club.family_friendly | default: "Yes" }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="club-card__actions">
+            <p class="club-card__distance">
+              📍 <span data-card-distance>Distance unavailable</span>
+            </p>
+
+            <a class="button button--outline" href="{{ club.url | relative_url }}">
+              View profile
+              <span aria-hidden="true">›</span>
+            </a>
+
+            <button class="button button--primary" type="button" data-lead-club="{{ club_slug }}">
+              Send my details
+            </button>
+
+            <p class="club-recommendation">
+              ★ Recommended for families
+            </p>
+          </div>
+        </article>
+      {% endfor %}
     </div>
+
+    <div class="empty-state" data-empty-state hidden>
+      <h2>No clubs match those filters</h2>
+      <p>Try removing one or more filters to see more clubs.</p>
+      <button class="button button--outline" type="button" data-clear-filters>
+        Reset filters
+      </button>
+    </div>
+
+    <p class="distance-note">
+      ⓘ Distances are approximate. Use your current location for more relevant nearby results.
+    </p>
   </div>
 </section>
 
-<section class="section">
-  <div class="container">
-    <h2>Start with what matters to you</h2>
-
-    <div class="feature-grid">
-      <article class="feature-card">
-        <h3>For families</h3>
-        <p>Find clubs with Nippers, youth pathways and family-friendly options.</p>
-      </article>
-
-      <article class="feature-card">
-        <h3>For volunteers</h3>
-        <p>Explore lifesaving patrols, training, education and operational roles.</p>
-      </article>
-
-      <article class="feature-card">
-        <h3>For sport</h3>
-        <p>Find clubs with surf sports, IRB, fitness and competition pathways.</p>
-      </article>
-    </div>
+<section class="info-section" id="how-it-works">
+  <div class="info-section__inner">
+    <p class="eyebrow">How it works</p>
+    <h2>Find a club, compare options, then send your details.</h2>
+    <p>
+      Use the filters to narrow clubs by location, age group, interests and facilities.
+      When you find a club that looks right, send your details and the enquiry can be followed up.
+    </p>
   </div>
 </section>
+
+<section class="info-section" id="membership-options">
+  <div class="info-section__inner">
+    <p class="eyebrow">Membership options</p>
+    <h2>There are different ways to get involved.</h2>
+    <p>
+      Clubs offer pathways across lifesaving patrols, Nippers, youth programs, surf sports,
+      training, volunteering and community events.
+    </p>
+  </div>
+</section>
+
+<div class="lead-modal" data-lead-modal hidden>
+  <div class="lead-modal__backdrop" data-lead-close></div>
+
+  <div class="lead-modal__panel" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
+    <button class="lead-modal__close" type="button" data-lead-close aria-label="Close">
+      ×
+    </button>
+
+    <div class="lead-modal__header">
+      <p class="eyebrow">Send your details</p>
+      <h2 id="lead-modal-title">Connect with <span data-lead-club-name>this club</span></h2>
+      <p>
+        We will capture your details and help connect you with the selected club.
+      </p>
+    </div>
+
+    <form class="lead-form" data-lead-form>
+      <input type="hidden" name="clubSlug" data-lead-club-slug>
+
+      <div class="form-grid">
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" autocomplete="name" required>
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+
+        <label>
+          <span>Phone</span>
+          <input type="tel" name="phone" autocomplete="tel">
+        </label>
+
+        <label>
+          <span>Suburb</span>
+          <input type="text" name="suburb" autocomplete="address-level2">
+        </label>
+      </div>
+
+      <label>
+        <span>What are you interested in?</span>
+        <textarea name="about" rows="4"></textarea>
+      </label>
+
+      <div class="lead-filter-summary" data-lead-filter-summary hidden>
+        <h3>Your selected filters</h3>
+        <ul data-lead-filter-list></ul>
+      </div>
+
+      <label class="consent-row">
+        <input type="checkbox" name="consent" required>
+        <span>I agree for my details to be captured and used to respond to this enquiry.</span>
+      </label>
+
+      <p class="lead-message" data-lead-message hidden></p>
+
+      <div class="lead-form__actions">
+        <button class="button button--outline" type="button" data-lead-close>
+          Cancel
+        </button>
+        <button class="button button--primary" type="submit">
+          Send my details
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

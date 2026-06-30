@@ -1,55 +1,91 @@
 ---
 layout: club
-title: Port Noarlunga Surf Life Saving Club
-slug: port-noarlunga-surf-life-saving-club
-permalink: /clubs/port-noarlunga-surf-life-saving-club/
-region: Southern Adelaide
-suburb: Port Noarlunga
-address: Port Noarlunga SA
-latitude: -35.1495
-longitude: 138.4699
-club_size: Medium coastal club
-
-summary: A southern metropolitan club with options for lifesaving patrols, training, community volunteering and beach-based activities.
-
+title: 'Port Noarlunga Surf Life Saving Club'
+slug: 'port-noarlunga-surf-life-saving-club'
+permalink: '/clubs/port-noarlunga-surf-life-saving-club/'
+summary: 'A southern metropolitan club at Port Noarlunga, close to the reef and jetty, with patrols, Nippers, training, surf sports and volunteering.'
+image: '/assets/img/clubs/port-noarlunga-surf-life-saving-club.jpg'
+suburb: 'Port Noarlunga'
+region: 'South Metro'
+address: 'Corner Saltfleet Street and Esplanade, Port Noarlunga SA 5167'
+website: 'https://pnslsc.com.au/'
+latitude: -35.1496
+longitude: 138.4672
+member_size: 'Medium metro club'
+membership_fee_note: 'Current public membership fees not verified in this pass. Confirm with club.'
+membership_fee_source: ''
+source_checked: '2026-06-30'
 age_groups:
-  - Youth
-  - Adults
-  - Families
-
+  - 'nippers'
+  - 'youth'
+  - 'adults'
+  - 'families'
 interests:
-  - Lifesaving patrols
-  - Training and education
-  - IRB
-  - Volunteering
-  - Community events
-
+  - 'lifesaving-patrols'
+  - 'nippers'
+  - 'surf-sports'
+  - 'training'
+  - 'volunteering'
+  - 'community'
 facilities:
-  - Family-friendly
-  - Beginner-friendly
-  - Adaptive program
-
+  - 'beach-access'
+  - 'clubrooms'
+  - 'family-friendly'
+  - 'training'
+verified_programs:
+  - 'Nippers'
+  - 'Lifesaving patrols'
+  - 'Training'
+  - 'Surf sports'
+  - 'Community volunteering'
+best_for:
+  - 'Families around Port Noarlunga'
+  - 'People near the reef and southern metro beaches'
+  - 'Members wanting a local surf club'
 commitment:
-  level: High
-  min_hours_per_month: 4
-  typical_hours_per_month: 8
-  notes: Suitable for people wanting to become more actively involved in lifesaving and operational activities.
-
-contact:
-  email_key: port-noarlunga
-  website:
+  id: 'flexible'
+  label: 'Flexible'
+adaptive_program: 'Ask club'
+multicultural_program: 'Ask club'
+gym_facilities: 'Ask club'
+family_friendly: 'Yes'
+badge_label: 'Reef beach'
+badge_type: 'blue'
 ---
 
-## About the club
+## Overview
 
-Port Noarlunga Surf Life Saving Club is included here as sample profile content for testing the club finder.
+Port Noarlunga SLSC is listed by SLSSA at the corner of Saltfleet Street and Esplanade, placing it close to one of Adelaideâ€™s most distinctive reef and jetty beach environments.
 
-The profile can be expanded with approved club information, images, training times, membership pathways and program details.
+## What this club offers
+
+- Lifesaving patrols and beach safety participation.
+- Nippers, training, surf sports and club volunteering pathways should be confirmed with the club.
+- Southern metropolitan beach community.
+
+## Training, Nippers and member activity
+
+- Current training days and Nipper details were not verified in this pass.
+- Use the club website or SLSSA directory details to confirm current season information.
+
+## Membership fees and joining notes
+
+- Current public fee schedule was not verified in this pass.
+- Confirm fees and categories directly with the club.
+
+## Culture and club fit
+
+- Local southern metropolitan club with a strong beach identity.
+- Likely to suit families and volunteers around Port Noarlunga, Noarlunga and nearby suburbs.
 
 ## Who this club may suit
 
-This club may suit people interested in lifesaving patrols, training, IRB activity, volunteering and a more active operational pathway.
+- Choose Port Noarlunga if it is your local beach or you want the reef/jetty environment.
+- Confirm Nippers, patrol expectations, training days and fees before joining.
 
-## Getting started
+## Profile sources and review notes
 
-Prospective members can send their details to the club so someone can follow up with information about membership options, training and next steps.
+- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
+- Club website: https://pnslsc.com.au/
+
+This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.

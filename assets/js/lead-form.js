@@ -68,24 +68,66 @@ function restoreReusableLeadDetails(form) {
   setFieldValue(form, "about", details.about);
 }
 
+function getLabelTextForField(field) {
+  const wrappingLabel = field.closest("label");
+
+  if (wrappingLabel) {
+    return wrappingLabel.textContent.trim();
+  }
+
+  if (field.id) {
+    const explicitLabel = document.querySelector("label[for='" + field.id + "']");
+
+    if (explicitLabel) {
+      return explicitLabel.textContent.trim();
+    }
+  }
+
+  return "";
+}
+
 function getSelectedFilterLabels() {
   const labels = [];
 
-  document.querySelectorAll("[data-filter]").forEach(function (field) {
+  document.querySelectorAll("select[data-filter]").forEach(function (field) {
     if (!field.value) {
       return;
     }
 
-    const label = document.querySelector("label[for='" + field.id + "']");
     const selectedOption = field.options ? field.options[field.selectedIndex] : null;
 
-    if (!label || !selectedOption) {
+    if (!selectedOption) {
       return;
     }
 
     labels.push({
-      name: label.textContent.trim(),
+      name: field.id === "filter-origin" ? "Location" : "Distance",
       value: selectedOption.textContent.trim()
+    });
+  });
+
+  document.querySelectorAll("input[data-filter-check]:checked").forEach(function (field) {
+    if (!field.value) {
+      return;
+    }
+
+    let groupName = "Filter";
+
+    if (field.name === "age") {
+      groupName = "Age group";
+    }
+
+    if (field.name === "interest") {
+      groupName = "Interest";
+    }
+
+    if (field.name === "facility") {
+      groupName = "Facility or program";
+    }
+
+    labels.push({
+      name: groupName,
+      value: getLabelTextForField(field)
     });
   });
 
