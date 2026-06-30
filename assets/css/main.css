@@ -1082,3 +1082,1241 @@ main {
     padding: 22px;
   }
 }
+
+/* CLUB FINDER UI FIXES START */
+:root {
+  --max-width: 1480px;
+}
+
+body {
+  font-family: "Slate Std", Aptos, "Aptos Display", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 400;
+}
+
+.browse-hero,
+.browse-shell,
+.club-profile,
+.info-section {
+  max-width: var(--max-width);
+  width: 100%;
+}
+
+.browse-shell {
+  grid-template-columns: 320px minmax(0, 1fr);
+  padding-right: 34px;
+  padding-left: 34px;
+}
+
+.browse-hero {
+  padding-right: 34px;
+  padding-left: 34px;
+}
+
+.brand-text strong,
+.brand-text span,
+.site-nav a,
+.site-nav .nav-cta,
+.filter-panel h2,
+.filter-reset,
+.filter-group__title h3,
+.location-button,
+.results-count,
+.results-actions label,
+.view-toggle,
+.club-card__body h2,
+.club-meta,
+.tag-list span,
+.club-card__distance,
+.button,
+.lead-form label,
+.lead-message {
+  font-weight: 600;
+}
+
+.eyebrow,
+.club-badge {
+  font-weight: 700;
+}
+
+.browse-hero h1,
+.club-profile__intro h1 {
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.filter-label {
+  display: block;
+  margin: 10px 0 6px;
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.location-search {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 11px 12px;
+  border: 1px solid #c5ceda;
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--text);
+}
+
+.location-search:focus,
+.filter-group select:focus,
+.lead-form input:focus,
+.lead-form textarea:focus {
+  outline: 2px solid rgba(0, 70, 173, 0.18);
+  border-color: var(--slssa-blue);
+}
+
+.club-card {
+  grid-template-columns: 300px minmax(0, 1fr) 230px;
+}
+
+.club-helper {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 45;
+}
+
+.club-helper__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slssa-blue);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(21, 32, 51, 0.22);
+  font-weight: 600;
+}
+
+.club-helper__toggle::before {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  place-items: center;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--slssa-blue);
+  content: "?";
+  font-weight: 700;
+}
+
+.club-helper__panel {
+  position: absolute;
+  right: 0;
+  bottom: 62px;
+  width: min(380px, calc(100vw - 32px));
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: var(--shadow-md);
+}
+
+.club-helper__panel[hidden] {
+  display: none;
+}
+
+.club-helper__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.club-helper__header h2 {
+  margin: 0;
+  color: var(--slssa-blue);
+  font-size: 1.22rem;
+  font-weight: 600;
+}
+
+.club-helper__close {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: #edf2f7;
+  color: #1f2937;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.club-helper__message {
+  margin: 0 0 12px;
+  color: #344054;
+}
+
+.club-helper__options {
+  display: grid;
+  gap: 8px;
+}
+
+.club-helper__options button {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--slssa-blue);
+  cursor: pointer;
+  text-align: left;
+  font-weight: 500;
+}
+
+.club-helper__options button:hover {
+  background: var(--slssa-blue-soft);
+  border-color: var(--slssa-blue);
+}
+
+@media (max-width: 980px) {
+  .browse-shell {
+    grid-template-columns: 1fr;
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .browse-hero {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+}
+
+@media (max-width: 720px) {
+  .club-helper {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .club-helper__toggle span {
+    display: none;
+  }
+
+  .club-helper__toggle {
+    width: 54px;
+    height: 54px;
+    padding: 0;
+  }
+
+  .club-helper__toggle::before {
+    margin-right: 0;
+  }
+}
+/* CLUB FINDER UI FIXES END */
+
+.location-autocomplete {
+  position: relative;
+  width: 100%;
+}
+
+.location-autocomplete__results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 35;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgba(21, 32, 51, 0.16);
+}
+
+.location-autocomplete__results[hidden] {
+  display: none;
+}
+
+.location-autocomplete__option {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 1px solid #edf2f7;
+  background: #ffffff;
+  color: #1f2937;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+
+.location-autocomplete__option:last-child {
+  border-bottom: 0;
+}
+
+.location-autocomplete__option:hover,
+.location-autocomplete__option:focus {
+  background: var(--slssa-blue-soft);
+  color: var(--slssa-blue);
+  outline: none;
+}
+
+/* FONT WEIGHT FIXES START */
+:root {
+  --font-sans: "Slate Std", SlateStd, Aptos, "Aptos Display", "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-synthesis-weight: none;
+}
+
+/* General text should stay regular */
+body,
+p,
+li,
+input,
+select,
+textarea,
+.club-card__summary,
+.club-profile__summary,
+.prose,
+.location-status,
+.distance-note,
+.results-summary,
+.club-recommendation,
+.club-helper__message {
+  font-weight: 400;
+}
+
+/* Headings should be clear, but not heavy */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.browse-hero h1,
+.club-profile__intro h1,
+.club-card__body h2,
+.filter-panel h2,
+.filter-group__title h3,
+.club-helper__header h2,
+.lead-modal__header h2 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+/* Buttons and navigation should be medium, not bold */
+button,
+.button,
+.site-nav a,
+.site-nav .nav-cta,
+.filter-reset,
+.location-button,
+.club-helper__toggle,
+.club-helper__options button,
+.lead-form__actions button {
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+/* Metadata and labels should not look over-bold */
+label,
+.filter-label,
+.results-actions label,
+.club-meta,
+.club-card__distance,
+.lead-form label,
+.consent-row,
+.brand-text span {
+  font-weight: 400;
+}
+
+/* Keep light emphasis where useful */
+strong,
+.brand-text strong,
+.results-count strong,
+.club-features strong,
+.lead-filter-summary h3 {
+  font-weight: 500;
+}
+
+/* Tags and badges should be readable but not chunky */
+.tag-list span,
+.club-badge,
+.eyebrow {
+  font-weight: 500;
+}
+
+/* Main hero heading can carry slightly more emphasis */
+.browse-hero h1 {
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+/* Club profile titles can stay prominent without using heavy bold */
+.club-profile__intro h1 {
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+/* Avoid browser-imposed boldness on form controls */
+select,
+input,
+textarea {
+  font-weight: 400;
+}
+
+/* Mobile Safari/Chrome can render system fonts heavier than expected */
+@supports (-webkit-touch-callout: none) {
+  body,
+  button,
+  input,
+  select,
+  textarea {
+    -webkit-font-smoothing: antialiased;
+  }
+}
+/* FONT WEIGHT FIXES END */
+
+/* CLUB CARD FEATURE TEXT SIZE FIX START */
+.club-features {
+  gap: 10px;
+}
+
+.club-features div {
+  min-height: 76px;
+  padding: 12px;
+}
+
+.club-features .feature-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.club-features span:not(.feature-icon) {
+  font-size: 0.92rem;
+  line-height: 1.25;
+  font-weight: 400;
+}
+
+.club-features strong {
+  margin-top: 3px;
+  font-size: 0.98rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+/* Slightly larger on wider screens where there is enough room */
+@media (min-width: 1100px) {
+  .club-features span:not(.feature-icon) {
+    font-size: 0.95rem;
+  }
+
+  .club-features strong {
+    font-size: 1rem;
+  }
+}
+/* CLUB CARD FEATURE TEXT SIZE FIX END */
+
+/* CLUB CARD FEATURE GRID FIX START */
+.club-card .club-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  margin-top: 18px;
+}
+
+.club-card .club-features div {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  row-gap: 2px;
+  align-items: start;
+  min-height: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.club-card .club-features .feature-icon {
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  width: 24px;
+  margin-top: 1px;
+  font-size: 1rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.club-card .club-features span:not(.feature-icon) {
+  grid-column: 2;
+  color: #344054;
+  font-size: 0.94rem;
+  line-height: 1.25;
+  font-weight: 400;
+}
+
+.club-card .club-features strong {
+  grid-column: 2;
+  margin-top: 0;
+  color: #006b2e;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+/* Keep profile pages roomier if they use the same feature component */
+.club-profile .club-features,
+.club-features--profile {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 720px) {
+  .club-card .club-features {
+    grid-template-columns: 1fr;
+  }
+}
+/* CLUB CARD FEATURE GRID FIX END */
+
+/* HEADER LOGO FIX START */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  flex: 0 0 auto;
+}
+
+.brand-logo img {
+  display: block;
+  max-width: 54px;
+  max-height: 54px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.brand-mark {
+  display: none;
+}
+
+.brand-text {
+  display: grid;
+  gap: 1px;
+  line-height: 1.1;
+}
+
+.brand-text strong {
+  color: var(--slssa-blue);
+  font-size: 1.02rem;
+  font-weight: 500;
+}
+
+.brand-text span {
+  color: #475467;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+@media (max-width: 720px) {
+  .brand-logo {
+    width: 46px;
+    height: 46px;
+  }
+
+  .brand-logo img {
+    max-width: 46px;
+    max-height: 46px;
+  }
+
+  .brand-text strong {
+    font-size: 0.95rem;
+  }
+
+  .brand-text span {
+    font-size: 0.82rem;
+  }
+}
+/* HEADER LOGO FIX END */
+
+/* HEADER LOGO ONLY FIX START */
+.site-header {
+  min-height: 88px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.brand.brand--logo-only {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 64px;
+  flex: 0 0 auto;
+}
+
+.brand-logo img {
+  display: block;
+  max-width: 96px;
+  max-height: 64px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.brand-text,
+.brand-mark {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .site-header {
+    min-height: 76px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .brand-logo {
+    width: 78px;
+    height: 52px;
+  }
+
+  .brand-logo img {
+    max-width: 78px;
+    max-height: 52px;
+  }
+}
+/* HEADER LOGO ONLY FIX END */
+
+/* LARGE HEADER LOGO OVERRIDE START */
+.site-header {
+  min-height: 150px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.brand-logo {
+  width: 240px;
+  height: 110px;
+}
+
+.brand-logo img {
+  max-width: 240px;
+  max-height: 110px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .site-header {
+    min-height: 104px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .brand-logo {
+    width: 160px;
+    height: 78px;
+  }
+
+  .brand-logo img {
+    max-width: 160px;
+    max-height: 78px;
+  }
+}
+/* LARGE HEADER LOGO OVERRIDE END */
+
+/* HEADER LOGO PADDING TIGHTEN START */
+.site-header {
+  min-height: 0;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  align-items: center;
+}
+
+.brand.brand--logo-only {
+  line-height: 0;
+}
+
+.brand-logo {
+  width: 260px;
+  height: auto;
+  line-height: 0;
+}
+
+.brand-logo img {
+  display: block;
+  width: 260px;
+  max-width: 260px;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .site-header {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .brand-logo,
+  .brand-logo img {
+    width: 170px;
+    max-width: 170px;
+  }
+}
+/* HEADER LOGO PADDING TIGHTEN END */
+
+/* HEADER NAV BUTTON FIX START */
+.site-nav button {
+  appearance: none;
+  border: 0;
+  font: inherit;
+}
+
+.site-nav .nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--slssa-blue);
+  color: #ffffff;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.site-nav .nav-cta:hover,
+.site-nav .nav-cta:focus {
+  background: #003f9e;
+  color: #ffffff;
+  outline: none;
+}
+
+.site-nav .nav-cta:focus-visible {
+  outline: 3px solid rgba(0, 70, 173, 0.22);
+  outline-offset: 3px;
+}
+/* HEADER NAV BUTTON FIX END */
+
+* FILTER SIDEBAR SCROLL FIX START */
+.browse-shell {
+  align-items: start;
+}
+
+.filter-panel {
+  position: static !important;
+  top: auto !important;
+  bottom: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overscroll-behavior: auto !important;
+}
+
+/* Remove inner scrolling if the stylesheet has applied it to filter groups */
+.filter-panel,
+.filter-panel *,
+.filter-group {
+  scrollbar-width: auto;
+}
+
+.filter-panel::-webkit-scrollbar,
+.filter-group::-webkit-scrollbar {
+  display: none;
+}
+/* FILTER SIDEBAR SCROLL FIX END */
+
+/* MEMBERSHIP PAGE FIX START */
+.membership-hero,
+.membership-section,
+.membership-hero *,
+.membership-section * {
+  box-sizing: border-box;
+}
+
+.membership-hero,
+.membership-section {
+  width: 100%;
+  max-width: var(--max-width, 1480px);
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 34px;
+  padding-left: 34px;
+}
+
+.membership-hero {
+  padding-top: 58px;
+  padding-bottom: 42px;
+}
+
+.membership-hero__content {
+  max-width: 900px;
+}
+
+.membership-hero h1 {
+  max-width: 980px;
+  margin: 0 0 18px;
+  color: var(--slssa-blue);
+  font-size: clamp(2.4rem, 5vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  font-weight: 500;
+}
+
+.membership-hero p {
+  max-width: 780px;
+  margin: 0;
+  color: #344054;
+  font-size: 1.16rem;
+  line-height: 1.6;
+}
+
+.membership-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.membership-section {
+  padding-top: 42px;
+  padding-bottom: 52px;
+}
+
+.section-heading {
+  max-width: 880px;
+  margin-bottom: 28px;
+}
+
+.section-heading h2 {
+  margin: 0 0 12px;
+  color: var(--slssa-blue);
+  font-size: clamp(1.9rem, 3vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #344054;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.option-grid,
+.volunteer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.option-card,
+.volunteer-card {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(21, 32, 51, 0.08);
+}
+
+.option-card__icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--slssa-blue-soft);
+  font-size: 1.45rem;
+}
+
+.option-card h3,
+.volunteer-card h3 {
+  margin: 0 0 10px;
+  color: var(--slssa-blue);
+  font-size: 1.22rem;
+  line-height: 1.22;
+  font-weight: 500;
+}
+
+.option-card p,
+.volunteer-card p {
+  margin: 0;
+  color: #344054;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.option-card ul {
+  display: grid;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding-left: 20px;
+  color: #344054;
+  font-size: 0.96rem;
+  line-height: 1.45;
+}
+
+.membership-section--blue {
+  max-width: none;
+  margin-top: 12px;
+  padding: 56px 0 64px;
+  background: linear-gradient(135deg, #f3f8ff 0%, #ffffff 72%);
+}
+
+.membership-section--blue .section-heading,
+.membership-section--blue .volunteer-grid {
+  width: 100%;
+  max-width: var(--max-width, 1480px);
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 34px;
+  padding-left: 34px;
+}
+
+.volunteer-card {
+  border-color: #d8e6f8;
+  box-shadow: none;
+}
+
+.pathway-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+  padding: 32px;
+  border-radius: 26px;
+  background: var(--slssa-blue);
+  color: #ffffff;
+}
+
+.pathway-panel .eyebrow {
+  color: #ffffff;
+  opacity: 0.86;
+}
+
+.pathway-panel h2 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+}
+
+.pathway-panel p {
+  max-width: 820px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.04rem;
+  line-height: 1.6;
+}
+
+.pathway-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.pathway-panel .button--outline {
+  border-color: rgba(255, 255, 255, 0.72);
+  color: #ffffff;
+}
+
+.pathway-panel .button--outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 1100px) {
+  .option-grid,
+  .volunteer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pathway-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .pathway-panel__actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 720px) {
+  .membership-hero,
+  .membership-section,
+  .membership-section--blue .section-heading,
+  .membership-section--blue .volunteer-grid {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .membership-hero {
+    padding-top: 38px;
+    padding-bottom: 30px;
+  }
+
+  .membership-section {
+    padding-top: 32px;
+    padding-bottom: 42px;
+  }
+
+  .membership-section--blue {
+    padding-top: 42px;
+    padding-bottom: 46px;
+  }
+
+  .option-grid,
+  .volunteer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .option-card,
+  .volunteer-card {
+    padding: 20px;
+  }
+
+  .pathway-panel {
+    padding: 24px;
+  }
+}
+/* MEMBERSHIP PAGE FIX END */
+
+/* INTERACTIVE CLUB HELPER START */
+.club-helper__panel {
+  width: min(480px, calc(100vw - 32px));
+}
+
+.club-helper__progress {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.club-helper__progress span {
+  height: 5px;
+  border-radius: 999px;
+  background: #d9e2ec;
+}
+
+.club-helper__progress span.is-active {
+  background: var(--slssa-blue);
+}
+
+.club-helper__question {
+  margin: 0 0 10px;
+  color: var(--slssa-blue);
+  font-size: 1.28rem;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.club-helper__options--cards {
+  gap: 10px;
+}
+
+.club-helper__options--cards button {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+}
+
+.club-helper__options button strong {
+  display: block;
+  color: var(--slssa-blue);
+  font-size: 0.98rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.club-helper__options button span {
+  display: block;
+  color: #475467;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+.club-helper__field {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0 12px;
+}
+
+.club-helper__field span {
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.club-helper__field input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #c5ceda;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.96rem;
+  font-weight: 400;
+}
+
+.club-helper__field input:focus {
+  outline: 2px solid rgba(0, 70, 173, 0.18);
+  border-color: var(--slssa-blue);
+}
+
+.club-helper__hint {
+  margin: 10px 0 0;
+  color: #667085;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.club-helper__hint[data-status-type="warning"] {
+  color: #b42318;
+}
+
+.club-helper__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.club-helper__actions--split {
+  justify-content: space-between;
+}
+
+.club-helper__text-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--slssa-blue);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.club-helper__result-header {
+  margin-bottom: 10px;
+}
+
+.club-helper__recommendations {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.club-helper__recommendation {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #d8e6f8;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.club-helper__recommendation h4 {
+  margin: 0;
+  color: var(--slssa-blue);
+  font-size: 1rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.club-helper__recommendation span {
+  display: inline-block;
+  margin-top: 3px;
+  color: #006b2e;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.club-helper__recommendation p {
+  margin: 6px 0 0;
+  color: #475467;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.club-helper__recommendation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.club-helper__recommendation-actions a,
+.club-helper__recommendation-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.club-helper__recommendation-actions a {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: var(--slssa-blue);
+}
+
+.club-helper__recommendation-actions button {
+  border: 1px solid var(--slssa-blue);
+  background: var(--slssa-blue);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .club-helper__panel {
+    width: min(420px, calc(100vw - 32px));
+  }
+}
+/* INTERACTIVE CLUB HELPER END */
