@@ -411,6 +411,26 @@ function useCurrentLocation() {
   );
 }
 
+function getLeadClubTitle(button) {
+  const card = button.closest("[data-club-card]");
+
+  if (card) {
+    const heading = card.querySelector("h3");
+
+    if (heading) {
+      return heading.textContent.trim();
+    }
+  }
+
+  const pageHeading = document.querySelector("h1");
+
+  if (pageHeading) {
+    return pageHeading.textContent.trim();
+  }
+
+  return "Selected surf life saving club";
+}
+
 document.addEventListener("change", function (event) {
   if (event.target.matches("[data-filter]")) {
     if (
@@ -443,7 +463,14 @@ document.addEventListener("click", function (event) {
 
   if (leadButton) {
     const clubSlug = leadButton.getAttribute("data-lead-club");
-    alert("The Send My Details form will be added next. Selected club: " + clubSlug);
+    const clubTitle = getLeadClubTitle(leadButton);
+
+    if (typeof window.openLeadForm === "function") {
+      window.openLeadForm({
+        clubSlug: clubSlug,
+        clubTitle: clubTitle
+      });
+    }
   }
 });
 

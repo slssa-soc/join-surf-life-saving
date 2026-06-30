@@ -1,0 +1,90 @@
+<div class="lead-modal" data-lead-modal hidden>
+  <div class="lead-modal__backdrop" data-lead-close></div>
+
+  <section
+    class="lead-modal__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lead-modal-title"
+  >
+    <div class="lead-modal__header">
+      <div>
+        <p class="eyebrow">Membership enquiry</p>
+        <h2 id="lead-modal-title">Send my details</h2>
+      </div>
+
+      <button class="lead-modal__close" type="button" aria-label="Close form" data-lead-close>
+        ×
+      </button>
+    </div>
+
+    <p class="lead-modal__intro">
+      Send your details to the selected surf life saving club so they can contact you about membership options.
+    </p>
+
+    <form class="lead-form" data-lead-form>
+      <input type="hidden" name="clubSlug" data-lead-club-slug>
+
+      <div class="lead-form__selected-club">
+        <span>Selected club</span>
+        <strong data-lead-club-name>Not selected</strong>
+      </div>
+
+      <div class="lead-form__grid">
+        <div class="field">
+          <label for="lead-name">Name</label>
+          <input id="lead-name" name="name" type="text" autocomplete="name" required>
+        </div>
+
+        <div class="field">
+          <label for="lead-email">Email address</label>
+          <input id="lead-email" name="email" type="email" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="lead-phone">Phone number <span>optional</span></label>
+          <input id="lead-phone" name="phone" type="tel" autocomplete="tel">
+        </div>
+
+        <div class="field">
+          <label for="lead-suburb">Suburb <span>optional</span></label>
+          <input id="lead-suburb" name="suburb" type="text" autocomplete="address-level2">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="lead-about">Something about yourself</label>
+        <textarea
+          id="lead-about"
+          name="about"
+          rows="5"
+          placeholder="For example: I am interested in joining with my children, I am new to surf lifesaving, or I would like to help with patrols."
+        ></textarea>
+      </div>
+
+      <div class="lead-form__summary" data-lead-filter-summary hidden>
+        <h3>Interests from your filters</h3>
+        <ul data-lead-filter-list></ul>
+      </div>
+
+      <label class="checkbox-field">
+        <input type="checkbox" name="consent" required>
+        <span>
+          I consent to Surf Life Saving SA sending my details to the selected surf life saving club so they can contact me about membership.
+        </span>
+      </label>
+
+      <div class="lead-form__actions">
+        <button class="button button-primary" type="submit">
+          Send my details
+        </button>
+
+        <button class="button button-secondary" type="button" data-lead-close>
+          Cancel
+        </button>
+      </div>
+
+      <div class="lead-form__message" data-lead-message hidden></div>
+    </form>
+  </section>
+</div>
