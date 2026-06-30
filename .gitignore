@@ -29,4 +29,22 @@ azure-functions/local.settings.json
 # OS/editor files
 .DS_Store
 Thumbs.db
+
+# Azurite local emulator files
+AzuriteConfig
+__azurite_db_*.json
+__blobstorage__/
+__queuestorage__/
+__tablestorage__/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
 .vscode/
+
+# Azurite local emulator files
+AzuriteConfig
+__azurite_db_*.json
+__blobstorage__/
+__queuestorage__/
+__tablestorage__/
