@@ -89,6 +89,15 @@ function getLabelTextForField(field) {
 function getSelectedFilterLabels() {
   const labels = [];
 
+  const originField = document.querySelector("input[data-filter='origin']");
+
+  if (originField && originField.value.trim()) {
+    labels.push({
+      name: "Location",
+      value: originField.value.trim()
+    });
+  }
+
   document.querySelectorAll("select[data-filter]").forEach(function (field) {
     if (!field.value) {
       return;

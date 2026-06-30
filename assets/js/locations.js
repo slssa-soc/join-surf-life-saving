@@ -1,4 +1,4 @@
-[
+window.SA_LOCATIONS = [
     {
         "suburb":  "Aberfoyle Park",
         "postcode":  "5159",
@@ -825,4 +825,4 @@
         "latitude":  -35.4572,
         "longitude":  138.3496
     }
-]
+];
