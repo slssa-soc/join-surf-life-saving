@@ -1,0 +1,28 @@
+title: Join Surf Life Saving SA
+description: Find the right Surf Life Saving club for you.
+url: "https://join.surflifesavingsa.com.au"
+baseurl: ""
+
+markdown: kramdown
+
+collections:
+  clubs:
+    output: true
+    permalink: /clubs/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: "clubs"
+    values:
+      layout: club
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+exclude:
+  - README.md
+  - Gemfile.lock
+  - node_modules
+  - azure-functions
