@@ -14,6 +14,10 @@ function splitDataList(value) {
 }
 
 function toNumber(value) {
+  if (value === null || value === undefined || String(value).trim() === "") {
+    return null;
+  }
+
   const number = Number(value);
   return Number.isFinite(number) ? number : null;
 }
@@ -35,8 +39,10 @@ function calculateDistanceKm(origin, destination) {
 
   const a =
     Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-    Math.cos(lat1) * Math.cos(lat2) *
-    Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+    Math.cos(lat1) *
+      Math.cos(lat2) *
+      Math.sin(deltaLon / 2) *
+      Math.sin(deltaLon / 2);
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
@@ -299,7 +305,9 @@ function updateLocationStatus(origin, filters) {
 
   if (origin) {
     setLocationStatus(
-      "Distances are being shown from " + origin.label + ". Select a maximum distance to filter results.",
+      "Distances are being shown from " +
+        origin.label +
+        ". Select a maximum distance to filter results.",
       "success"
     );
   }
@@ -329,9 +337,10 @@ function applyFilters() {
   }
 
   if (summaryElement) {
-    summaryElement.textContent = visibleCount === 1
-      ? "Showing 1 matching club."
-      : "Showing " + visibleCount + " matching clubs.";
+    summaryElement.textContent =
+      visibleCount === 1
+        ? "Showing 1 matching club."
+        : "Showing " + visibleCount + " matching clubs.";
   }
 
   if (emptyState) {
