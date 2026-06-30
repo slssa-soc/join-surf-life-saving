@@ -1,0 +1,39 @@
+- name: Adelaide CBD
+  slug: adelaide-cbd
+  latitude: -34.9285
+  longitude: 138.6007
+
+- name: Glenelg
+  slug: glenelg
+  latitude: -34.9801
+  longitude: 138.5118
+
+- name: Brighton
+  slug: brighton
+  latitude: -35.0184
+  longitude: 138.5157
+
+- name: Port Noarlunga
+  slug: port-noarlunga
+  latitude: -35.1495
+  longitude: 138.4699
+
+- name: Semaphore
+  slug: semaphore
+  latitude: -34.8397
+  longitude: 138.4820
+
+- name: Henley Beach
+  slug: henley-beach
+  latitude: -34.9204
+  longitude: 138.4946
+
+- name: Aldinga
+  slug: aldinga
+  latitude: -35.2698
+  longitude: 138.4830
+
+- name: Goolwa
+  slug: goolwa
+  latitude: -35.5018
+  longitude: 138.7810
