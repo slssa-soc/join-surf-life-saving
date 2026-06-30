@@ -33,6 +33,7 @@ facilities:
   - Gym facilities
 
 commitment:
+  level: Medium
   min_hours_per_month: 2
   typical_hours_per_month: 6
   notes: Flexible options are available for new members and families.
