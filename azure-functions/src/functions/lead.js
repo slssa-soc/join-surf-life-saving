@@ -1,4 +1,6 @@
 const { app } = require("@azure/functions");
+const { TableClient } = require("@azure/data-tables");
+const crypto = require("crypto");
 
 const REQUIRED_FIELDS = ["clubSlug", "name", "email", "consent"];
 
@@ -122,7 +124,87 @@ function validateLead(payload) {
   return errors;
 }
 
-function buildLeadSummary(payload, club) {
+function getStorageConnectionString() {
+  return process.env.AzureWebJobsStorage;
+}
+
+function getLeadTableName() {
+  return process.env.LEAD_TABLE_NAME || "LeadSubmissions";
+}
+
+function createRowKey() {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const random = crypto.randomUUID();
+
+  return `${timestamp}-${random}`;
+}
+
+function hashValue(value) {
+  return crypto
+    .createHash("sha256")
+    .update(String(value || "").toLowerCase().trim())
+    .digest("hex");
+}
+
+function safeJson(value) {
+  return JSON.stringify(value || []);
+}
+
+async function getLeadTableClient() {
+  const connectionString = getStorageConnectionString();
+
+  if (!connectionString) {
+    throw new Error("AzureWebJobsStorage is not configured.");
+  }
+
+  const tableClient = TableClient.fromConnectionString(
+    connectionString,
+    getLeadTableName()
+  );
+
+  try {
+    await tableClient.createTable();
+  } catch (error) {
+    if (error.statusCode !== 409) {
+      throw error;
+    }
+  }
+
+  return tableClient;
+}
+
+async function storeLeadSubmission(payload, club) {
+  const tableClient = await getLeadTableClient();
+  const submittedAt = payload.submittedAt || new Date().toISOString();
+
+  const entity = {
+    partitionKey: payload.clubSlug,
+    rowKey: createRowKey(),
+    clubSlug: payload.clubSlug,
+    clubName: club.name,
+    name: payload.name,
+    email: payload.email,
+    emailHash: hashValue(payload.email),
+    phone: payload.phone,
+    suburb: payload.suburb,
+    about: payload.about,
+    filtersJson: safeJson(payload.filters),
+    consent: payload.consent,
+    sourcePage: payload.sourcePage,
+    submittedAt,
+    createdAt: new Date().toISOString(),
+    leadApiMode: process.env.LEAD_API_MODE || "local"
+  };
+
+  await tableClient.createEntity(entity);
+
+  return {
+    partitionKey: entity.partitionKey,
+    rowKey: entity.rowKey
+  };
+}
+
+function buildLeadSummary(payload, club, storageResult) {
   const filterLines = payload.filters.length
     ? payload.filters.map((filter) => `- ${filter.name}: ${filter.value}`).join("\n")
     : "- No filters selected";
@@ -144,7 +226,9 @@ function buildLeadSummary(payload, club) {
     payload.about || "Not provided",
     ``,
     `Source page: ${payload.sourcePage || "Not provided"}`,
-    `Submitted at: ${payload.submittedAt || new Date().toISOString()}`
+    `Submitted at: ${payload.submittedAt || new Date().toISOString()}`,
+    ``,
+    `Stored lead record: ${storageResult.partitionKey}/${storageResult.rowKey}`
   ].join("\n");
 }
 
@@ -180,16 +264,28 @@ app.http("lead", {
     }
 
     const club = CLUB_RECIPIENTS[payload.clubSlug];
-    const leadSummary = buildLeadSummary(payload, club);
 
-    context.log("Lead enquiry received:");
-    context.log(leadSummary);
+    try {
+      const storageResult = await storeLeadSubmission(payload, club);
+      const leadSummary = buildLeadSummary(payload, club, storageResult);
 
-    return jsonResponse(request, 200, {
-      ok: true,
-      mode: process.env.LEAD_API_MODE || "local",
-      message: "Lead captured successfully.",
-      clubName: club.name
-    });
+      context.log("Lead enquiry received and stored:");
+      context.log(leadSummary);
+
+      return jsonResponse(request, 200, {
+        ok: true,
+        mode: process.env.LEAD_API_MODE || "local",
+        message: "Lead captured successfully.",
+        clubName: club.name,
+        leadId: storageResult.rowKey
+      });
+    } catch (error) {
+      context.error("Failed to store lead submission.", error);
+
+      return jsonResponse(request, 500, {
+        ok: false,
+        message: "The enquiry could not be stored. Please try again."
+      });
+    }
   }
 });
