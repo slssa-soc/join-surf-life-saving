@@ -1,7 +1,8 @@
 const LEAD_DETAILS_STORAGE_KEY = "joinSlssaLeadDetails";
-const LEAD_API_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
-  ? "http://localhost:7071/api/lead"
-  : "/api/lead";
+const LEAD_API_URL =
+  window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+    ? "http://localhost:7071/api/lead"
+    : "https://func-join-slssa-prod-d3hwbvgygng2cdeh.australiasoutheast-01.azurewebsites.net/api/lead";
 
 function getLeadModal() {
   return document.querySelector("[data-lead-modal]");
