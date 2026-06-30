@@ -10,7 +10,7 @@ permalink: /browse/
     <p class="eyebrow">Browse clubs</p>
     <h1>Find a club that suits you.</h1>
     <p class="lead">
-      Filter clubs by age group, interests, facilities, programs and the amount of time you may be able to commit.
+      Filter clubs by location, age group, interests, facilities, programs and the amount of time you may be able to commit.
     </p>
   </div>
 </section>
@@ -22,6 +22,44 @@ permalink: /browse/
         <h2>Filters</h2>
         <button class="text-button" type="button" data-clear-filters>Clear</button>
       </div>
+
+      <fieldset class="filter-group">
+        <legend>Location</legend>
+
+        <label for="filter-origin">Start from</label>
+        <select id="filter-origin" data-filter="origin">
+          <option value="">Any location</option>
+          <option value="current">Current location</option>
+          {% for location in site.data.locations %}
+            <option
+              value="{{ location.slug | escape }}"
+              data-latitude="{{ location.latitude }}"
+              data-longitude="{{ location.longitude }}"
+            >
+              {{ location.name }}
+            </option>
+          {% endfor %}
+        </select>
+
+        <button class="button button-secondary button-full" type="button" data-use-current-location>
+          Use my current location
+        </button>
+
+        <p class="location-status" data-location-status>
+          Select a location or use your current location to filter by distance.
+        </p>
+
+        <label for="filter-radius">Maximum distance</label>
+        <select id="filter-radius" data-filter="radius">
+          <option value="">Any distance</option>
+          <option value="5">Within 5 km</option>
+          <option value="10">Within 10 km</option>
+          <option value="15">Within 15 km</option>
+          <option value="25">Within 25 km</option>
+          <option value="50">Within 50 km</option>
+          <option value="100">Within 100 km</option>
+        </select>
+      </fieldset>
 
       <label for="filter-age">Age group</label>
       <select id="filter-age" data-filter="age">
@@ -56,7 +94,7 @@ permalink: /browse/
       </select>
 
       <p class="filter-help">
-        More filters, including distance from a suburb or current location, will be added after the core filtering is working.
+        Distance is calculated in a straight line from the selected starting location to each club.
       </p>
     </aside>
 
@@ -74,6 +112,8 @@ permalink: /browse/
             class="club-card"
             data-club-card
             data-title="{{ club.title | escape }}"
+            data-latitude="{{ club.latitude }}"
+            data-longitude="{{ club.longitude }}"
             data-age-groups="{{ club.age_groups | join: '|' | escape }}"
             data-interests="{{ club.interests | join: '|' | escape }}"
             data-facilities="{{ club.facilities | join: '|' | escape }}"
@@ -88,6 +128,7 @@ permalink: /browse/
                 <span>{{ club.suburb }}</span>
                 <span>{{ club.club_size }}</span>
                 <span>{{ club.commitment.level }} commitment</span>
+                <span data-distance-label hidden></span>
               </div>
 
               <h4>Age groups</h4>
@@ -115,7 +156,7 @@ permalink: /browse/
 
       <div class="empty-state" data-empty-state hidden>
         <h2>No clubs match those filters yet.</h2>
-        <p>Try removing one filter, or use broader options to see more clubs.</p>
+        <p>Try removing one filter, increasing the distance, or using broader options to see more clubs.</p>
         <button class="button button-secondary" type="button" data-clear-filters>Clear filters</button>
       </div>
     </div>
