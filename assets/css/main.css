@@ -348,3 +348,67 @@ h3 {
     position: static;
   }
 }
+.filter-panel__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: var(--colour-blue);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.filter-help {
+  color: var(--colour-muted);
+  font-size: 0.92rem;
+  margin: 20px 0 0;
+}
+
+.club-card__meta {
+  color: var(--colour-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.92rem;
+  gap: 8px 14px;
+  margin: 14px 0;
+}
+
+.club-card__meta span {
+  position: relative;
+}
+
+.club-card__meta span:not(:last-child)::after {
+  content: "•";
+  color: var(--colour-border);
+  margin-left: 14px;
+}
+
+.club-card h4 {
+  color: var(--colour-navy);
+  font-size: 0.92rem;
+  margin: 18px 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.empty-state {
+  background: var(--colour-surface);
+  border: 1px dashed var(--colour-border);
+  border-radius: var(--radius-lg);
+  margin-top: 18px;
+  padding: 32px;
+  text-align: center;
+}
+
+.empty-state[hidden],
+.club-card[hidden] {
+  display: none;
+}

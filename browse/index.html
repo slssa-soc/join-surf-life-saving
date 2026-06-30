@@ -10,7 +10,7 @@ permalink: /browse/
     <p class="eyebrow">Browse clubs</p>
     <h1>Find a club that suits you.</h1>
     <p class="lead">
-      This first version shows club cards from Markdown files. The next step will add working filters and the guided popup.
+      Filter clubs by age group, interests, facilities, programs and the amount of time you may be able to commit.
     </p>
   </div>
 </section>
@@ -18,42 +18,88 @@ permalink: /browse/
 <section class="section">
   <div class="container browse-layout">
     <aside class="filter-panel" id="club-finder">
-      <h2>Filters</h2>
+      <div class="filter-panel__heading">
+        <h2>Filters</h2>
+        <button class="text-button" type="button" data-clear-filters>Clear</button>
+      </div>
 
       <label for="filter-age">Age group</label>
-      <select id="filter-age" disabled>
-        <option>Coming next</option>
+      <select id="filter-age" data-filter="age">
+        <option value="">Any age group</option>
+        {% for item in site.data.taxonomy.age_groups %}
+          <option value="{{ item | escape }}">{{ item }}</option>
+        {% endfor %}
       </select>
 
       <label for="filter-interest">Interest</label>
-      <select id="filter-interest" disabled>
-        <option>Coming next</option>
+      <select id="filter-interest" data-filter="interest">
+        <option value="">Any interest</option>
+        {% for item in site.data.taxonomy.interests %}
+          <option value="{{ item | escape }}">{{ item }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="filter-facility">Facilities and programs</label>
+      <select id="filter-facility" data-filter="facility">
+        <option value="">Any facility or program</option>
+        {% for item in site.data.taxonomy.facilities %}
+          <option value="{{ item | escape }}">{{ item }}</option>
+        {% endfor %}
       </select>
 
       <label for="filter-commitment">Commitment</label>
-      <select id="filter-commitment" disabled>
-        <option>Coming next</option>
+      <select id="filter-commitment" data-filter="commitment">
+        <option value="">Any commitment level</option>
+        {% for item in site.data.taxonomy.commitment %}
+          <option value="{{ item | escape }}">{{ item }}</option>
+        {% endfor %}
       </select>
+
+      <p class="filter-help">
+        More filters, including distance from a suburb or current location, will be added after the core filtering is working.
+      </p>
     </aside>
 
     <div class="club-results">
       <div class="results-heading">
-        <h2>{{ site.clubs | size }} clubs</h2>
-        <p>Showing available club profiles.</p>
+        <h2><span data-results-count>{{ site.clubs | size }}</span> clubs</h2>
+        <p data-results-summary>Showing available club profiles.</p>
       </div>
 
-      <div class="club-card-grid">
+      <div class="club-card-grid" data-club-results>
         {% assign clubs = site.clubs | sort: 'title' %}
 
         {% for club in clubs %}
-          <article class="club-card">
+          <article
+            class="club-card"
+            data-club-card
+            data-title="{{ club.title | escape }}"
+            data-age-groups="{{ club.age_groups | join: '|' | escape }}"
+            data-interests="{{ club.interests | join: '|' | escape }}"
+            data-facilities="{{ club.facilities | join: '|' | escape }}"
+            data-commitment="{{ club.commitment.level | escape }}"
+          >
             <div class="club-card__content">
               <p class="club-card__region">{{ club.region }}</p>
               <h3>{{ club.title }}</h3>
               <p>{{ club.summary }}</p>
 
+              <div class="club-card__meta">
+                <span>{{ club.suburb }}</span>
+                <span>{{ club.club_size }}</span>
+                <span>{{ club.commitment.level }} commitment</span>
+              </div>
+
+              <h4>Age groups</h4>
               <ul class="tag-list">
-                {% for item in club.age_groups limit: 3 %}
+                {% for item in club.age_groups %}
+                  <li>{{ item }}</li>
+                {% endfor %}
+              </ul>
+
+              <h4>Interests</h4>
+              <ul class="tag-list">
+                {% for item in club.interests limit: 5 %}
                   <li>{{ item }}</li>
                 {% endfor %}
               </ul>
@@ -65,6 +111,12 @@ permalink: /browse/
             </div>
           </article>
         {% endfor %}
+      </div>
+
+      <div class="empty-state" data-empty-state hidden>
+        <h2>No clubs match those filters yet.</h2>
+        <p>Try removing one filter, or use broader options to see more clubs.</p>
+        <button class="button button-secondary" type="button" data-clear-filters>Clear filters</button>
       </div>
     </div>
   </div>
