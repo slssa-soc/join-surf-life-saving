@@ -242,9 +242,7 @@ main {
 
 .site-nav button {
   appearance: none;
-
   border: 0;
-
   font: inherit;
 }
 
@@ -395,12 +393,21 @@ main {
 /* -------------------------------------------------------------------------- */
 
 .browse-hero__helper {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 7px;
+  justify-content: space-between;
+  gap: 18px;
+
+  width: fit-content;
+  max-width: 100%;
 
   margin-top: 18px;
+}
+
+.browse-hero__helper-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
   color: #475467;
 
@@ -410,8 +417,10 @@ main {
 .browse-hero__helper-icon {
   display: inline-grid;
 
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
+
+  flex: 0 0 26px;
 
   place-items: center;
 
@@ -428,32 +437,41 @@ main {
   color: #475467;
 }
 
-.browse-hero__helper-link {
-  padding: 0;
+.browse-hero__helper-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  border: 0;
+  min-height: 40px;
 
-  background: transparent;
-  color: var(--slssa-blue);
+  padding: 9px 15px;
+
+  border: 1px solid var(--slssa-blue);
+  border-radius: 999px;
+
+  background: var(--slssa-blue);
+  color: #ffffff;
 
   cursor: pointer;
 
   font: inherit;
+  font-size: 0.9rem;
   font-weight: 500;
 
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  white-space: nowrap;
+
+  transition: none;
 }
 
-.browse-hero__helper-link:hover {
-  color: var(--slssa-blue-dark);
+.browse-hero__helper-button:hover {
+  border-color: var(--slssa-blue-dark);
+
+  background: var(--slssa-blue-dark);
+  color: #ffffff;
 }
 
-.browse-hero__helper-link:focus-visible {
-  border-radius: 4px;
-
-  outline: 3px solid rgba(0, 70, 173, 0.16);
+.browse-hero__helper-button:focus-visible {
+  outline: 3px solid rgba(0, 70, 173, 0.2);
   outline-offset: 3px;
 }
 
@@ -1219,10 +1237,7 @@ main {
 
   text-align: left;
 
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease,
-    transform 0.15s ease;
+  transition: none;
 }
 
 .club-helper__options button:hover,
@@ -1232,10 +1247,6 @@ main {
   background: var(--slssa-blue-soft);
 
   outline: none;
-}
-
-.club-helper__options button:hover {
-  transform: translateY(-1px);
 }
 
 .club-helper__options button strong {
@@ -2078,9 +2089,21 @@ main {
   }
 
   .browse-hero__helper {
-    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+
+    width: 100%;
 
     margin-top: 16px;
+  }
+
+  .browse-hero__helper-copy {
+    width: 100%;
+  }
+
+  .browse-hero__helper-button {
+    width: 100%;
   }
 
   .results-toolbar {
@@ -2128,7 +2151,6 @@ main {
     margin-bottom: 2px;
   }
 
-  /* Guided club finder remains a centred modal on mobile */
   .club-helper-modal {
     padding: 16px;
   }
