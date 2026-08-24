@@ -158,6 +158,9 @@ permalink: /
         {% assign badge_type = club.badge_type | default: "blue" %}
         {% assign club_image = club.image | default: "/assets/img/club-placeholder.jpg" %}
 
+        {% assign generic_badges = "family friendly|community club|surf life saving club|nippers|lifesaving and patrolling|surf sports" | split: "|" %}
+        {% assign badge_label_normalised = club.badge_label | downcase | strip %}
+
         <article
           class="club-card"
           data-club-card
@@ -173,9 +176,11 @@ permalink: /
             <img src="{{ club_image | relative_url }}" alt="{{ club.title }}">
 
             {% if club.badge_label %}
-              <span class="club-badge club-badge--{{ badge_type }}">
-                {{ club.badge_label }}
-              </span>
+              {% unless generic_badges contains badge_label_normalised %}
+                <span class="club-badge club-badge--{{ badge_type }}">
+                  {{ club.badge_label }}
+                </span>
+              {% endunless %}
             {% endif %}
           </a>
 
@@ -234,37 +239,14 @@ permalink: /
               {% endif %}
             </div>
 
-            <div class="club-features">
-              <div>
-                <span class="feature-icon">👨‍👩‍👧</span>
-                <span>Family friendly</span>
-                <strong>{{ club.family_friendly | default: "Ask club" }}</strong>
+            {% if club.best_for %}
+              <div class="club-fit">
+                <p class="club-fit__label">May suit</p>
+                <p class="club-fit__text">
+                  {{ club.best_for | first }}
+                </p>
               </div>
-
-              <div>
-                <span class="feature-icon">♿</span>
-                <span>Adaptive / inclusive</span>
-                <strong>{{ club.adaptive_program | default: "Ask club" }}</strong>
-              </div>
-
-              <div>
-                <span class="feature-icon">⚙</span>
-                <span>Gym / facilities</span>
-                <strong>{{ club.gym_facilities | default: "Ask club" }}</strong>
-              </div>
-
-              <div>
-                <span class="feature-icon">💳</span>
-                <span>Fees</span>
-                <strong>
-                  {% if club.membership_fee_source %}
-                    Fee info found
-                  {% else %}
-                    Ask club
-                  {% endif %}
-                </strong>
-              </div>
-            </div>
+            {% endif %}
           </div>
 
           <div class="club-card__actions">
@@ -279,12 +261,6 @@ permalink: /
             <a class="button button--outline" href="{{ club.url | relative_url }}">
               View profile
             </a>
-
-            {% if club.best_for %}
-              <p class="club-recommendation">
-                Best for: {{ club.best_for | first }}
-              </p>
-            {% endif %}
           </div>
         </article>
       {% endfor %}
@@ -390,6 +366,7 @@ permalink: /
         <button class="button button--outline" type="button" data-lead-close>
           Cancel
         </button>
+
         <button class="button button--primary" type="submit">
           Send my details
         </button>
