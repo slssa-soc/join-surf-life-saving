@@ -4,20 +4,11 @@ title: Browse Surf Life Saving SA clubs
 permalink: /
 ---
 
-<section class="browse-hero">
-  <div class="browse-hero__content">
-    <p class="eyebrow">Join Surf Life Saving SA</p>
-    <h1>Find the right club for you</h1>
-    <p>
-      There is a role in Surf Life Saving for everyone. Find the club and membership option that feels like the right fit for you.
-    </p>
-  </div>
-</section>
-
 <section class="browse-shell" id="clubs">
   <aside class="filter-panel" aria-label="Club filters">
     <div class="filter-panel__header">
       <h2>Filter clubs</h2>
+
       <button class="filter-reset" type="button" data-clear-filters>
         Clear
       </button>
@@ -29,7 +20,9 @@ permalink: /
         <h3>Location</h3>
       </div>
 
-      <label class="filter-label" for="filter-origin">Suburb or area</label>
+      <label class="filter-label" for="filter-origin">
+        Suburb or area
+      </label>
 
       <input
         id="filter-origin"
@@ -44,7 +37,10 @@ permalink: /
 
       <datalist id="sa-location-options"></datalist>
 
-      <label class="filter-label" for="filter-radius">Maximum distance</label>
+      <label class="filter-label" for="filter-radius">
+        Maximum distance
+      </label>
+
       <select id="filter-radius" data-filter="radius">
         <option value="">Any distance</option>
         <option value="10">Within 10 km</option>
@@ -55,7 +51,11 @@ permalink: /
         <option value="500">Within 500 km</option>
       </select>
 
-      <button class="location-button" type="button" data-use-current-location>
+      <button
+        class="location-button"
+        type="button"
+        data-use-current-location
+      >
         Use current location
       </button>
 
@@ -71,7 +71,13 @@ permalink: /
       </div>
 
       <label class="check-row">
-        <input type="checkbox" name="age" value="" data-filter-check checked>
+        <input
+          type="checkbox"
+          name="age"
+          value=""
+          data-filter-check
+          checked
+        >
         <span>All ages</span>
       </label>
 
@@ -81,7 +87,12 @@ permalink: /
 
         {% if age_id and age_label %}
           <label class="check-row">
-            <input type="checkbox" name="age" value="{{ age_id }}" data-filter-check>
+            <input
+              type="checkbox"
+              name="age"
+              value="{{ age_id }}"
+              data-filter-check
+            >
             <span>{{ age_label }}</span>
           </label>
         {% endif %}
@@ -100,7 +111,12 @@ permalink: /
 
         {% if interest_id and interest_label %}
           <label class="check-row">
-            <input type="checkbox" name="interest" value="{{ interest_id }}" data-filter-check>
+            <input
+              type="checkbox"
+              name="interest"
+              value="{{ interest_id }}"
+              data-filter-check
+            >
             <span>{{ interest_label }}</span>
           </label>
         {% endif %}
@@ -119,7 +135,12 @@ permalink: /
 
         {% if facility_id and facility_label %}
           <label class="check-row">
-            <input type="checkbox" name="facility" value="{{ facility_id }}" data-filter-check>
+            <input
+              type="checkbox"
+              name="facility"
+              value="{{ facility_id }}"
+              data-filter-check
+            >
             <span>{{ facility_label }}</span>
           </label>
         {% endif %}
@@ -133,13 +154,17 @@ permalink: /
         <p class="results-count">
           <strong data-results-count>{{ site.clubs | size }}</strong> clubs
         </p>
+
         <p class="results-summary" data-results-summary>
           Showing all Surf Life Saving SA clubs.
         </p>
       </div>
 
       <div class="results-actions">
-        <label for="sort-clubs">Sort by</label>
+        <label for="sort-clubs">
+          Sort by
+        </label>
+
         <select id="sort-clubs" data-sort-clubs>
           <option value="name-asc">Club name</option>
           <option value="distance">Distance</option>
@@ -172,8 +197,15 @@ permalink: /
           data-latitude="{{ club.latitude }}"
           data-longitude="{{ club.longitude }}"
         >
-          <a class="club-card__image" href="{{ club.url | relative_url }}" aria-label="View {{ club.title }}">
-            <img src="{{ club_image | relative_url }}" alt="{{ club.title }}">
+          <a
+            class="club-card__image"
+            href="{{ club.url | relative_url }}"
+            aria-label="View {{ club.title }}"
+          >
+            <img
+              src="{{ club_image | relative_url }}"
+              alt="{{ club.title }}"
+            >
 
             {% if club.badge_label %}
               {% unless generic_badges contains badge_label_normalised %}
@@ -191,9 +223,11 @@ permalink: /
               </a>
             </h2>
 
-            <p class="club-card__summary">
-              {{ club.summary }}
-            </p>
+            {% if club.summary %}
+              <p class="club-card__summary">
+                {{ club.summary }}
+              </p>
+            {% endif %}
 
             <div class="club-meta">
               {% if club.suburb %}
@@ -208,18 +242,23 @@ permalink: /
                 <span>{{ club.member_size }}</span>
               {% endif %}
 
-              <span data-location-fallback>Distance available after location is entered</span>
+              <span data-location-fallback>
+                Distance available after location is entered
+              </span>
+
               <span data-distance-label hidden></span>
             </div>
 
-            <div class="tag-list">
-              {% if club.verified_programs %}
+            {% if club.verified_programs %}
+              <div class="tag-list">
                 {% for program in club.verified_programs limit: 6 %}
                   {% if program %}
                     <span>{{ program }}</span>
                   {% endif %}
                 {% endfor %}
-              {% else %}
+              </div>
+            {% elsif club.interests %}
+              <div class="tag-list">
                 {% for interest_id in club.interests limit: 6 %}
                   {% assign interest_label = interest_id %}
 
@@ -236,29 +275,30 @@ permalink: /
                     <span>{{ interest_label }}</span>
                   {% endif %}
                 {% endfor %}
-              {% endif %}
-            </div>
-
-            {% if club.best_for %}
-              <div class="club-fit">
-                <p class="club-fit__label">May suit</p>
-                <p class="club-fit__text">
-                  {{ club.best_for | first }}
-                </p>
               </div>
             {% endif %}
           </div>
 
           <div class="club-card__actions">
-            <p class="club-card__distance" data-card-distance>
+            <p
+              class="club-card__distance"
+              data-card-distance
+            >
               Distance unavailable
             </p>
 
-            <button class="button button--primary" type="button" data-lead-club="{{ club_slug }}">
+            <button
+              class="button button--primary"
+              type="button"
+              data-lead-club="{{ club_slug }}"
+            >
               Send my details
             </button>
 
-            <a class="button button--outline" href="{{ club.url | relative_url }}">
+            <a
+              class="button button--outline"
+              href="{{ club.url | relative_url }}"
+            >
               View profile
             </a>
           </div>
@@ -266,8 +306,13 @@ permalink: /
       {% endfor %}
     </div>
 
-    <div class="empty-state" data-empty-state hidden>
+    <div
+      class="empty-state"
+      data-empty-state
+      hidden
+    >
       <h2>No clubs match those filters</h2>
+
       <p>
         Try clearing one or more filters, increasing the distance, or using the helper in the bottom-right corner.
       </p>
@@ -284,90 +329,172 @@ permalink: /
 </script>
 
 <div class="club-helper" data-club-helper>
-  <button class="club-helper__toggle" type="button" data-helper-toggle>
+  <button
+    class="club-helper__toggle"
+    type="button"
+    data-helper-toggle
+  >
     <span>Need help choosing?</span>
   </button>
 
-  <section class="club-helper__panel" data-helper-panel hidden aria-label="Club finder helper">
+  <section
+    class="club-helper__panel"
+    data-helper-panel
+    hidden
+    aria-label="Club finder helper"
+  >
     <div class="club-helper__header">
       <div>
         <p class="eyebrow">Club finder helper</p>
         <h2>Find the right fit</h2>
       </div>
 
-      <button type="button" class="club-helper__close" data-helper-close aria-label="Close helper">
+      <button
+        type="button"
+        class="club-helper__close"
+        data-helper-close
+        aria-label="Close helper"
+      >
         ×
       </button>
     </div>
 
-    <div class="club-helper__content" data-helper-content></div>
+    <div
+      class="club-helper__content"
+      data-helper-content
+    ></div>
   </section>
 </div>
 
 <div class="lead-modal" data-lead-modal hidden>
-  <div class="lead-modal__backdrop" data-lead-close></div>
+  <div
+    class="lead-modal__backdrop"
+    data-lead-close
+  ></div>
 
-  <div class="lead-modal__panel" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
-    <button class="lead-modal__close" type="button" data-lead-close aria-label="Close">
+  <div
+    class="lead-modal__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lead-modal-title"
+  >
+    <button
+      class="lead-modal__close"
+      type="button"
+      data-lead-close
+      aria-label="Close"
+    >
       ×
     </button>
 
     <div class="lead-modal__header">
       <p class="eyebrow">Send your details</p>
-      <h2 id="lead-modal-title">Connect with <span data-lead-club-name>this club</span></h2>
+
+      <h2 id="lead-modal-title">
+        Connect with
+        <span data-lead-club-name>this club</span>
+      </h2>
+
       <p>
         We will capture your details and help connect you with the selected club.
       </p>
     </div>
 
     <form class="lead-form" data-lead-form>
-      <input type="hidden" name="clubSlug" data-lead-club-slug>
+      <input
+        type="hidden"
+        name="clubSlug"
+        data-lead-club-slug
+      >
 
       <div class="form-grid">
         <label>
           <span>Name</span>
-          <input type="text" name="name" autocomplete="name" required>
+          <input
+            type="text"
+            name="name"
+            autocomplete="name"
+            required
+          >
         </label>
 
         <label>
           <span>Email</span>
-          <input type="email" name="email" autocomplete="email" required>
+          <input
+            type="email"
+            name="email"
+            autocomplete="email"
+            required
+          >
         </label>
 
         <label>
           <span>Phone</span>
-          <input type="tel" name="phone" autocomplete="tel">
+          <input
+            type="tel"
+            name="phone"
+            autocomplete="tel"
+          >
         </label>
 
         <label>
           <span>Suburb</span>
-          <input type="text" name="suburb" autocomplete="address-level2">
+          <input
+            type="text"
+            name="suburb"
+            autocomplete="address-level2"
+          >
         </label>
       </div>
 
       <label>
         <span>What are you interested in?</span>
-        <textarea name="about" rows="4"></textarea>
+        <textarea
+          name="about"
+          rows="4"
+        ></textarea>
       </label>
 
-      <div class="lead-filter-summary" data-lead-filter-summary hidden>
+      <div
+        class="lead-filter-summary"
+        data-lead-filter-summary
+        hidden
+      >
         <h3>Your selected filters</h3>
         <ul data-lead-filter-list></ul>
       </div>
 
       <label class="consent-row">
-        <input type="checkbox" name="consent" required>
-        <span>I agree for my details to be captured and used to respond to this enquiry.</span>
+        <input
+          type="checkbox"
+          name="consent"
+          required
+        >
+
+        <span>
+          I agree for my details to be captured and used to respond to this enquiry.
+        </span>
       </label>
 
-      <p class="lead-message" data-lead-message hidden></p>
+      <p
+        class="lead-message"
+        data-lead-message
+        hidden
+      ></p>
 
       <div class="lead-form__actions">
-        <button class="button button--outline" type="button" data-lead-close>
+        <button
+          class="button button--outline"
+          type="button"
+          data-lead-close
+        >
           Cancel
         </button>
 
-        <button class="button button--primary" type="submit">
+        <button
+          class="button button--primary"
+          type="submit"
+        >
           Send my details
         </button>
       </div>
