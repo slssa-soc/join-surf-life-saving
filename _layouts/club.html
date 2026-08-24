@@ -1,380 +1,188 @@
 ---
 layout: default
-title: Browse Surf Life Saving SA clubs
-permalink: /
 ---
 
-<section class="browse-hero">
-  <div class="browse-hero__content">
-    <p class="eyebrow">Join Surf Life Saving SA</p>
-    <h1>Find the right club for you</h1>
-    <p>
-      There is a role in Surf Life Saving for everyone. Find the club and membership option that feels like the right fit for you.
-    </p>
-  </div>
-</section>
+{% assign club_slug = page.slug | default: page.title | slugify %}
+{% assign club_image = page.image | default: "/assets/img/club-placeholder.jpg" %}
 
-<section class="browse-shell" id="clubs">
-  <aside class="filter-panel" aria-label="Club filters">
-    <div class="filter-panel__header">
-      <h2>Filter clubs</h2>
-
-      <button class="filter-reset" type="button" data-clear-filters>
-        Clear
-      </button>
+<section class="club-profile">
+  <div class="club-profile__hero">
+    <div class="club-profile__image">
+      <img
+        src="{{ club_image | relative_url }}"
+        alt="{{ page.title }}"
+      >
     </div>
 
-    <section class="filter-group">
-      <div class="filter-group__title">
-        <span aria-hidden="true">📍</span>
-        <h3>Location</h3>
-      </div>
+    <div class="club-profile__intro">
+      <p class="eyebrow">Club profile</p>
 
-      <label class="filter-label" for="filter-origin">
-        Suburb or area
-      </label>
+      <h1>{{ page.title }}</h1>
 
-      <input
-        id="filter-origin"
-        class="location-search"
-        type="text"
-        data-filter="origin"
-        data-location-field
-        data-location-list-id="sa-location-options"
-        placeholder="Start typing a suburb or town"
-        autocomplete="off"
-      >
-
-      <datalist id="sa-location-options"></datalist>
-
-      <label class="filter-label" for="filter-radius">
-        Maximum distance
-      </label>
-
-      <select id="filter-radius" data-filter="radius">
-        <option value="">Any distance</option>
-        <option value="10">Within 10 km</option>
-        <option value="25">Within 25 km</option>
-        <option value="50">Within 50 km</option>
-        <option value="100">Within 100 km</option>
-        <option value="250">Within 250 km</option>
-        <option value="500">Within 500 km</option>
-      </select>
-
-      <button
-        class="location-button"
-        type="button"
-        data-use-current-location
-      >
-        Use current location
-      </button>
-
-      <p class="location-status" data-location-status>
-        Type at least 4 characters to search by suburb or town, or use your current location.
-      </p>
-    </section>
-
-    <section class="filter-group">
-      <div class="filter-group__title">
-        <span aria-hidden="true">👥</span>
-        <h3>Who is joining?</h3>
-      </div>
-
-      <label class="check-row">
-        <input
-          type="checkbox"
-          name="age"
-          value=""
-          data-filter-check
-          checked
-        >
-        <span>All ages</span>
-      </label>
-
-      {% for age in site.data.taxonomy.age_groups %}
-        {% assign age_id = age.id | default: age.value | default: age %}
-        {% assign age_label = age.label | default: age.name | default: age.title | default: age_id %}
-
-        {% if age_id and age_label %}
-          <label class="check-row">
-            <input
-              type="checkbox"
-              name="age"
-              value="{{ age_id }}"
-              data-filter-check
-            >
-            <span>{{ age_label }}</span>
-          </label>
-        {% endif %}
-      {% endfor %}
-    </section>
-
-    <section class="filter-group">
-      <div class="filter-group__title">
-        <span aria-hidden="true">⭐</span>
-        <h3>Interests</h3>
-      </div>
-
-      {% for interest in site.data.taxonomy.interests %}
-        {% assign interest_id = interest.id | default: interest.value | default: interest %}
-        {% assign interest_label = interest.label | default: interest.name | default: interest.title | default: interest_id %}
-
-        {% if interest_id and interest_label %}
-          <label class="check-row">
-            <input
-              type="checkbox"
-              name="interest"
-              value="{{ interest_id }}"
-              data-filter-check
-            >
-            <span>{{ interest_label }}</span>
-          </label>
-        {% endif %}
-      {% endfor %}
-    </section>
-
-    <section class="filter-group">
-      <div class="filter-group__title">
-        <span aria-hidden="true">🏠</span>
-        <h3>Facilities and programs</h3>
-      </div>
-
-      {% for facility in site.data.taxonomy.facilities %}
-        {% assign facility_id = facility.id | default: facility.value | default: facility %}
-        {% assign facility_label = facility.label | default: facility.name | default: facility.title | default: facility_id %}
-
-        {% if facility_id and facility_label %}
-          <label class="check-row">
-            <input
-              type="checkbox"
-              name="facility"
-              value="{{ facility_id }}"
-              data-filter-check
-            >
-            <span>{{ facility_label }}</span>
-          </label>
-        {% endif %}
-      {% endfor %}
-    </section>
-  </aside>
-
-  <div class="browse-results">
-    <div class="results-toolbar">
-      <div>
-        <p class="results-count">
-          <strong data-results-count>{{ site.clubs | size }}</strong> clubs
+      {% if page.summary %}
+        <p class="club-profile__summary">
+          {{ page.summary }}
         </p>
+      {% endif %}
 
-        <p class="results-summary" data-results-summary>
-          Showing all Surf Life Saving SA clubs.
-        </p>
+      <div class="club-profile__meta">
+        {% if page.suburb %}
+          <span>📍 {{ page.suburb }}</span>
+        {% elsif page.address %}
+          <span>📍 {{ page.address }}</span>
+        {% endif %}
+
+        {% if page.region %}
+          <span>{{ page.region }}</span>
+        {% endif %}
+
+        {% if page.member_size %}
+          <span>👥 {{ page.member_size }}</span>
+        {% endif %}
       </div>
 
-      <div class="results-actions">
-        <label for="sort-clubs">
-          Sort by
-        </label>
-
-        <select id="sort-clubs" data-sort-clubs>
-          <option value="name-asc">Club name</option>
-          <option value="distance">Distance</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="club-list" data-club-list>
-      {% assign clubs = site.clubs | sort: "title" %}
-
-      {% for club in clubs %}
-        {% assign club_slug = club.slug | default: club.title | slugify %}
-        {% assign age_groups = club.age_groups | join: "|" %}
-        {% assign interests = club.interests | join: "|" %}
-        {% assign facilities = club.facilities | join: "|" %}
-        {% assign badge_type = club.badge_type | default: "blue" %}
-        {% assign club_image = club.image | default: "/assets/img/club-placeholder.jpg" %}
-
-        {% assign generic_badges = "family friendly|community club|surf life saving club|nippers|lifesaving and patrolling|surf sports" | split: "|" %}
-        {% assign badge_label_normalised = club.badge_label | downcase | strip %}
-
-        <article
-          class="club-card"
-          data-club-card
-          data-title="{{ club.title | escape }}"
-          data-members="{{ club.member_count | default: 0 }}"
-          data-age-groups="{{ age_groups | escape }}"
-          data-interests="{{ interests | escape }}"
-          data-facilities="{{ facilities | escape }}"
-          data-latitude="{{ club.latitude }}"
-          data-longitude="{{ club.longitude }}"
+      <div class="club-profile__actions">
+        <button
+          class="button button--primary"
+          type="button"
+          data-lead-club="{{ club_slug }}"
         >
+          Send my details
+        </button>
+
+        {% if page.website %}
           <a
-            class="club-card__image"
-            href="{{ club.url | relative_url }}"
-            aria-label="View {{ club.title }}"
+            class="button button--outline"
+            href="{{ page.website }}"
+            target="_blank"
+            rel="noopener"
           >
-            <img
-              src="{{ club_image | relative_url }}"
-              alt="{{ club.title }}"
-            >
-
-            {% if club.badge_label %}
-              {% unless generic_badges contains badge_label_normalised %}
-                <span class="club-badge club-badge--{{ badge_type }}">
-                  {{ club.badge_label }}
-                </span>
-              {% endunless %}
-            {% endif %}
+            Visit club website
           </a>
+        {% endif %}
 
-          <div class="club-card__body">
-            <h2>
-              <a href="{{ club.url | relative_url }}">
-                {{ club.title }}
-              </a>
-            </h2>
-
-            {% if club.summary %}
-              <p class="club-card__summary">
-                {{ club.summary }}
-              </p>
-            {% endif %}
-
-            <div class="club-meta">
-              {% if club.suburb %}
-                <span>{{ club.suburb }}</span>
-              {% endif %}
-
-              {% if club.region %}
-                <span>{{ club.region }}</span>
-              {% endif %}
-
-              {% if club.member_size %}
-                <span>{{ club.member_size }}</span>
-              {% endif %}
-
-              <span data-location-fallback>
-                Distance available after location is entered
-              </span>
-
-              <span data-distance-label hidden></span>
-            </div>
-
-            {% if club.verified_programs %}
-              <div class="tag-list">
-                {% for program in club.verified_programs limit: 6 %}
-                  {% if program %}
-                    <span>{{ program }}</span>
-                  {% endif %}
-                {% endfor %}
-              </div>
-            {% elsif club.interests %}
-              <div class="tag-list">
-                {% for interest_id in club.interests limit: 6 %}
-                  {% assign interest_label = interest_id %}
-
-                  {% for interest in site.data.taxonomy.interests %}
-                    {% assign taxonomy_interest_id = interest.id | default: interest.value | default: interest %}
-                    {% assign taxonomy_interest_label = interest.label | default: interest.name | default: interest.title | default: taxonomy_interest_id %}
-
-                    {% if taxonomy_interest_id == interest_id %}
-                      {% assign interest_label = taxonomy_interest_label %}
-                    {% endif %}
-                  {% endfor %}
-
-                  {% if interest_label %}
-                    <span>{{ interest_label }}</span>
-                  {% endif %}
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
-
-          <div class="club-card__actions">
-            <p
-              class="club-card__distance"
-              data-card-distance
-            >
-              Distance unavailable
-            </p>
-
-            <button
-              class="button button--primary"
-              type="button"
-              data-lead-club="{{ club_slug }}"
-            >
-              Send my details
-            </button>
-
-            <a
-              class="button button--outline"
-              href="{{ club.url | relative_url }}"
-            >
-              View profile
-            </a>
-          </div>
-        </article>
-      {% endfor %}
+        <a
+          class="button button--outline"
+          href="{{ '/' | relative_url }}"
+        >
+          Back to club browse
+        </a>
+      </div>
     </div>
-
-    <div
-      class="empty-state"
-      data-empty-state
-      hidden
-    >
-      <h2>No clubs match those filters</h2>
-
-      <p>
-        Try clearing one or more filters, increasing the distance, or using the helper in the bottom-right corner.
-      </p>
-    </div>
-
-    <p class="distance-note">
-      Distances are approximate and are calculated from suburb or area centre points.
-    </p>
   </div>
-</section>
 
-<script type="application/json" id="sa-locations-data">
-  {{ site.data.locations | jsonify }}
-</script>
+  <div class="club-profile__content">
+    <section class="club-profile__section">
+      <div class="prose">
+        {{ content }}
+      </div>
+    </section>
 
-<div class="club-helper" data-club-helper>
-  <button
-    class="club-helper__toggle"
-    type="button"
-    data-helper-toggle
-  >
-    <span>Need help choosing?</span>
-  </button>
+    <aside class="club-profile__panel">
+      <h2>At a glance</h2>
 
-  <section
-    class="club-helper__panel"
-    data-helper-panel
-    hidden
-    aria-label="Club finder helper"
-  >
-    <div class="club-helper__header">
-      <div>
-        <p class="eyebrow">Club finder helper</p>
-        <h2>Find the right fit</h2>
+      <div class="club-profile__glance">
+
+        {% if page.activity_details.junior %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Nippers / junior activities
+            </span>
+
+            <strong>
+              {{ page.activity_details.junior }}
+            </strong>
+          </div>
+        {% endif %}
+
+        {% if page.activity_details.youth %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Youth
+            </span>
+
+            <strong>
+              {{ page.activity_details.youth }}
+            </strong>
+          </div>
+        {% endif %}
+
+        {% if page.activity_details.lifesaving_patrolling %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Lifesaving and patrols
+            </span>
+
+            <strong>
+              {{ page.activity_details.lifesaving_patrolling }}
+            </strong>
+          </div>
+        {% endif %}
+
+        {% if page.facilities contains "beach-access" %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Accessibility
+            </span>
+
+            <strong>
+              Accessible facilities / beach access listed
+            </strong>
+          </div>
+
+        {% elsif page.facilities contains "accessible-facilities" %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Accessibility
+            </span>
+
+            <strong>
+              Accessible facilities listed
+            </strong>
+          </div>
+        {% endif %}
       </div>
 
-      <button
-        type="button"
-        class="club-helper__close"
-        data-helper-close
-        aria-label="Close helper"
-      >
-        ×
-      </button>
-    </div>
+      {% if page.activity_details.adaptive %}
+        <div class="club-profile__highlight">
+          <h3>Adaptive participation</h3>
+          <p>
+            {{ page.activity_details.adaptive }}
+          </p>
+        </div>
+      {% endif %}
 
-    <div
-      class="club-helper__content"
-      data-helper-content
-    ></div>
-  </section>
-</div>
+      {% if page.activity_details.multicultural %}
+        <div class="club-profile__highlight">
+          <h3>Multicultural participation</h3>
+          <p>
+            {{ page.activity_details.multicultural }}
+          </p>
+        </div>
+      {% endif %}
+
+      {% if page.activity_details.first_nations %}
+        <div class="club-profile__highlight">
+          <h3>First Nations participation</h3>
+          <p>
+            {{ page.activity_details.first_nations }}
+          </p>
+        </div>
+      {% endif %}
+
+      {% if page.activity_details.other_programs %}
+        {% for program in page.activity_details.other_programs %}
+          {% if program %}
+            <div class="club-profile__highlight">
+              <h3>Also available</h3>
+              <p>{{ program }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </aside>
+  </div>
+</section>
 
 <div class="lead-modal" data-lead-modal hidden>
   <div
@@ -402,7 +210,7 @@ permalink: /
 
       <h2 id="lead-modal-title">
         Connect with
-        <span data-lead-club-name>this club</span>
+        <span data-lead-club-name>{{ page.title }}</span>
       </h2>
 
       <p>
@@ -414,12 +222,14 @@ permalink: /
       <input
         type="hidden"
         name="clubSlug"
+        value="{{ club_slug }}"
         data-lead-club-slug
       >
 
       <div class="form-grid">
         <label>
           <span>Name</span>
+
           <input
             type="text"
             name="name"
@@ -430,6 +240,7 @@ permalink: /
 
         <label>
           <span>Email</span>
+
           <input
             type="email"
             name="email"
@@ -440,6 +251,7 @@ permalink: /
 
         <label>
           <span>Phone</span>
+
           <input
             type="tel"
             name="phone"
@@ -449,6 +261,7 @@ permalink: /
 
         <label>
           <span>Suburb</span>
+
           <input
             type="text"
             name="suburb"
@@ -459,6 +272,7 @@ permalink: /
 
       <label>
         <span>What are you interested in?</span>
+
         <textarea
           name="about"
           rows="4"
