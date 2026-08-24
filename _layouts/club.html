@@ -4,20 +4,21 @@ layout: default
 
 {% assign club_slug = page.slug | default: page.title | slugify %}
 {% assign club_image = page.image | default: "/assets/img/club-placeholder.jpg" %}
+{% assign club_display_title = page.title | replace: "Surf Life Saving Club", "SLSC" | replace: "Life Saving Club", "LSC" %}
 
 <section class="club-profile">
   <div class="club-profile__hero">
     <div class="club-profile__image">
       <img
         src="{{ club_image | relative_url }}"
-        alt="{{ page.title }}"
+        alt="{{ club_display_title }}"
       >
     </div>
 
     <div class="club-profile__intro">
       <p class="eyebrow">Club profile</p>
 
-      <h1>{{ page.title }}</h1>
+      <h1>{{ club_display_title }}</h1>
 
       {% if page.summary %}
         <p class="club-profile__summary">
@@ -65,7 +66,7 @@ layout: default
           class="button button--outline"
           href="{{ '/' | relative_url }}"
         >
-          Back to club browse
+          Back to clubs
         </a>
       </div>
     </div>
@@ -82,7 +83,6 @@ layout: default
       <h2>At a glance</h2>
 
       <div class="club-profile__glance">
-
         {% if page.activity_details.junior %}
           <div class="club-profile__glance-item">
             <span class="club-profile__glance-label">
@@ -210,7 +210,7 @@ layout: default
 
       <h2 id="lead-modal-title">
         Connect with
-        <span data-lead-club-name>{{ page.title }}</span>
+        <span data-lead-club-name>{{ club_display_title }}</span>
       </h2>
 
       <p>
