@@ -4,7 +4,6 @@ layout: default
 
 {% assign club_slug = page.slug | default: page.title | slugify %}
 {% assign club_image = page.image | default: "/assets/img/club-placeholder.jpg" %}
-{% assign club_members = page.members | default: 0 %}
 
 <section class="club-profile">
   <div class="club-profile__hero">
@@ -14,32 +13,55 @@ layout: default
 
     <div class="club-profile__intro">
       <p class="eyebrow">Club profile</p>
+
       <h1>{{ page.title }}</h1>
 
-      <p class="club-profile__summary">
-        {{ page.summary | default: page.excerpt | strip_html }}
-      </p>
+      {% if page.summary %}
+        <p class="club-profile__summary">
+          {{ page.summary }}
+        </p>
+      {% endif %}
 
       <div class="club-profile__meta">
-        {% if club_members and club_members != 0 %}
-          <span>👤 Members: {{ club_members }}</span>
+        {% if page.suburb %}
+          <span>📍 {{ page.suburb }}</span>
+        {% elsif page.address %}
+          <span>📍 {{ page.address }}</span>
         {% endif %}
 
-        {% if page.suburb or page.region %}
-          <span>📍 {{ page.suburb | default: page.region }}</span>
+        {% if page.region %}
+          <span>{{ page.region }}</span>
         {% endif %}
 
-        {% if page.commitment.label %}
-          <span>⏱ {{ page.commitment.label }} commitment</span>
+        {% if page.member_size %}
+          <span>👥 {{ page.member_size }}</span>
         {% endif %}
       </div>
 
       <div class="club-profile__actions">
-        <button class="button button--primary" type="button" data-lead-club="{{ club_slug }}">
+        <button
+          class="button button--primary"
+          type="button"
+          data-lead-club="{{ club_slug }}"
+        >
           Send my details
         </button>
 
-        <a class="button button--outline" href="{{ '/' | relative_url }}">
+        {% if page.website %}
+          <a
+            class="button button--outline"
+            href="{{ page.website }}"
+            target="_blank"
+            rel="noopener"
+          >
+            Visit club website
+          </a>
+        {% endif %}
+
+        <a
+          class="button button--outline"
+          href="{{ '/' | relative_url }}"
+        >
           Back to club browse
         </a>
       </div>
@@ -48,50 +70,122 @@ layout: default
 
   <div class="club-profile__content">
     <section class="club-profile__section">
-      <h2>About the club</h2>
       <div class="prose">
         {{ content }}
       </div>
     </section>
 
     <aside class="club-profile__panel">
-      <h2>What this club offers</h2>
+      <h2>At a glance</h2>
 
-      <div class="tag-list tag-list--large">
-        {% for interest_id in page.interests %}
-          {% assign interest_label = interest_id %}
-          {% for interest in site.data.taxonomy.interests %}
-            {% assign taxonomy_interest_id = interest.id | default: interest.value | default: interest %}
-            {% if taxonomy_interest_id == interest_id %}
-              {% assign interest_label = interest.label | default: interest.name | default: interest.title | default: interest_id %}
-            {% endif %}
-          {% endfor %}
-          <span>{{ interest_label }}</span>
+      <div class="club-profile__glance">
+        {% if page.suburb or page.address %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Location
+            </span>
+
+            <strong>
+              {% if page.suburb %}
+                {{ page.suburb }}
+              {% else %}
+                {{ page.address }}
+              {% endif %}
+            </strong>
+          </div>
+        {% endif %}
+
+        {% if page.member_size %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Club size
+            </span>
+
+            <strong>{{ page.member_size }}</strong>
+          </div>
+        {% endif %}
+
+        {% if page.activity_details.junior %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Nippers
+            </span>
+
+            <strong>
+              {{ page.activity_details.junior }}
+            </strong>
+          </div>
+        {% endif %}
+
+        {% if page.activity_details.youth %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Youth
+            </span>
+
+            <strong>
+              {{ page.activity_details.youth }}
+            </strong>
+          </div>
+        {% endif %}
+
+        {% if page.activity_details.lifesaving_patrolling %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Patrols
+            </span>
+
+            <strong>
+              {{ page.activity_details.lifesaving_patrolling }}
+            </strong>
+          </div>
+        {% endif %}
+
+        {% if page.facilities contains "accessible-facilities" %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Accessibility
+            </span>
+
+            <strong>
+              Accessible facilities listed
+            </strong>
+          </div>
+        {% elsif page.facilities contains "beach-access" %}
+          <div class="club-profile__glance-item">
+            <span class="club-profile__glance-label">
+              Accessibility
+            </span>
+
+            <strong>
+              Accessible beach access listed
+            </strong>
+          </div>
+        {% endif %}
+      </div>
+
+      {% assign adaptive_text = page.adaptive_program | default: "" %}
+      {% assign adaptive_normalised = adaptive_text | downcase %}
+
+      {% if adaptive_text != "" %}
+        {% unless adaptive_normalised contains "no specific" %}
+          <div class="club-profile__highlight">
+            <h3>Adaptive participation</h3>
+            <p>{{ adaptive_text }}</p>
+          </div>
+        {% endunless %}
+      {% endif %}
+
+      {% if page.activity_details.other_programs %}
+        {% for program in page.activity_details.other_programs %}
+          {% if program %}
+            <div class="club-profile__highlight">
+              <h3>Also available</h3>
+              <p>{{ program }}</p>
+            </div>
+          {% endif %}
         {% endfor %}
-      </div>
-
-      <div class="club-features club-features--profile">
-        <div>
-          <span class="feature-icon">♿</span>
-          <span>Adaptive program</span>
-          <strong>{{ page.adaptive_program | default: "Available" }}</strong>
-        </div>
-        <div>
-          <span class="feature-icon">◎</span>
-          <span>Multicultural program</span>
-          <strong>{{ page.multicultural_program | default: "Available" }}</strong>
-        </div>
-        <div>
-          <span class="feature-icon">⚙</span>
-          <span>Gym facilities</span>
-          <strong>{{ page.gym_facilities | default: "On site" }}</strong>
-        </div>
-        <div>
-          <span class="feature-icon">⚑</span>
-          <span>Family-friendly</span>
-          <strong>{{ page.family_friendly | default: "Yes" }}</strong>
-        </div>
-      </div>
+      {% endif %}
     </aside>
   </div>
 </section>
@@ -99,41 +193,79 @@ layout: default
 <div class="lead-modal" data-lead-modal hidden>
   <div class="lead-modal__backdrop" data-lead-close></div>
 
-  <div class="lead-modal__panel" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
-    <button class="lead-modal__close" type="button" data-lead-close aria-label="Close">
+  <div
+    class="lead-modal__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lead-modal-title"
+  >
+    <button
+      class="lead-modal__close"
+      type="button"
+      data-lead-close
+      aria-label="Close"
+    >
       ×
     </button>
 
     <div class="lead-modal__header">
       <p class="eyebrow">Send your details</p>
-      <h2 id="lead-modal-title">Connect with <span data-lead-club-name>{{ page.title }}</span></h2>
+
+      <h2 id="lead-modal-title">
+        Connect with
+        <span data-lead-club-name>{{ page.title }}</span>
+      </h2>
+
       <p>
         We will capture your details and help connect you with the selected club.
       </p>
     </div>
 
     <form class="lead-form" data-lead-form>
-      <input type="hidden" name="clubSlug" value="{{ club_slug }}" data-lead-club-slug>
+      <input
+        type="hidden"
+        name="clubSlug"
+        value="{{ club_slug }}"
+        data-lead-club-slug
+      >
 
       <div class="form-grid">
         <label>
           <span>Name</span>
-          <input type="text" name="name" autocomplete="name" required>
+          <input
+            type="text"
+            name="name"
+            autocomplete="name"
+            required
+          >
         </label>
 
         <label>
           <span>Email</span>
-          <input type="email" name="email" autocomplete="email" required>
+          <input
+            type="email"
+            name="email"
+            autocomplete="email"
+            required
+          >
         </label>
 
         <label>
           <span>Phone</span>
-          <input type="tel" name="phone" autocomplete="tel">
+          <input
+            type="tel"
+            name="phone"
+            autocomplete="tel"
+          >
         </label>
 
         <label>
           <span>Suburb</span>
-          <input type="text" name="suburb" autocomplete="address-level2">
+          <input
+            type="text"
+            name="suburb"
+            autocomplete="address-level2"
+          >
         </label>
       </div>
 
@@ -142,23 +274,46 @@ layout: default
         <textarea name="about" rows="4"></textarea>
       </label>
 
-      <div class="lead-filter-summary" data-lead-filter-summary hidden>
+      <div
+        class="lead-filter-summary"
+        data-lead-filter-summary
+        hidden
+      >
         <h3>Your selected filters</h3>
         <ul data-lead-filter-list></ul>
       </div>
 
       <label class="consent-row">
-        <input type="checkbox" name="consent" required>
-        <span>I agree for my details to be captured and used to respond to this enquiry.</span>
+        <input
+          type="checkbox"
+          name="consent"
+          required
+        >
+
+        <span>
+          I agree for my details to be captured and used to respond to this enquiry.
+        </span>
       </label>
 
-      <p class="lead-message" data-lead-message hidden></p>
+      <p
+        class="lead-message"
+        data-lead-message
+        hidden
+      ></p>
 
       <div class="lead-form__actions">
-        <button class="button button--outline" type="button" data-lead-close>
+        <button
+          class="button button--outline"
+          type="button"
+          data-lead-close
+        >
           Cancel
         </button>
-        <button class="button button--primary" type="submit">
+
+        <button
+          class="button button--primary"
+          type="submit"
+        >
           Send my details
         </button>
       </div>
