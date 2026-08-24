@@ -20,7 +20,11 @@ function splitDataList(value) {
 }
 
 function toNumber(value) {
-  if (value === null || value === undefined || String(value).trim() === "") {
+  if (
+    value === null ||
+    value === undefined ||
+    String(value).trim() === ""
+  ) {
     return null;
   }
 
@@ -50,7 +54,12 @@ function calculateDistanceKm(origin, destination) {
       Math.sin(deltaLon / 2) *
       Math.sin(deltaLon / 2);
 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const c =
+    2 *
+    Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
+    );
 
   return earthRadiusKm * c;
 }
@@ -81,22 +90,28 @@ function getSaLocations() {
     return window.SA_LOCATIONS;
   }
 
-  const dataElement = document.getElementById("sa-locations-data");
+  const dataElement =
+    document.getElementById("sa-locations-data");
 
   if (!dataElement) {
     return [];
   }
 
   try {
-    const locations = JSON.parse(dataElement.textContent);
-    return Array.isArray(locations) ? locations : [];
+    const locations =
+      JSON.parse(dataElement.textContent);
+
+    return Array.isArray(locations)
+      ? locations
+      : [];
   } catch (error) {
     return [];
   }
 }
 
 function populateNativeLocationDatalist() {
-  const datalist = document.getElementById("sa-location-options");
+  const datalist =
+    document.getElementById("sa-location-options");
 
   if (!datalist) {
     return;
@@ -109,21 +124,28 @@ function populateNativeLocationDatalist() {
       return;
     }
 
-    const option = document.createElement("option");
+    const option =
+      document.createElement("option");
+
     option.value = location.label;
     datalist.appendChild(option);
   });
 }
 
 function updateLocationAutocompleteState(field) {
-  const listId = field.getAttribute("data-location-list-id");
+  const listId =
+    field.getAttribute("data-location-list-id");
+
   const value = field.value.trim();
 
   if (!listId) {
     return;
   }
 
-  if (value.length >= 4 && normaliseValue(value) !== "current location") {
+  if (
+    value.length >= 4 &&
+    normaliseValue(value) !== "current location"
+  ) {
     field.setAttribute("list", listId);
   } else {
     field.removeAttribute("list");
@@ -132,7 +154,10 @@ function updateLocationAutocompleteState(field) {
 
 function getStoredCurrentLocation() {
   try {
-    const stored = window.sessionStorage.getItem(CURRENT_LOCATION_STORAGE_KEY);
+    const stored =
+      window.sessionStorage.getItem(
+        CURRENT_LOCATION_STORAGE_KEY
+      );
 
     if (!stored) {
       return null;
@@ -166,27 +191,35 @@ function setStoredCurrentLocation(location) {
 
 function clearStoredCurrentLocation() {
   try {
-    window.sessionStorage.removeItem(CURRENT_LOCATION_STORAGE_KEY);
+    window.sessionStorage.removeItem(
+      CURRENT_LOCATION_STORAGE_KEY
+    );
   } catch (error) {
     // Ignore storage errors.
   }
 }
 
 function setLocationStatus(message, type) {
-  const status = document.querySelector("[data-location-status]");
+  const status =
+    document.querySelector(
+      "[data-location-status]"
+    );
 
   if (!status) {
     return;
   }
 
   status.textContent = message;
-  status.dataset.statusType = type || "info";
+  status.dataset.statusType =
+    type || "info";
 }
 
 function getSelectedValues(name) {
   return Array.from(
     document.querySelectorAll(
-      "input[name='" + name + "'][data-filter-check]:checked"
+      "input[name='" +
+        name +
+        "'][data-filter-check]:checked"
     )
   )
     .map(function (input) {
@@ -203,7 +236,8 @@ function findLocationByInput(value) {
   }
 
   if (query === "current location") {
-    const storedLocation = getStoredCurrentLocation();
+    const storedLocation =
+      getStoredCurrentLocation();
 
     if (storedLocation) {
       return {
@@ -218,27 +252,42 @@ function findLocationByInput(value) {
 
   const locations = getSaLocations();
 
-  const exactLabelMatch = locations.find(function (location) {
-    return normaliseValue(location.label) === query;
-  });
+  const exactLabelMatch =
+    locations.find(function (location) {
+      return (
+        normaliseValue(location.label) === query
+      );
+    });
 
   if (exactLabelMatch) {
     return {
       label: exactLabelMatch.label,
-      latitude: Number(exactLabelMatch.latitude),
-      longitude: Number(exactLabelMatch.longitude)
+      latitude: Number(
+        exactLabelMatch.latitude
+      ),
+      longitude: Number(
+        exactLabelMatch.longitude
+      )
     };
   }
 
-  const exactSuburbMatch = locations.find(function (location) {
-    return normaliseValue(location.suburb) === query;
-  });
+  const exactSuburbMatch =
+    locations.find(function (location) {
+      return (
+        normaliseValue(location.suburb) ===
+        query
+      );
+    });
 
   if (exactSuburbMatch) {
     return {
       label: exactSuburbMatch.label,
-      latitude: Number(exactSuburbMatch.latitude),
-      longitude: Number(exactSuburbMatch.longitude)
+      latitude: Number(
+        exactSuburbMatch.latitude
+      ),
+      longitude: Number(
+        exactSuburbMatch.longitude
+      )
     };
   }
 
@@ -246,33 +295,57 @@ function findLocationByInput(value) {
 }
 
 function getSelectedOrigin() {
-  const originField = document.querySelector("[data-filter='origin']");
+  const originField =
+    document.querySelector(
+      "[data-filter='origin']"
+    );
 
   if (!originField || !originField.value) {
     return null;
   }
 
-  return findLocationByInput(originField.value);
+  return findLocationByInput(
+    originField.value
+  );
 }
 
 function getCurrentFilters() {
-  const origin = document.querySelector("[data-filter='origin']");
-  const radius = document.querySelector("[data-filter='radius']");
+  const origin =
+    document.querySelector(
+      "[data-filter='origin']"
+    );
+
+  const radius =
+    document.querySelector(
+      "[data-filter='radius']"
+    );
 
   return {
     age: getSelectedValues("age"),
-    interest: getSelectedValues("interest"),
-    facility: getSelectedValues("facility"),
-    origin: origin ? origin.value.trim() : "",
-    radius: radius ? toNumber(radius.value) : null
+    interest:
+      getSelectedValues("interest"),
+    facility:
+      getSelectedValues("facility"),
+    origin: origin
+      ? origin.value.trim()
+      : "",
+    radius: radius
+      ? toNumber(radius.value)
+      : null
   };
 }
 
 function getClubCoordinates(card) {
-  const latitude = toNumber(card.dataset.latitude);
-  const longitude = toNumber(card.dataset.longitude);
+  const latitude =
+    toNumber(card.dataset.latitude);
 
-  if (latitude === null || longitude === null) {
+  const longitude =
+    toNumber(card.dataset.longitude);
+
+  if (
+    latitude === null ||
+    longitude === null
+  ) {
     return null;
   }
 
@@ -283,9 +356,20 @@ function getClubCoordinates(card) {
 }
 
 function updateCardDistance(card, origin) {
-  const inlineLabel = card.querySelector("[data-distance-label]");
-  const actionLabel = card.querySelector("[data-card-distance]");
-  const fallback = card.querySelector("[data-location-fallback]");
+  const inlineLabel =
+    card.querySelector(
+      "[data-distance-label]"
+    );
+
+  const actionLabel =
+    card.querySelector(
+      "[data-card-distance]"
+    );
+
+  const fallback =
+    card.querySelector(
+      "[data-location-fallback]"
+    );
 
   if (!origin) {
     if (inlineLabel) {
@@ -298,29 +382,42 @@ function updateCardDistance(card, origin) {
     }
 
     if (actionLabel) {
-      actionLabel.textContent = "Distance unavailable";
+      actionLabel.textContent =
+        "Distance unavailable";
     }
 
     card.dataset.distance = "";
     return null;
   }
 
-  const clubCoordinates = getClubCoordinates(card);
+  const clubCoordinates =
+    getClubCoordinates(card);
 
   if (!clubCoordinates) {
     if (actionLabel) {
-      actionLabel.textContent = "Distance unavailable";
+      actionLabel.textContent =
+        "Distance unavailable";
     }
 
     card.dataset.distance = "";
     return null;
   }
 
-  const distanceKm = calculateDistanceKm(origin, clubCoordinates);
-  const formatted = formatDistance(distanceKm);
+  const distanceKm =
+    calculateDistanceKm(
+      origin,
+      clubCoordinates
+    );
+
+  const formatted =
+    formatDistance(distanceKm);
 
   if (inlineLabel) {
-    inlineLabel.textContent = formatted + " from " + origin.label;
+    inlineLabel.textContent =
+      formatted +
+      " from " +
+      origin.label;
+
     inlineLabel.hidden = false;
   }
 
@@ -332,41 +429,79 @@ function updateCardDistance(card, origin) {
     actionLabel.textContent = formatted;
   }
 
-  card.dataset.distance = String(distanceKm);
+  card.dataset.distance =
+    String(distanceKm);
 
   return distanceKm;
 }
 
-function hasAnyMatch(selectedValues, availableValues) {
+function hasAnyMatch(
+  selectedValues,
+  availableValues
+) {
   if (selectedValues.length === 0) {
     return true;
   }
 
-  return selectedValues.some(function (value) {
-    return availableValues.includes(value);
-  });
+  return selectedValues.some(
+    function (value) {
+      return availableValues.includes(value);
+    }
+  );
 }
 
-function clubMatchesFilters(card, filters, origin) {
-  const ageGroups = splitDataList(card.dataset.ageGroups);
-  const interests = splitDataList(card.dataset.interests);
-  const facilities = splitDataList(card.dataset.facilities);
-  const distanceKm = updateCardDistance(card, origin);
+function clubMatchesFilters(
+  card,
+  filters,
+  origin
+) {
+  const ageGroups =
+    splitDataList(card.dataset.ageGroups);
 
-  if (!hasAnyMatch(filters.age, ageGroups)) {
+  const interests =
+    splitDataList(card.dataset.interests);
+
+  const facilities =
+    splitDataList(card.dataset.facilities);
+
+  const distanceKm =
+    updateCardDistance(card, origin);
+
+  if (
+    !hasAnyMatch(
+      filters.age,
+      ageGroups
+    )
+  ) {
     return false;
   }
 
-  if (!hasAnyMatch(filters.interest, interests)) {
+  if (
+    !hasAnyMatch(
+      filters.interest,
+      interests
+    )
+  ) {
     return false;
   }
 
-  if (!hasAnyMatch(filters.facility, facilities)) {
+  if (
+    !hasAnyMatch(
+      filters.facility,
+      facilities
+    )
+  ) {
     return false;
   }
 
-  if (origin && filters.radius !== null) {
-    if (distanceKm === null || distanceKm > filters.radius) {
+  if (
+    origin &&
+    filters.radius !== null
+  ) {
+    if (
+      distanceKm === null ||
+      distanceKm > filters.radius
+    ) {
       return false;
     }
   }
@@ -375,39 +510,62 @@ function clubMatchesFilters(card, filters, origin) {
 }
 
 function updateFilterUrl(filters) {
-  const params = new URLSearchParams();
+  const params =
+    new URLSearchParams();
 
-  filters.age.forEach(function (value) {
-    params.append("age", value);
-  });
+  filters.age.forEach(
+    function (value) {
+      params.append("age", value);
+    }
+  );
 
-  filters.interest.forEach(function (value) {
-    params.append("interest", value);
-  });
+  filters.interest.forEach(
+    function (value) {
+      params.append("interest", value);
+    }
+  );
 
-  filters.facility.forEach(function (value) {
-    params.append("facility", value);
-  });
+  filters.facility.forEach(
+    function (value) {
+      params.append("facility", value);
+    }
+  );
 
   if (filters.origin) {
-    params.set("origin", filters.origin);
+    params.set(
+      "origin",
+      filters.origin
+    );
   }
 
   if (filters.radius !== null) {
-    params.set("radius", String(filters.radius));
+    params.set(
+      "radius",
+      String(filters.radius)
+    );
   }
 
-  const newUrl = params.toString()
-    ? window.location.pathname + "?" + params.toString()
-    : window.location.pathname;
+  const newUrl =
+    params.toString()
+      ? window.location.pathname +
+        "?" +
+        params.toString()
+      : window.location.pathname;
 
-  window.history.replaceState({}, "", newUrl);
+  window.history.replaceState(
+    {},
+    "",
+    newUrl
+  );
 }
 
-function updateLocationStatus(origin, filters) {
+function updateLocationStatus(
+  origin,
+  filters
+) {
   if (!filters.origin) {
     setLocationStatus(
-      "Type at least 4 characters to search by suburb or town, or use your current location.",
+      "Type a suburb or town, or use your current location.",
       "info"
     );
     return;
@@ -416,22 +574,29 @@ function updateLocationStatus(origin, filters) {
   if (filters.origin && !origin) {
     if (filters.origin.length < 4) {
       setLocationStatus(
-        "Type at least 4 characters to search by suburb or town.",
+        "Type at least 4 characters to search.",
         "info"
       );
       return;
     }
 
     setLocationStatus(
-      "Select a suburb or area from the suggestions so we can calculate distance.",
+      "Select a location from the suggestions.",
       "warning"
     );
     return;
   }
 
-  if (origin && filters.radius !== null) {
+  if (
+    origin &&
+    filters.radius !== null
+  ) {
     setLocationStatus(
-      "Showing clubs within " + filters.radius + " km of " + origin.label + ".",
+      "Showing clubs within " +
+        filters.radius +
+        " km of " +
+        origin.label +
+        ".",
       "success"
     );
     return;
@@ -439,47 +604,74 @@ function updateLocationStatus(origin, filters) {
 
   if (origin) {
     setLocationStatus(
-      "Distances are being shown from " +
+      "Distances are shown from " +
         origin.label +
-        ". Select a maximum distance to filter results.",
+        ".",
       "success"
     );
   }
 }
 
 function sortCards(cards, sortMode) {
-  const list = document.querySelector("[data-club-list]");
+  const list =
+    document.querySelector(
+      "[data-club-list]"
+    );
 
   if (!list) {
     return;
   }
 
-  const sorted = cards.slice().sort(function (a, b) {
-    if (sortMode === "distance") {
-      const aDistance = toNumber(a.dataset.distance);
-      const bDistance = toNumber(b.dataset.distance);
+  const sorted =
+    cards.slice().sort(
+      function (a, b) {
+        if (sortMode === "distance") {
+          const aDistance =
+            toNumber(
+              a.dataset.distance
+            );
 
-      if (aDistance === null && bDistance === null) {
-        return String(a.dataset.title || "").localeCompare(
-          String(b.dataset.title || "")
+          const bDistance =
+            toNumber(
+              b.dataset.distance
+            );
+
+          if (
+            aDistance === null &&
+            bDistance === null
+          ) {
+            return String(
+              a.dataset.title || ""
+            ).localeCompare(
+              String(
+                b.dataset.title || ""
+              )
+            );
+          }
+
+          if (aDistance === null) {
+            return 1;
+          }
+
+          if (bDistance === null) {
+            return -1;
+          }
+
+          return (
+            aDistance -
+            bDistance
+          );
+        }
+
+        return String(
+          a.dataset.title || ""
+        ).localeCompare(
+          String(
+            b.dataset.title || ""
+          )
         );
       }
-
-      if (aDistance === null) {
-        return 1;
-      }
-
-      if (bDistance === null) {
-        return -1;
-      }
-
-      return aDistance - bDistance;
-    }
-
-    return String(a.dataset.title || "").localeCompare(
-      String(b.dataset.title || "")
     );
-  });
 
   sorted.forEach(function (card) {
     list.appendChild(card);
@@ -487,18 +679,49 @@ function sortCards(cards, sortMode) {
 }
 
 function applyFilters() {
-  const cards = Array.from(document.querySelectorAll("[data-club-card]"));
-  const countElement = document.querySelector("[data-results-count]");
-  const summaryElement = document.querySelector("[data-results-summary]");
-  const emptyState = document.querySelector("[data-empty-state]");
-  const sortField = document.querySelector("[data-sort-clubs]");
-  const filters = getCurrentFilters();
-  const origin = getSelectedOrigin();
+  const cards =
+    Array.from(
+      document.querySelectorAll(
+        "[data-club-card]"
+      )
+    );
+
+  const countElement =
+    document.querySelector(
+      "[data-results-count]"
+    );
+
+  const summaryElement =
+    document.querySelector(
+      "[data-results-summary]"
+    );
+
+  const emptyState =
+    document.querySelector(
+      "[data-empty-state]"
+    );
+
+  const sortField =
+    document.querySelector(
+      "[data-sort-clubs]"
+    );
+
+  const filters =
+    getCurrentFilters();
+
+  const origin =
+    getSelectedOrigin();
 
   let visibleCount = 0;
 
   cards.forEach(function (card) {
-    const isVisible = clubMatchesFilters(card, filters, origin);
+    const isVisible =
+      clubMatchesFilters(
+        card,
+        filters,
+        origin
+      );
+
     card.hidden = !isVisible;
 
     if (isVisible) {
@@ -507,81 +730,161 @@ function applyFilters() {
   });
 
   if (sortField) {
-    sortCards(cards, sortField.value);
+    sortCards(
+      cards,
+      sortField.value
+    );
   }
 
   if (countElement) {
-    countElement.textContent = String(visibleCount);
+    countElement.textContent =
+      String(visibleCount);
   }
 
   if (summaryElement) {
-    summaryElement.textContent =
-      visibleCount === 1
-        ? "Showing 1 matching club."
-        : "Showing " + visibleCount + " matching clubs.";
+    if (
+      filters.age.length === 0 &&
+      filters.interest.length === 0 &&
+      filters.facility.length === 0 &&
+      !filters.origin &&
+      filters.radius === null
+    ) {
+      summaryElement.textContent =
+        "Showing all Surf Life Saving SA clubs.";
+    } else {
+      summaryElement.textContent =
+        visibleCount === 1
+          ? "Showing 1 matching club."
+          : "Showing " +
+            visibleCount +
+            " matching clubs.";
+    }
   }
 
   if (emptyState) {
-    emptyState.hidden = visibleCount !== 0;
+    emptyState.hidden =
+      visibleCount !== 0;
   }
 
-  updateLocationStatus(origin, filters);
+  updateLocationStatus(
+    origin,
+    filters
+  );
+
   updateFilterUrl(filters);
 }
 
-function setCheckboxesFromUrl(name, values) {
-  const inputs = Array.from(
-    document.querySelectorAll("input[name='" + name + "'][data-filter-check]")
-  );
+function setCheckboxesFromUrl(
+  name,
+  values
+) {
+  const inputs =
+    Array.from(
+      document.querySelectorAll(
+        "input[name='" +
+          name +
+          "'][data-filter-check]"
+      )
+    );
 
   inputs.forEach(function (input) {
     if (input.value === "") {
-      input.checked = values.length === 0;
+      input.checked =
+        values.length === 0;
       return;
     }
 
-    input.checked = values.includes(input.value);
+    input.checked =
+      values.includes(input.value);
   });
 }
 
 function setFiltersFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const originField = document.querySelector("[data-filter='origin']");
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
 
-  setCheckboxesFromUrl("age", params.getAll("age"));
-  setCheckboxesFromUrl("interest", params.getAll("interest"));
-  setCheckboxesFromUrl("facility", params.getAll("facility"));
+  const originField =
+    document.querySelector(
+      "[data-filter='origin']"
+    );
 
-  if (originField && params.get("origin")) {
-    originField.value = params.get("origin");
-    updateLocationAutocompleteState(originField);
+  setCheckboxesFromUrl(
+    "age",
+    params.getAll("age")
+  );
+
+  setCheckboxesFromUrl(
+    "interest",
+    params.getAll("interest")
+  );
+
+  setCheckboxesFromUrl(
+    "facility",
+    params.getAll("facility")
+  );
+
+  if (
+    originField &&
+    params.get("origin")
+  ) {
+    originField.value =
+      params.get("origin");
+
+    updateLocationAutocompleteState(
+      originField
+    );
   }
 
-  document.querySelectorAll("select[data-filter]").forEach(function (field) {
-    const key = field.getAttribute("data-filter");
-    const value = params.get(key);
+  document
+    .querySelectorAll(
+      "select[data-filter]"
+    )
+    .forEach(function (field) {
+      const key =
+        field.getAttribute(
+          "data-filter"
+        );
 
-    if (value) {
-      field.value = value;
-    }
-  });
+      const value =
+        params.get(key);
+
+      if (value) {
+        field.value = value;
+      }
+    });
 }
 
 function clearFilters() {
-  const originField = document.querySelector("[data-filter='origin']");
+  const originField =
+    document.querySelector(
+      "[data-filter='origin']"
+    );
 
   if (originField) {
     originField.value = "";
-    updateLocationAutocompleteState(originField);
+    updateLocationAutocompleteState(
+      originField
+    );
   }
 
-  document.querySelectorAll("select[data-filter]").forEach(function (field) {
-    field.value = "";
-  });
+  document
+    .querySelectorAll(
+      "select[data-filter]"
+    )
+    .forEach(function (field) {
+      field.value = "";
+    });
 
-  document.querySelectorAll("input[data-filter-check]").forEach(function (input) {
-    input.checked = input.value === "";
-  });
+  document
+    .querySelectorAll(
+      "input[data-filter-check]"
+    )
+    .forEach(function (input) {
+      input.checked =
+        input.value === "";
+    });
 
   clearStoredCurrentLocation();
   applyFilters();
@@ -592,37 +895,64 @@ function handleCheckboxChange(input) {
     return;
   }
 
-  const allAgesInput = document.querySelector("input[name='age'][value='']");
+  const allAgesInput =
+    document.querySelector(
+      "input[name='age'][value='']"
+    );
 
   if (!allAgesInput) {
     return;
   }
 
-  if (input.value === "" && input.checked) {
-    document.querySelectorAll("input[name='age'][data-filter-check]").forEach(function (ageInput) {
-      if (ageInput !== allAgesInput) {
-        ageInput.checked = false;
-      }
-    });
+  if (
+    input.value === "" &&
+    input.checked
+  ) {
+    document
+      .querySelectorAll(
+        "input[name='age'][data-filter-check]"
+      )
+      .forEach(
+        function (ageInput) {
+          if (
+            ageInput !==
+            allAgesInput
+          ) {
+            ageInput.checked =
+              false;
+          }
+        }
+      );
 
     return;
   }
 
-  if (input.value !== "" && input.checked) {
-    allAgesInput.checked = false;
+  if (
+    input.value !== "" &&
+    input.checked
+  ) {
+    allAgesInput.checked =
+      false;
   }
 
-  const selectedSpecificAges = document.querySelectorAll(
-    "input[name='age'][data-filter-check]:checked:not([value=''])"
-  );
+  const selectedSpecificAges =
+    document.querySelectorAll(
+      "input[name='age'][data-filter-check]:checked:not([value=''])"
+    );
 
-  if (selectedSpecificAges.length === 0) {
+  if (
+    selectedSpecificAges.length ===
+    0
+  ) {
     allAgesInput.checked = true;
   }
 }
 
 function useCurrentLocation(callback) {
-  const originField = document.querySelector("[data-filter='origin']");
+  const originField =
+    document.querySelector(
+      "[data-filter='origin']"
+    );
 
   if (!navigator.geolocation) {
     setLocationStatus(
@@ -630,37 +960,49 @@ function useCurrentLocation(callback) {
       "warning"
     );
 
-    if (typeof callback === "function") {
+    if (
+      typeof callback ===
+      "function"
+    ) {
       callback(false);
     }
 
     return;
   }
 
-  setLocationStatus("Requesting your current location...", "info");
+  setLocationStatus(
+    "Requesting your current location...",
+    "info"
+  );
 
   navigator.geolocation.getCurrentPosition(
     function (position) {
       const location = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
+        latitude:
+          position.coords.latitude,
+        longitude:
+          position.coords.longitude
       };
 
-      setStoredCurrentLocation(location);
+      setStoredCurrentLocation(
+        location
+      );
 
       if (originField) {
-        originField.value = "Current location";
-        updateLocationAutocompleteState(originField);
-      }
+        originField.value =
+          "Current location";
 
-      setLocationStatus(
-        "Current location set. Select a maximum distance to filter results.",
-        "success"
-      );
+        updateLocationAutocompleteState(
+          originField
+        );
+      }
 
       applyFilters();
 
-      if (typeof callback === "function") {
+      if (
+        typeof callback ===
+        "function"
+      ) {
         callback(true);
       }
     },
@@ -670,7 +1012,10 @@ function useCurrentLocation(callback) {
         "warning"
       );
 
-      if (typeof callback === "function") {
+      if (
+        typeof callback ===
+        "function"
+      ) {
         callback(false);
       }
     },
@@ -683,23 +1028,31 @@ function useCurrentLocation(callback) {
 }
 
 function getLeadClubTitle(button) {
-  const helperTitle = button.getAttribute("data-helper-club-title");
+  const helperTitle =
+    button.getAttribute(
+      "data-helper-club-title"
+    );
 
   if (helperTitle) {
     return helperTitle;
   }
 
-  const card = button.closest("[data-club-card]");
+  const card =
+    button.closest(
+      "[data-club-card]"
+    );
 
   if (card) {
-    const heading = card.querySelector("h2");
+    const heading =
+      card.querySelector("h2");
 
     if (heading) {
       return heading.textContent.trim();
     }
   }
 
-  const pageHeading = document.querySelector("h1");
+  const pageHeading =
+    document.querySelector("h1");
 
   if (pageHeading) {
     return pageHeading.textContent.trim();
@@ -708,97 +1061,173 @@ function getLeadClubTitle(button) {
   return "Selected Surf Life Saving SA club";
 }
 
-function setCheckedValues(name, values) {
-  const normalisedValues = values.map(function (value) {
-    return normaliseValue(value);
-  });
+function setCheckedValues(
+  name,
+  values
+) {
+  const normalisedValues =
+    values.map(function (value) {
+      return normaliseValue(value);
+    });
 
-  document.querySelectorAll("input[name='" + name + "'][data-filter-check]").forEach(function (input) {
-    if (input.value === "") {
-      input.checked = normalisedValues.length === 0;
-      return;
-    }
+  document
+    .querySelectorAll(
+      "input[name='" +
+        name +
+        "'][data-filter-check]"
+    )
+    .forEach(function (input) {
+      if (input.value === "") {
+        input.checked =
+          normalisedValues.length ===
+          0;
+        return;
+      }
 
-    input.checked = normalisedValues.includes(normaliseValue(input.value));
-  });
+      input.checked =
+        normalisedValues.includes(
+          normaliseValue(
+            input.value
+          )
+        );
+    });
 }
 
 function setInterestValues(values) {
-  const normalisedValues = values.map(function (value) {
-    return normaliseValue(value);
-  });
+  const normalisedValues =
+    values.map(function (value) {
+      return normaliseValue(value);
+    });
 
-  document.querySelectorAll("input[name='interest'][data-filter-check]").forEach(function (input) {
-    input.checked = normalisedValues.includes(normaliseValue(input.value));
-  });
+  document
+    .querySelectorAll(
+      "input[name='interest'][data-filter-check]"
+    )
+    .forEach(function (input) {
+      input.checked =
+        normalisedValues.includes(
+          normaliseValue(
+            input.value
+          )
+        );
+    });
 }
 
 function getHelperAgeFilters() {
-  if (helperState.age === "child") {
-    return ["nippers", "families"];
+  if (
+    helperState.age === "child"
+  ) {
+    return ["nippers"];
   }
 
-  if (helperState.age === "youth") {
+  if (
+    helperState.age === "youth"
+  ) {
     return ["youth"];
   }
 
-  if (helperState.age === "adult") {
+  if (
+    helperState.age === "adult"
+  ) {
     return ["adults"];
   }
 
-  if (helperState.age === "family") {
-    return ["families", "nippers"];
+  if (
+    helperState.age === "family"
+  ) {
+    return ["families"];
   }
 
   return [];
 }
 
 function getHelperInterestFilters() {
-  if (helperState.interest === "nippers") {
+  if (
+    helperState.interest ===
+    "nippers"
+  ) {
     return ["nippers"];
   }
 
-  if (helperState.interest === "patrol") {
-    return ["lifesaving-patrols", "training"];
+  if (
+    helperState.interest ===
+    "patrol"
+  ) {
+    return [
+      "lifesaving-patrols"
+    ];
   }
 
-  if (helperState.interest === "sport") {
+  if (
+    helperState.interest ===
+    "sport"
+  ) {
     return ["surf-sports"];
   }
 
-  if (helperState.interest === "volunteer") {
-    return ["volunteering", "community"];
+  if (
+    helperState.interest ===
+    "training"
+  ) {
+    return ["training"];
   }
 
-  if (helperState.interest === "training") {
-    return ["training", "lifesaving-patrols"];
+  if (
+    helperState.interest ===
+    "volunteer"
+  ) {
+    return [
+      "volunteering",
+      "community"
+    ];
   }
 
-  if (helperState.interest === "community") {
-    return ["community", "volunteering"];
+  if (
+    helperState.interest ===
+    "inclusive"
+  ) {
+    return [
+      "inclusive-programs"
+    ];
   }
 
   return [];
 }
 
 function applyHelperFilters() {
-  const ageFilters = getHelperAgeFilters();
-  const interestFilters = getHelperInterestFilters();
+  setCheckedValues(
+    "age",
+    getHelperAgeFilters()
+  );
 
-  setCheckedValues("age", ageFilters);
-  setInterestValues(interestFilters);
+  setInterestValues(
+    getHelperInterestFilters()
+  );
 
-  const radiusField = document.querySelector("[data-filter='radius']");
-  const origin = getSelectedOrigin();
+  const radiusField =
+    document.querySelector(
+      "[data-filter='radius']"
+    );
 
-  if (origin && radiusField && !radiusField.value) {
+  const origin =
+    getSelectedOrigin();
+
+  if (
+    origin &&
+    radiusField &&
+    !radiusField.value
+  ) {
     radiusField.value = "25";
   }
 
-  const sortField = document.querySelector("[data-sort-clubs]");
+  const sortField =
+    document.querySelector(
+      "[data-sort-clubs]"
+    );
 
   if (origin && sortField) {
-    sortField.value = "distance";
+    sortField.value =
+      "distance";
   }
 
   applyFilters();
@@ -811,16 +1240,25 @@ function resetHelperState() {
 }
 
 function getHelperContentElement() {
-  return document.querySelector("[data-helper-content]");
+  return document.querySelector(
+    "[data-helper-content]"
+  );
 }
 
 function getHelperPanelElement() {
-  return document.querySelector("[data-helper-panel]");
+  return document.querySelector(
+    "[data-helper-panel]"
+  );
 }
 
-function getHelperStepLabel(stepNumber) {
+function getHelperStepLabel(
+  stepNumber
+) {
   return `
-    <div class="club-helper__progress" aria-label="Step ${stepNumber} of 3">
+    <div
+      class="club-helper__progress"
+      aria-label="Step ${stepNumber} of 3"
+    >
       <span class="${stepNumber >= 1 ? "is-active" : ""}"></span>
       <span class="${stepNumber >= 2 ? "is-active" : ""}"></span>
       <span class="${stepNumber >= 3 ? "is-active" : ""}"></span>
@@ -834,7 +1272,8 @@ function renderHelperStart() {
 }
 
 function renderHelperAgeStep() {
-  const content = getHelperContentElement();
+  const content =
+    getHelperContentElement();
 
   if (!content) {
     return;
@@ -842,40 +1281,58 @@ function renderHelperAgeStep() {
 
   content.innerHTML = `
     ${getHelperStepLabel(1)}
-    <p class="club-helper__message">I will ask a few quick questions and narrow the club list for you.</p>
-    <h3 class="club-helper__question">Who is joining?</h3>
+
+    <h3 class="club-helper__question">
+      Who is joining?
+    </h3>
 
     <div class="club-helper__options club-helper__options--cards">
-      <button type="button" data-helper-answer="age:child">
+      <button
+        type="button"
+        data-helper-answer="age:child"
+      >
         <strong>My child</strong>
-        <span>Nippers, surf awareness and family involvement.</span>
+        <span>Ages 5–13</span>
       </button>
 
-      <button type="button" data-helper-answer="age:youth">
-        <strong>A teenager or young person</strong>
-        <span>Skills, leadership, sport and lifesaving pathways.</span>
+      <button
+        type="button"
+        data-helper-answer="age:youth"
+      >
+        <strong>A teenager</strong>
+        <span>Ages 13–18</span>
       </button>
 
-      <button type="button" data-helper-answer="age:adult">
+      <button
+        type="button"
+        data-helper-answer="age:adult"
+      >
         <strong>Me as an adult</strong>
-        <span>Volunteering, patrols, training, sport or community.</span>
+        <span>18+</span>
       </button>
 
-      <button type="button" data-helper-answer="age:family">
+      <button
+        type="button"
+        data-helper-answer="age:family"
+      >
         <strong>Our family</strong>
-        <span>A club that feels welcoming for parents and children.</span>
+        <span>Adults and children</span>
       </button>
 
-      <button type="button" data-helper-answer="age:any">
-        <strong>I am not sure yet</strong>
-        <span>Show me a broad range of options.</span>
+      <button
+        type="button"
+        data-helper-answer="age:any"
+      >
+        <strong>I'm not sure</strong>
+        <span>Keep my options open</span>
       </button>
     </div>
   `;
 }
 
 function renderHelperInterestStep() {
-  const content = getHelperContentElement();
+  const content =
+    getHelperContentElement();
 
   if (!content) {
     return;
@@ -883,228 +1340,414 @@ function renderHelperInterestStep() {
 
   content.innerHTML = `
     ${getHelperStepLabel(2)}
-    <h3 class="club-helper__question">What sounds most interesting?</h3>
-    <p class="club-helper__message">You can still change the filters afterwards. This just helps us start in the right place.</p>
+
+    <h3 class="club-helper__question">
+      What interests you most?
+    </h3>
 
     <div class="club-helper__options club-helper__options--cards">
-      <button type="button" data-helper-answer="interest:nippers">
-        <strong>Nippers and family activities</strong>
-        <span>For children learning beach safety and surf awareness.</span>
+      <button
+        type="button"
+        data-helper-answer="interest:nippers"
+      >
+        <strong>Nippers</strong>
+        <span>Beach skills for children</span>
       </button>
 
-      <button type="button" data-helper-answer="interest:patrol">
-        <strong>Beach patrols and lifesaving</strong>
-        <span>Learn rescue, first aid and beach safety skills.</span>
+      <button
+        type="button"
+        data-helper-answer="interest:patrol"
+      >
+        <strong>Lifesaving and patrols</strong>
+        <span>Rescue and beach safety</span>
       </button>
 
-      <button type="button" data-helper-answer="interest:sport">
-        <strong>Surf sports and fitness</strong>
-        <span>Training, competition and staying active.</span>
+      <button
+        type="button"
+        data-helper-answer="interest:sport"
+      >
+        <strong>Surf sports</strong>
+        <span>Training and competition</span>
       </button>
 
-      <button type="button" data-helper-answer="interest:volunteer">
-        <strong>Volunteering</strong>
-        <span>Help your local club on or off the beach.</span>
-      </button>
-
-      <button type="button" data-helper-answer="interest:training">
+      <button
+        type="button"
+        data-helper-answer="interest:training"
+      >
         <strong>Training and new skills</strong>
-        <span>First aid, rescue skills, radios, leadership and more.</span>
+        <span>Learn something new</span>
       </button>
 
-      <button type="button" data-helper-answer="interest:community">
-        <strong>Community and social connection</strong>
-        <span>Be part of a local club and support its activities.</span>
+      <button
+        type="button"
+        data-helper-answer="interest:volunteer"
+      >
+        <strong>Volunteering</strong>
+        <span>Help on or off the beach</span>
+      </button>
+
+      <button
+        type="button"
+        data-helper-answer="interest:inclusive"
+      >
+        <strong>Inclusive programs</strong>
+        <span>Adaptive or inclusive participation</span>
+      </button>
+
+      <button
+        type="button"
+        data-helper-answer="interest:any"
+      >
+        <strong>I'm not sure</strong>
+        <span>Show me a broad range</span>
       </button>
     </div>
 
     <div class="club-helper__actions">
-      <button type="button" class="club-helper__text-button" data-helper-back="age">Back</button>
+      <button
+        type="button"
+        class="club-helper__text-button"
+        data-helper-back="age"
+      >
+        Back
+      </button>
     </div>
   `;
 }
 
 function renderHelperLocationStep() {
-  const content = getHelperContentElement();
+  const content =
+    getHelperContentElement();
 
   if (!content) {
     return;
   }
 
-  const existingOriginField = document.querySelector("[data-location-field]");
-  const existingOrigin = existingOriginField ? existingOriginField.value : "";
+  const existingOriginField =
+    document.querySelector(
+      "[data-location-field]"
+    );
+
+  const existingOrigin =
+    existingOriginField
+      ? existingOriginField.value
+      : "";
 
   content.innerHTML = `
     ${getHelperStepLabel(3)}
-    <h3 class="club-helper__question">Where should we search from?</h3>
-    <p class="club-helper__message">Location helps sort clubs by distance. You can skip this if you want to browse all matching clubs.</p>
+
+    <h3 class="club-helper__question">
+      Where are you?
+    </h3>
+
+    <p class="club-helper__message">
+      We'll use this to find the closest matches.
+    </p>
 
     <label class="club-helper__field">
       <span>Suburb or town</span>
+
       <input
         type="text"
         data-helper-location-input
         data-location-list-id="sa-location-options"
-        placeholder="Start typing, for example Glenelg"
+        placeholder="Start typing a suburb or town"
         autocomplete="off"
         value="${escapeHtml(existingOrigin)}"
       >
     </label>
 
     <div class="club-helper__options">
-      <button type="button" data-helper-location-continue>
-        Use this suburb or town
+      <button
+        type="button"
+        data-helper-location-continue
+      >
+        <strong>Use this location</strong>
       </button>
 
-      <button type="button" data-helper-location-current>
-        Use my current location
+      <button
+        type="button"
+        data-helper-location-current
+      >
+        <strong>Use my current location</strong>
       </button>
 
-      <button type="button" data-helper-location-skip>
-        Skip location for now
+      <button
+        type="button"
+        data-helper-location-skip
+      >
+        <strong>Skip for now</strong>
       </button>
     </div>
 
-    <p class="club-helper__hint" data-helper-location-message>
-      Type at least 4 characters, then select a matching suburb or town.
+    <p
+      class="club-helper__hint"
+      data-helper-location-message
+    >
+      Type at least 4 characters and select a suggestion.
     </p>
 
     <div class="club-helper__actions">
-      <button type="button" class="club-helper__text-button" data-helper-back="interest">Back</button>
+      <button
+        type="button"
+        class="club-helper__text-button"
+        data-helper-back="interest"
+      >
+        Back
+      </button>
     </div>
   `;
 
-  const helperLocationInput = content.querySelector("[data-helper-location-input]");
+  const helperLocationInput =
+    content.querySelector(
+      "[data-helper-location-input]"
+    );
 
   if (helperLocationInput) {
-    updateLocationAutocompleteState(helperLocationInput);
+    updateLocationAutocompleteState(
+      helperLocationInput
+    );
+
     helperLocationInput.focus();
   }
 }
 
-function getVisibleClubRecommendations(limit) {
-  const cards = Array.from(document.querySelectorAll("[data-club-card]"))
-    .filter(function (card) {
+function getVisibleClubRecommendations(
+  limit
+) {
+  const cards =
+    Array.from(
+      document.querySelectorAll(
+        "[data-club-card]"
+      )
+    ).filter(function (card) {
       return !card.hidden;
     });
 
-  const origin = getSelectedOrigin();
+  const origin =
+    getSelectedOrigin();
 
-  const sorted = cards.slice().sort(function (a, b) {
-    if (origin) {
-      const aDistance = toNumber(a.dataset.distance);
-      const bDistance = toNumber(b.dataset.distance);
+  const sorted =
+    cards.slice().sort(
+      function (a, b) {
+        if (origin) {
+          const aDistance =
+            toNumber(
+              a.dataset.distance
+            );
 
-      if (aDistance === null && bDistance === null) {
-        return String(a.dataset.title || "").localeCompare(String(b.dataset.title || ""));
+          const bDistance =
+            toNumber(
+              b.dataset.distance
+            );
+
+          if (
+            aDistance === null &&
+            bDistance === null
+          ) {
+            return String(
+              a.dataset.title || ""
+            ).localeCompare(
+              String(
+                b.dataset.title || ""
+              )
+            );
+          }
+
+          if (aDistance === null) {
+            return 1;
+          }
+
+          if (bDistance === null) {
+            return -1;
+          }
+
+          return (
+            aDistance -
+            bDistance
+          );
+        }
+
+        return String(
+          a.dataset.title || ""
+        ).localeCompare(
+          String(
+            b.dataset.title || ""
+          )
+        );
       }
+    );
 
-      if (aDistance === null) {
-        return 1;
-      }
-
-      if (bDistance === null) {
-        return -1;
-      }
-
-      return aDistance - bDistance;
-    }
-
-    return String(a.dataset.title || "").localeCompare(String(b.dataset.title || ""));
-  });
-
-  return sorted.slice(0, limit || 3);
+  return sorted.slice(
+    0,
+    limit || 3
+  );
 }
 
-function getCardRecommendationData(card) {
-  const title = card.dataset.title || "Surf Life Saving club";
-  const summaryElement = card.querySelector(".club-card__summary");
-  const distanceElement = card.querySelector("[data-card-distance]");
-  const profileLink = card.querySelector(".club-card__actions a[href], .club-card__body h2 a[href]");
-  const leadButton = card.querySelector("[data-lead-club]");
+function getCardRecommendationData(
+  card
+) {
+  const title =
+    card.dataset.title ||
+    "Surf Life Saving club";
+
+  const summaryElement =
+    card.querySelector(
+      ".club-card__summary"
+    );
+
+  const distanceElement =
+    card.querySelector(
+      "[data-card-distance]"
+    );
+
+  const profileLink =
+    card.querySelector(
+      ".club-card__actions a[href], .club-card__body h2 a[href]"
+    );
+
+  const leadButton =
+    card.querySelector(
+      "[data-lead-club]"
+    );
 
   return {
     title: title,
-    summary: summaryElement ? summaryElement.textContent.trim() : "",
-    distance: distanceElement ? distanceElement.textContent.trim() : "",
-    profileUrl: profileLink ? profileLink.getAttribute("href") : "#",
-    clubSlug: leadButton ? leadButton.getAttribute("data-lead-club") : ""
+    summary: summaryElement
+      ? summaryElement.textContent.trim()
+      : "",
+    distance: distanceElement
+      ? distanceElement.textContent.trim()
+      : "",
+    profileUrl: profileLink
+      ? profileLink.getAttribute("href")
+      : "#",
+    clubSlug: leadButton
+      ? leadButton.getAttribute(
+          "data-lead-club"
+        )
+      : ""
   };
 }
 
 function renderHelperResults() {
   applyHelperFilters();
 
-  const content = getHelperContentElement();
+  const content =
+    getHelperContentElement();
 
   if (!content) {
     return;
   }
 
-  const visibleCards = getVisibleClubRecommendations(3);
-  const countElement = document.querySelector("[data-results-count]");
-  const visibleCount = countElement ? countElement.textContent : String(visibleCards.length);
-  const origin = getSelectedOrigin();
+  const visibleCards =
+    getVisibleClubRecommendations(4);
 
-  if (visibleCards.length === 0) {
+  const countElement =
+    document.querySelector(
+      "[data-results-count]"
+    );
+
+  const visibleCount =
+    countElement
+      ? countElement.textContent
+      : String(
+          visibleCards.length
+        );
+
+  const origin =
+    getSelectedOrigin();
+
+  if (
+    visibleCards.length === 0
+  ) {
     content.innerHTML = `
       <div class="club-helper__result-header">
-        <p class="eyebrow">Recommended next step</p>
-        <h3 class="club-helper__question">No close match yet</h3>
+        <h3 class="club-helper__question">
+          No close match yet
+        </h3>
       </div>
 
       <p class="club-helper__message">
-        I could not find a club that matches all of those answers. Try broadening the distance or clearing one of the filters.
+        Try a wider search or change one of your answers.
       </p>
 
       <div class="club-helper__options">
-        <button type="button" data-helper-broaden-search>Broaden the search</button>
-        <button type="button" data-helper-start-over>Start again</button>
+        <button
+          type="button"
+          data-helper-broaden-search
+        >
+          <strong>Broaden the search</strong>
+        </button>
+
+        <button
+          type="button"
+          data-helper-start-over
+        >
+          <strong>Start again</strong>
+        </button>
       </div>
     `;
 
     return;
   }
 
-  const recommendationHtml = visibleCards
-    .map(function (card) {
-      const data = getCardRecommendationData(card);
-      const distanceText =
-        origin && data.distance && data.distance !== "Distance unavailable"
-          ? `<span>${escapeHtml(data.distance)}</span>`
-          : "";
+  const recommendationHtml =
+    visibleCards
+      .map(function (card) {
+        const data =
+          getCardRecommendationData(
+            card
+          );
 
-      return `
-        <article class="club-helper__recommendation">
-          <div>
-            <h4>${escapeHtml(data.title)}</h4>
-            ${distanceText}
-            <p>${escapeHtml(data.summary)}</p>
-          </div>
+        const distanceText =
+          origin &&
+          data.distance &&
+          data.distance !==
+            "Distance unavailable"
+            ? `<span>${escapeHtml(data.distance)}</span>`
+            : "";
 
-          <div class="club-helper__recommendation-actions">
-            <a href="${escapeHtml(data.profileUrl)}">View profile</a>
-            <button
-              type="button"
-              data-lead-club="${escapeHtml(data.clubSlug)}"
-              data-helper-club-title="${escapeHtml(data.title)}"
-            >
-              Send details
-            </button>
-          </div>
-        </article>
-      `;
-    })
-    .join("");
+        return `
+          <article class="club-helper__recommendation">
+            <div>
+              <h4>${escapeHtml(data.title)}</h4>
+              ${distanceText}
+
+              ${
+                data.summary
+                  ? `<p>${escapeHtml(data.summary)}</p>`
+                  : ""
+              }
+            </div>
+
+            <div class="club-helper__recommendation-actions">
+              <a href="${escapeHtml(data.profileUrl)}">
+                View profile
+              </a>
+
+              <button
+                type="button"
+                data-lead-club="${escapeHtml(data.clubSlug)}"
+                data-helper-club-title="${escapeHtml(data.title)}"
+              >
+                Send my details
+              </button>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
 
   content.innerHTML = `
     <div class="club-helper__result-header">
-      <p class="eyebrow">Recommended clubs</p>
-      <h3 class="club-helper__question">Here are some good starting points</h3>
+      <h3 class="club-helper__question">
+        Your closest matches
+      </h3>
     </div>
 
     <p class="club-helper__message">
-      I have applied your answers to the club list. Showing ${escapeHtml(visibleCount)} matching clubs on the page.
+      ${escapeHtml(visibleCount)} clubs match your answers. Here are some places to start.
     </p>
 
     <div class="club-helper__recommendations">
@@ -1112,14 +1755,30 @@ function renderHelperResults() {
     </div>
 
     <div class="club-helper__actions club-helper__actions--split">
-      <button type="button" class="club-helper__text-button" data-helper-back="location">Back</button>
-      <button type="button" class="club-helper__text-button" data-helper-start-over>Start again</button>
+      <button
+        type="button"
+        class="club-helper__text-button"
+        data-helper-back="location"
+      >
+        Back
+      </button>
+
+      <button
+        type="button"
+        class="club-helper__text-button"
+        data-helper-start-over
+      >
+        Start again
+      </button>
     </div>
   `;
 }
 
 function broadenHelperSearch() {
-  const radiusField = document.querySelector("[data-filter='radius']");
+  const radiusField =
+    document.querySelector(
+      "[data-filter='radius']"
+    );
 
   if (radiusField) {
     radiusField.value = "100";
@@ -1129,294 +1788,520 @@ function broadenHelperSearch() {
   renderHelperResults();
 }
 
-function openClubHelperFromHeader() {
-  const panel = getHelperPanelElement();
-  const targetUrlButton = document.querySelector("[data-open-club-helper]");
-  const targetUrl = targetUrlButton
-    ? targetUrlButton.getAttribute("data-helper-target-url")
-    : "/?helper=open#clubs";
+function openClubHelper() {
+  const panel =
+    getHelperPanelElement();
 
   if (!panel) {
-    window.location.href = targetUrl || "/?helper=open#clubs";
-    return;
+    return false;
   }
 
   panel.hidden = false;
   renderHelperStart();
+
+  return true;
 }
 
-document.addEventListener("input", function (event) {
-  if (event.target.matches("[data-location-field]")) {
-    clearStoredCurrentLocation();
-    updateLocationAutocompleteState(event.target);
-    applyFilters();
-    return;
+function openClubHelperFromHeader() {
+  const targetUrlButton =
+    document.querySelector(
+      "[data-open-club-helper]"
+    );
+
+  const targetUrl =
+    targetUrlButton
+      ? targetUrlButton.getAttribute(
+          "data-helper-target-url"
+        )
+      : "/?helper=open#clubs";
+
+  if (!openClubHelper()) {
+    window.location.href =
+      targetUrl ||
+      "/?helper=open#clubs";
   }
+}
 
-  if (event.target.matches("[data-helper-location-input]")) {
-    updateLocationAutocompleteState(event.target);
-  }
-});
+document.addEventListener(
+  "input",
+  function (event) {
+    if (
+      event.target.matches(
+        "[data-location-field]"
+      )
+    ) {
+      clearStoredCurrentLocation();
 
-document.addEventListener("focusin", function (event) {
-  if (
-    event.target.matches("[data-location-field]") ||
-    event.target.matches("[data-helper-location-input]")
-  ) {
-    updateLocationAutocompleteState(event.target);
-  }
-});
+      updateLocationAutocompleteState(
+        event.target
+      );
 
-document.addEventListener("change", function (event) {
-  if (event.target.matches("[data-location-field]")) {
-    updateLocationAutocompleteState(event.target);
-    applyFilters();
-    return;
-  }
-
-  if (event.target.matches("select[data-filter]")) {
-    applyFilters();
-    return;
-  }
-
-  if (event.target.matches("input[data-filter-check]")) {
-    handleCheckboxChange(event.target);
-    applyFilters();
-    return;
-  }
-
-  if (event.target.matches("[data-sort-clubs]")) {
-    applyFilters();
-  }
-});
-
-document.addEventListener("click", function (event) {
-  const openHelperButton = event.target.closest("[data-open-club-helper]");
-
-  if (openHelperButton) {
-    event.preventDefault();
-    openClubHelperFromHeader();
-    return;
-  }
-
-  const clearButton = event.target.closest("[data-clear-filters]");
-
-  if (clearButton) {
-    clearFilters();
-    return;
-  }
-
-  const currentLocationButton = event.target.closest("[data-use-current-location]");
-
-  if (currentLocationButton) {
-    useCurrentLocation();
-    return;
-  }
-
-  const helperAnswer = event.target.closest("[data-helper-answer]");
-
-  if (helperAnswer) {
-    const answer = helperAnswer.getAttribute("data-helper-answer");
-    const parts = answer.split(":");
-    const key = parts[0];
-    const value = parts[1];
-
-    if (key === "age") {
-      helperState.age = value;
-      renderHelperInterestStep();
+      applyFilters();
       return;
     }
 
-    if (key === "interest") {
-      helperState.interest = value;
-      renderHelperLocationStep();
-      return;
+    if (
+      event.target.matches(
+        "[data-helper-location-input]"
+      )
+    ) {
+      updateLocationAutocompleteState(
+        event.target
+      );
     }
   }
+);
 
-  const helperBack = event.target.closest("[data-helper-back]");
-
-  if (helperBack) {
-    const step = helperBack.getAttribute("data-helper-back");
-
-    if (step === "age") {
-      renderHelperAgeStep();
-      return;
-    }
-
-    if (step === "interest") {
-      renderHelperInterestStep();
-      return;
-    }
-
-    if (step === "location") {
-      renderHelperLocationStep();
-      return;
+document.addEventListener(
+  "focusin",
+  function (event) {
+    if (
+      event.target.matches(
+        "[data-location-field]"
+      ) ||
+      event.target.matches(
+        "[data-helper-location-input]"
+      )
+    ) {
+      updateLocationAutocompleteState(
+        event.target
+      );
     }
   }
+);
 
-  const helperLocationContinue = event.target.closest("[data-helper-location-continue]");
+document.addEventListener(
+  "change",
+  function (event) {
+    if (
+      event.target.matches(
+        "[data-location-field]"
+      )
+    ) {
+      updateLocationAutocompleteState(
+        event.target
+      );
 
-  if (helperLocationContinue) {
-    const helperLocationInput = document.querySelector("[data-helper-location-input]");
-    const originField = document.querySelector("[data-location-field]");
-    const message = document.querySelector("[data-helper-location-message]");
-    const value = helperLocationInput ? helperLocationInput.value.trim() : "";
+      applyFilters();
+      return;
+    }
 
-    if (!value) {
-      if (message) {
-        message.textContent = "Enter a suburb or town, or skip location for now.";
-        message.dataset.statusType = "warning";
+    if (
+      event.target.matches(
+        "select[data-filter]"
+      )
+    ) {
+      applyFilters();
+      return;
+    }
+
+    if (
+      event.target.matches(
+        "input[data-filter-check]"
+      )
+    ) {
+      handleCheckboxChange(
+        event.target
+      );
+
+      applyFilters();
+      return;
+    }
+
+    if (
+      event.target.matches(
+        "[data-sort-clubs]"
+      )
+    ) {
+      applyFilters();
+    }
+  }
+);
+
+document.addEventListener(
+  "click",
+  function (event) {
+    const openHeaderHelper =
+      event.target.closest(
+        "[data-open-club-helper]"
+      );
+
+    if (openHeaderHelper) {
+      event.preventDefault();
+      openClubHelperFromHeader();
+      return;
+    }
+
+    const openPromoHelper =
+      event.target.closest(
+        "[data-club-guide-open]"
+      );
+
+    if (openPromoHelper) {
+      openClubHelper();
+      return;
+    }
+
+    const clearButton =
+      event.target.closest(
+        "[data-clear-filters]"
+      );
+
+    if (clearButton) {
+      clearFilters();
+      return;
+    }
+
+    const currentLocationButton =
+      event.target.closest(
+        "[data-use-current-location]"
+      );
+
+    if (currentLocationButton) {
+      useCurrentLocation();
+      return;
+    }
+
+    const helperAnswer =
+      event.target.closest(
+        "[data-helper-answer]"
+      );
+
+    if (helperAnswer) {
+      const answer =
+        helperAnswer.getAttribute(
+          "data-helper-answer"
+        );
+
+      const parts =
+        answer.split(":");
+
+      const key = parts[0];
+      const value = parts[1];
+
+      if (key === "age") {
+        helperState.age = value;
+        renderHelperInterestStep();
+        return;
       }
 
-      return;
+      if (key === "interest") {
+        helperState.interest =
+          value;
+
+        renderHelperLocationStep();
+        return;
+      }
     }
 
-    if (!findLocationByInput(value)) {
-      if (message) {
-        message.textContent = "Select a suburb or town from the suggestions so distance can be calculated.";
-        message.dataset.statusType = "warning";
+    const helperBack =
+      event.target.closest(
+        "[data-helper-back]"
+      );
+
+    if (helperBack) {
+      const step =
+        helperBack.getAttribute(
+          "data-helper-back"
+        );
+
+      if (step === "age") {
+        renderHelperAgeStep();
+        return;
       }
 
-      return;
+      if (step === "interest") {
+        renderHelperInterestStep();
+        return;
+      }
+
+      if (step === "location") {
+        renderHelperLocationStep();
+        return;
+      }
     }
 
-    clearStoredCurrentLocation();
+    const helperLocationContinue =
+      event.target.closest(
+        "[data-helper-location-continue]"
+      );
 
-    if (originField) {
-      originField.value = value;
-      updateLocationAutocompleteState(originField);
-    }
+    if (helperLocationContinue) {
+      const helperLocationInput =
+        document.querySelector(
+          "[data-helper-location-input]"
+        );
 
-    const radiusField = document.querySelector("[data-filter='radius']");
+      const originField =
+        document.querySelector(
+          "[data-location-field]"
+        );
 
-    if (radiusField && !radiusField.value) {
-      radiusField.value = "25";
-    }
+      const message =
+        document.querySelector(
+          "[data-helper-location-message]"
+        );
 
-    helperState.location = "suburb";
-    renderHelperResults();
-    return;
-  }
+      const value =
+        helperLocationInput
+          ? helperLocationInput.value.trim()
+          : "";
 
-  const helperLocationCurrent = event.target.closest("[data-helper-location-current]");
+      if (!value) {
+        if (message) {
+          message.textContent =
+            "Enter a suburb or town, or skip this step.";
 
-  if (helperLocationCurrent) {
-    helperState.location = "current";
-
-    useCurrentLocation(function (success) {
-      if (success) {
-        const radiusField = document.querySelector("[data-filter='radius']");
-
-        if (radiusField && !radiusField.value) {
-          radiusField.value = "25";
+          message.dataset.statusType =
+            "warning";
         }
 
-        renderHelperResults();
+        return;
       }
-    });
 
-    return;
+      if (!findLocationByInput(value)) {
+        if (message) {
+          message.textContent =
+            "Select a location from the suggestions.";
+
+          message.dataset.statusType =
+            "warning";
+        }
+
+        return;
+      }
+
+      clearStoredCurrentLocation();
+
+      if (originField) {
+        originField.value = value;
+
+        updateLocationAutocompleteState(
+          originField
+        );
+      }
+
+      const radiusField =
+        document.querySelector(
+          "[data-filter='radius']"
+        );
+
+      if (
+        radiusField &&
+        !radiusField.value
+      ) {
+        radiusField.value = "25";
+      }
+
+      helperState.location =
+        "suburb";
+
+      renderHelperResults();
+      return;
+    }
+
+    const helperLocationCurrent =
+      event.target.closest(
+        "[data-helper-location-current]"
+      );
+
+    if (helperLocationCurrent) {
+      helperState.location =
+        "current";
+
+      useCurrentLocation(
+        function (success) {
+          if (success) {
+            const radiusField =
+              document.querySelector(
+                "[data-filter='radius']"
+              );
+
+            if (
+              radiusField &&
+              !radiusField.value
+            ) {
+              radiusField.value =
+                "25";
+            }
+
+            renderHelperResults();
+          }
+        }
+      );
+
+      return;
+    }
+
+    const helperLocationSkip =
+      event.target.closest(
+        "[data-helper-location-skip]"
+      );
+
+    if (helperLocationSkip) {
+      const originField =
+        document.querySelector(
+          "[data-location-field]"
+        );
+
+      if (originField) {
+        originField.value = "";
+
+        updateLocationAutocompleteState(
+          originField
+        );
+      }
+
+      const radiusField =
+        document.querySelector(
+          "[data-filter='radius']"
+        );
+
+      if (radiusField) {
+        radiusField.value = "";
+      }
+
+      clearStoredCurrentLocation();
+
+      helperState.location =
+        "any";
+
+      renderHelperResults();
+      return;
+    }
+
+    const broadenSearchButton =
+      event.target.closest(
+        "[data-helper-broaden-search]"
+      );
+
+    if (broadenSearchButton) {
+      broadenHelperSearch();
+      return;
+    }
+
+    const helperStartOver =
+      event.target.closest(
+        "[data-helper-start-over]"
+      );
+
+    if (helperStartOver) {
+      renderHelperStart();
+      return;
+    }
+
+    const leadButton =
+      event.target.closest(
+        "[data-lead-club]"
+      );
+
+    if (leadButton) {
+      const clubSlug =
+        leadButton.getAttribute(
+          "data-lead-club"
+        );
+
+      const clubTitle =
+        getLeadClubTitle(
+          leadButton
+        );
+
+      if (
+        typeof window.openLeadForm ===
+        "function"
+      ) {
+        window.openLeadForm({
+          clubSlug: clubSlug,
+          clubTitle: clubTitle
+        });
+      }
+
+      return;
+    }
+
+    const helperToggle =
+      event.target.closest(
+        "[data-helper-toggle]"
+      );
+
+    if (helperToggle) {
+      const panel =
+        getHelperPanelElement();
+
+      if (panel) {
+        panel.hidden =
+          !panel.hidden;
+
+        if (!panel.hidden) {
+          renderHelperStart();
+        }
+      }
+
+      return;
+    }
+
+    const helperClose =
+      event.target.closest(
+        "[data-helper-close]"
+      );
+
+    if (helperClose) {
+      const panel =
+        getHelperPanelElement();
+
+      if (panel) {
+        panel.hidden = true;
+      }
+    }
   }
+);
 
-  const helperLocationSkip = event.target.closest("[data-helper-location-skip]");
+document.addEventListener(
+  "keydown",
+  function (event) {
+    if (event.key === "Escape") {
+      const panel =
+        getHelperPanelElement();
 
-  if (helperLocationSkip) {
-    const originField = document.querySelector("[data-location-field]");
+      if (
+        panel &&
+        !panel.hidden
+      ) {
+        panel.hidden = true;
+      }
+    }
+  }
+);
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
+    const initialParams =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    populateNativeLocationDatalist();
+
+    const originField =
+      document.querySelector(
+        "[data-location-field]"
+      );
 
     if (originField) {
-      originField.value = "";
-      updateLocationAutocompleteState(originField);
+      updateLocationAutocompleteState(
+        originField
+      );
     }
 
-    clearStoredCurrentLocation();
-    helperState.location = "any";
-    renderHelperResults();
-    return;
-  }
+    setFiltersFromUrl();
+    applyFilters();
 
-  const broadenSearchButton = event.target.closest("[data-helper-broaden-search]");
-
-  if (broadenSearchButton) {
-    broadenHelperSearch();
-    return;
-  }
-
-  const helperStartOver = event.target.closest("[data-helper-start-over]");
-
-  if (helperStartOver) {
-    renderHelperStart();
-    return;
-  }
-
-  const leadButton = event.target.closest("[data-lead-club]");
-
-  if (leadButton) {
-    const clubSlug = leadButton.getAttribute("data-lead-club");
-    const clubTitle = getLeadClubTitle(leadButton);
-
-    if (typeof window.openLeadForm === "function") {
-      window.openLeadForm({
-        clubSlug: clubSlug,
-        clubTitle: clubTitle
-      });
-    }
-
-    return;
-  }
-
-  const helperToggle = event.target.closest("[data-helper-toggle]");
-
-  if (helperToggle) {
-    const panel = getHelperPanelElement();
-
-    if (panel) {
-      panel.hidden = !panel.hidden;
-
-      if (!panel.hidden) {
-        renderHelperStart();
-      }
-    }
-
-    return;
-  }
-
-  const helperClose = event.target.closest("[data-helper-close]");
-
-  if (helperClose) {
-    const panel = getHelperPanelElement();
-
-    if (panel) {
-      panel.hidden = true;
+    if (
+      initialParams.get("helper") ===
+      "open"
+    ) {
+      openClubHelperFromHeader();
     }
   }
-});
-
-document.addEventListener("keydown", function (event) {
-  if (event.key === "Escape") {
-    const panel = getHelperPanelElement();
-
-    if (panel && !panel.hidden) {
-      panel.hidden = true;
-    }
-  }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const initialParams = new URLSearchParams(window.location.search);
-
-  populateNativeLocationDatalist();
-
-  const originField = document.querySelector("[data-location-field]");
-
-  if (originField) {
-    updateLocationAutocompleteState(originField);
-  }
-
-  setFiltersFromUrl();
-  applyFilters();
-
-  if (initialParams.get("helper") === "open") {
-    openClubHelperFromHeader();
-  }
-});
+);

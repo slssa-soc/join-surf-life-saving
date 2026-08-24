@@ -1,27 +1,57 @@
 age_groups:
-  - Nippers
-  - Youth
-  - Adults
-  - Families
+  - id: nippers
+    label: Nippers
+
+  - id: youth
+    label: Youth
+
+  - id: adults
+    label: Adults
+
+  - id: families
+    label: Families
 
 interests:
-  - Lifesaving patrols
-  - Surf sports
-  - Nippers
-  - Youth programs
-  - Training and education
-  - IRB
-  - Volunteering
-  - Community events
+  - id: lifesaving-patrols
+    label: Lifesaving and patrols
+
+  - id: surf-sports
+    label: Surf sports
+
+  - id: nippers
+    label: Nippers
+
+  - id: training
+    label: Training and new skills
+
+  - id: volunteering
+    label: Volunteering
+
+  - id: community
+    label: Community involvement
+
+  - id: inclusive-programs
+    label: Inclusive programs
 
 facilities:
-  - Adaptive program
-  - Multicultural program
-  - Gym facilities
-  - Family-friendly
-  - Beginner-friendly
+  - id: accessible-facilities
+    label: Accessible facilities
+
+  - id: beach-access
+    label: Accessible beach access
+
+  - id: gym
+    label: Gym
+
+  - id: restaurant
+    label: Club restaurant
 
 commitment:
-  - Low
-  - Medium
-  - High
+  - id: low
+    label: Low
+
+  - id: medium
+    label: Medium
+
+  - id: high
+    label: High

@@ -131,8 +131,8 @@ function getSelectedFilterLabels() {
     }
 
     if (field.name === "facility") {
-      groupName = "Facility or program";
-    }
+  groupName = "Facility";
+}
 
     labels.push({
       name: groupName,
@@ -306,9 +306,11 @@ async function handleLeadSubmit(event) {
     const result = await submitLeadPayload(payload);
 
     showLeadMessage(
-      "Thanks — your details have been captured for " + result.clubName + ". You can send your details to another club without retyping them.",
-      "success"
-    );
+  "Thanks — your details have been sent to " +
+    result.clubName +
+    ". You can send your details to another club without retyping them.",
+  "success"
+);
   } catch (error) {
     const detailText = error.details && error.details.length
       ? " " + error.details.join(" ")

@@ -1,12 +1,18 @@
 <header class="site-header">
-  <a class="brand brand--logo-only" href="{{ '/' | relative_url }}" aria-label="Join Surf Life Saving SA home">
+  <a
+    class="brand brand--logo-only"
+    href="{{ '/' | relative_url }}"
+    aria-label="Join Surf Life Saving SA home"
+  >
     <span class="brand-logo" aria-hidden="true">
-      <img src="{{ '/assets/img/sls-logo.png' | relative_url }}" alt="">
+      <img
+        src="{{ '/assets/img/sls-logo.png' | relative_url }}"
+        alt=""
+      >
     </span>
   </a>
 
   <nav class="site-nav" aria-label="Primary navigation">
-
     <a
       href="{{ '/' | relative_url }}#clubs"
       {% if page.url == '/' %}class="is-active"{% endif %}
@@ -20,7 +26,7 @@
       data-open-club-helper
       data-helper-target-url="{{ '/' | relative_url }}?helper=open#clubs"
     >
-      Join a club
+      Help me choose
     </button>
   </nav>
 </header>

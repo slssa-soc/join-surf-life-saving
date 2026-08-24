@@ -7,9 +7,27 @@ permalink: /
 <section class="browse-hero">
   <div class="browse-hero__content">
     <h1>Find the right club for you</h1>
+
     <p>
       There is a role in Surf Life Saving for everyone. Find the club and membership option that feels like the right fit for you.
     </p>
+
+    <div class="club-guide-promo">
+      <div class="club-guide-promo__content">
+        <strong>Not sure where to start?</strong>
+        <span>
+          Answer three quick questions and we'll narrow down the clubs.
+        </span>
+      </div>
+
+      <button
+        class="button button--primary"
+        type="button"
+        data-club-guide-open
+      >
+        Help me choose a club
+      </button>
+    </div>
   </div>
 </section>
 
@@ -18,7 +36,11 @@ permalink: /
     <div class="filter-panel__header">
       <h2>Filter clubs</h2>
 
-      <button class="filter-reset" type="button" data-clear-filters>
+      <button
+        class="filter-reset"
+        type="button"
+        data-clear-filters
+      >
         Clear
       </button>
     </div>
@@ -29,7 +51,10 @@ permalink: /
         <h3>Location</h3>
       </div>
 
-      <label class="filter-label" for="filter-origin">
+      <label
+        class="filter-label"
+        for="filter-origin"
+      >
         Suburb or area
       </label>
 
@@ -46,11 +71,17 @@ permalink: /
 
       <datalist id="sa-location-options"></datalist>
 
-      <label class="filter-label" for="filter-radius">
+      <label
+        class="filter-label"
+        for="filter-radius"
+      >
         Maximum distance
       </label>
 
-      <select id="filter-radius" data-filter="radius">
+      <select
+        id="filter-radius"
+        data-filter="radius"
+      >
         <option value="">Any distance</option>
         <option value="10">Within 10 km</option>
         <option value="25">Within 25 km</option>
@@ -68,8 +99,11 @@ permalink: /
         Use current location
       </button>
 
-      <p class="location-status" data-location-status>
-        Type at least 4 characters to search by suburb or town, or use your current location.
+      <p
+        class="location-status"
+        data-location-status
+      >
+        Type a suburb or town, or use your current location.
       </p>
     </section>
 
@@ -134,8 +168,8 @@ permalink: /
 
     <section class="filter-group">
       <div class="filter-group__title">
-        <span aria-hidden="true">🏠</span>
-        <h3>Facilities and programs</h3>
+        <span aria-hidden="true">♿</span>
+        <h3>Facilities</h3>
       </div>
 
       {% for facility in site.data.taxonomy.facilities %}
@@ -161,10 +195,16 @@ permalink: /
     <div class="results-toolbar">
       <div>
         <p class="results-count">
-          <strong data-results-count>{{ site.clubs | size }}</strong> clubs
+          <strong data-results-count>
+            {{ site.clubs | size }}
+          </strong>
+          clubs
         </p>
 
-        <p class="results-summary" data-results-summary>
+        <p
+          class="results-summary"
+          data-results-summary
+        >
           Showing all Surf Life Saving SA clubs.
         </p>
       </div>
@@ -174,14 +214,25 @@ permalink: /
           Sort by
         </label>
 
-        <select id="sort-clubs" data-sort-clubs>
-          <option value="name-asc">Club name</option>
-          <option value="distance">Distance</option>
+        <select
+          id="sort-clubs"
+          data-sort-clubs
+        >
+          <option value="name-asc">
+            Club name
+          </option>
+
+          <option value="distance">
+            Distance
+          </option>
         </select>
       </div>
     </div>
 
-    <div class="club-list" data-club-list>
+    <div
+      class="club-list"
+      data-club-list
+    >
       {% assign clubs = site.clubs | sort: "title" %}
 
       {% for club in clubs %}
@@ -255,7 +306,10 @@ permalink: /
                 Distance available after location is entered
               </span>
 
-              <span data-distance-label hidden></span>
+              <span
+                data-distance-label
+                hidden
+              ></span>
             </div>
 
             {% if club.verified_programs %}
@@ -266,6 +320,7 @@ permalink: /
                   {% endif %}
                 {% endfor %}
               </div>
+
             {% elsif club.interests %}
               <div class="tag-list">
                 {% for interest_id in club.interests limit: 6 %}
@@ -323,8 +378,16 @@ permalink: /
       <h2>No clubs match those filters</h2>
 
       <p>
-        Try clearing one or more filters, increasing the distance, or using the helper in the bottom-right corner.
+        Try changing your filters, increasing the distance, or use the guided club finder to help narrow down your options.
       </p>
+
+      <button
+        class="button button--primary"
+        type="button"
+        data-club-guide-open
+      >
+        Help me choose a club
+      </button>
     </div>
 
     <p class="distance-note">
@@ -333,36 +396,54 @@ permalink: /
   </div>
 </section>
 
-<script type="application/json" id="sa-locations-data">
+<script
+  type="application/json"
+  id="sa-locations-data"
+>
   {{ site.data.locations | jsonify }}
 </script>
 
-<div class="club-helper" data-club-helper>
+<div
+  class="club-helper"
+  data-club-helper
+>
   <button
     class="club-helper__toggle"
     type="button"
     data-helper-toggle
   >
-    <span>Need help choosing?</span>
+    <span
+      class="club-helper__toggle-icon"
+      aria-hidden="true"
+    >
+      ?
+    </span>
+
+    <span class="club-helper__toggle-label">
+      Help me choose
+    </span>
   </button>
 
   <section
     class="club-helper__panel"
     data-helper-panel
     hidden
-    aria-label="Club finder helper"
+    aria-label="Find the right club"
   >
     <div class="club-helper__header">
       <div>
-        <p class="eyebrow">Club finder helper</p>
-        <h2>Find the right fit</h2>
+        <h2>Find the right club</h2>
+
+        <p class="club-helper__intro">
+          3 quick questions to narrow your options.
+        </p>
       </div>
 
       <button
         type="button"
         class="club-helper__close"
         data-helper-close
-        aria-label="Close helper"
+        aria-label="Close club finder"
       >
         ×
       </button>
@@ -375,7 +456,11 @@ permalink: /
   </section>
 </div>
 
-<div class="lead-modal" data-lead-modal hidden>
+<div
+  class="lead-modal"
+  data-lead-modal
+  hidden
+>
   <div
     class="lead-modal__backdrop"
     data-lead-close
@@ -397,19 +482,26 @@ permalink: /
     </button>
 
     <div class="lead-modal__header">
-      <p class="eyebrow">Send your details</p>
+      <p class="eyebrow">
+        Send your details
+      </p>
 
       <h2 id="lead-modal-title">
         Connect with
-        <span data-lead-club-name>this club</span>
+        <span data-lead-club-name>
+          this club
+        </span>
       </h2>
 
       <p>
-        We will capture your details and help connect you with the selected club.
+        Send your details to the club and they can get in touch with you about joining.
       </p>
     </div>
 
-    <form class="lead-form" data-lead-form>
+    <form
+      class="lead-form"
+      data-lead-form
+    >
       <input
         type="hidden"
         name="clubSlug"
@@ -419,6 +511,7 @@ permalink: /
       <div class="form-grid">
         <label>
           <span>Name</span>
+
           <input
             type="text"
             name="name"
@@ -429,6 +522,7 @@ permalink: /
 
         <label>
           <span>Email</span>
+
           <input
             type="email"
             name="email"
@@ -439,6 +533,7 @@ permalink: /
 
         <label>
           <span>Phone</span>
+
           <input
             type="tel"
             name="phone"
@@ -448,6 +543,7 @@ permalink: /
 
         <label>
           <span>Suburb</span>
+
           <input
             type="text"
             name="suburb"
@@ -457,10 +553,12 @@ permalink: /
       </div>
 
       <label>
-        <span>What are you interested in?</span>
+        <span>Anything you'd like the club to know?</span>
+
         <textarea
           name="about"
           rows="4"
+          placeholder="Optional"
         ></textarea>
       </label>
 
@@ -469,7 +567,7 @@ permalink: /
         data-lead-filter-summary
         hidden
       >
-        <h3>Your selected filters</h3>
+        <h3>Your preferences</h3>
         <ul data-lead-filter-list></ul>
       </div>
 
@@ -481,7 +579,7 @@ permalink: /
         >
 
         <span>
-          I agree for my details to be captured and used to respond to this enquiry.
+          I agree for my details to be shared with the selected Surf Life Saving club so they can respond to my enquiry.
         </span>
       </label>
 
