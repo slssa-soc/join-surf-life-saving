@@ -1,101 +1,139 @@
 ---
 layout: club
-title: 'Brighton Surf Life Saving Club'
-slug: 'brighton-surf-life-saving-club'
-permalink: '/clubs/brighton-surf-life-saving-club/'
-summary: 'A large metropolitan club on the Brighton foreshore, offering Nippers, lifesaving, surf sports, training, volunteering and a strong family club environment.'
-image: '/assets/img/clubs/brighton-surf-life-saving-club.jpg'
-suburb: 'Brighton'
-region: 'Adelaide Metro'
-address: 'The Esplanade, Brighton SA 5048'
-website: 'https://www.brightonsurfclub.com/'
+title: Brighton Surf Life Saving Club
+slug: brighton-slsc
+permalink: /clubs/brighton-slsc/
+summary: A large metropolitan club at Brighton offering Nippers, patrols, a broad surf-sports program and member facilities.
+image: /assets/img/clubs/brighton-slsc.jpg
+suburb: Brighton
+region: Adelaide Metro
+address: 147 Esplanade, Brighton SA 5048
+website: https://www.brightonsurfclub.com/
 latitude: -35.0195
 longitude: 138.5112
-member_size: 'Large metro club'
-membership_fee_note: 'Current public membership fees not clearly verified in this pass. Club website directs members through SLSA registration and club registrar.'
-membership_fee_source: 'https://www.brightonsurfclub.com/the-club/how-to-join/'
-source_checked: '2026-06-30'
+member_size: Large (401+ members)
+membership_fee_note: 'New active member 18+: $200; Social member: $60; Family membership: $400; Under 18: $150–$230. 2026/27
+  fees supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
-  - 'hospitality'
+- accessible-facilities
+- gym
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'Come and Try Nippers'
-  - 'Lifesaving pathways'
-  - 'Surf sports'
-  - 'Volunteer club roles'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Inflatable Rescue Boat racing
+- Pool rescue
+- Surf sports support
 best_for:
-  - 'Families near Brighton'
-  - 'Children starting Nippers'
-  - 'Members wanting a large metropolitan club'
-  - 'People interested in lifesaving and surf sports'
+- Families in Adelaide’s southern coastal suburbs
+- Members interested in a broad surf-sports program
+- People looking for regular club activity and lifesaving pathways
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: No specific program listed
+multicultural_program: No specific program listed
+gym_facilities: Gym (award holders only)
 family_friendly: 'Yes'
-badge_label: 'Large metro club'
-badge_type: 'blue'
+badge_label: Large metro club
+badge_type: blue
+first_nations_program: No specific program listed
+activity_details:
+  junior: Saturdays 2:00 pm–4:00 pm.
+  youth: Youth program available for ages 13–18; contact the club for current session details.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Inflatable Rescue Boat racing
+  - Pool rescue
+  surf_sports_support: true
+facility_details:
+- Gym (award holders only)
+- Restaurant
+- Accessible toilet/changerooms
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $200
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $60
+- name: Family membership
+  description: 2 adults and all children under 14.
+  price: $400
+- name: Under 18
+  description: 'Age 5–6 plus one adult: $150; age 7–12 plus one adult: $230; age 13–18: $200.'
+  price: $150–$230
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
+about: Brighton SLSC is a large metropolitan club on Adelaide’s southern coastline with regular activity across Nippers, lifesaving,
+  patrolling and surf sports. Its program covers the major surf-sport disciplines and the club has facilities that support
+  both active members and the wider club community. It is well suited to families and members who want access to a broad range
+  of participation pathways.
+lead_contact_email: registrarinfo@brightonsurfclub.com
+visit_note: The club is open Friday evenings from 5:00 pm and Sundays from 3:00 pm. During the summer Nippers season it is
+  also open on Saturday afternoons.
 ---
 
-## Overview
+## About the club
 
-Brighton SLSC presents itself as a relaxed, family-oriented surf lifesaving club and one of the larger clubs in South Australia. Its public information emphasises Nippers, lifesaving pathways, volunteering and community participation.
+Brighton SLSC is a large metropolitan club on Adelaide’s southern coastline with regular activity across Nippers, lifesaving, patrolling and surf sports. Its program covers the major surf-sport disciplines and the club has facilities that support both active members and the wider club community. It is well suited to families and members who want access to a broad range of participation pathways.
 
 ## What this club offers
 
-- Nippers program based on surf education, beach activities, swimming, running and board paddling.
-- Come and Try Nippers sessions for new families.
-- Lifesaving pathway information, including SRC and Bronze Medallion progression.
-- Surf sports and broader volunteer club roles.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue
+- Coaching, officiating and administration opportunities
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Come and Try Nippers information states families meet on the beach on Saturday at 1:30pm for a 2:00pm start.
-- Nippers are education-focused with competition as one part of the broader program.
-- Lifesaving pathway information is published on the club website.
+- **Junior activities:** Saturdays 2:00 pm–4:00 pm.
+- **Youth:** Youth program available for ages 13–18; contact the club for current session details.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Current fee schedule was not clearly verified from the public site in this pass.
-- The club advises new members to register through Surf Life Saving Australia and contact the Registrar for information.
+- **New active member 18+ — $200:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $60:** For members who want to participate in the club without patrolling.
+- **Family membership — $400:** 2 adults and all children under 14.
+- **Under 18 — $150–$230:** Age 5–6 plus one adult: $150; age 7–12 plus one adult: $230; age 13–18: $200.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Large metropolitan club with family, lifesaving, sport and social pathways.
-- Volunteer-based operating model.
-- Good fit for people who want a busy club with multiple ways to participate.
+- Gym (award holders only)
+- Restaurant
+- Accessible toilet/changerooms
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Brighton if you want a large metro club with strong Nippers and multiple member pathways.
-- Good option for families in Brighton, Hove, Marion and nearby suburbs.
-- Confirm fees and program availability directly with the registrar before joining.
+The club is open Friday evenings from 5:00 pm and Sundays from 3:00 pm. During the summer Nippers season it is also open on Saturday afternoons.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.brightonsurfclub.com/
-- How to join: https://www.brightonsurfclub.com/the-club/how-to-join/
-- Nippers: https://www.brightonsurfclub.com/nippers/
-- Come and Try: https://www.brightonsurfclub.com/nippers/come-and-try/
-- Membership information: https://www.brightonsurfclub.com/the-club/membership-information/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

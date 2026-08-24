@@ -1,85 +1,111 @@
 ---
 layout: club
-title: 'Beachport Surf Life Saving Club'
-slug: 'beachport-surf-life-saving-club'
-permalink: '/clubs/beachport-surf-life-saving-club/'
-summary: 'A regional Limestone Coast club supporting the Beachport community through lifesaving, training and volunteering.'
-image: '/assets/img/clubs/beachport-surf-life-saving-club.jpg'
-suburb: 'Beachport'
-region: 'Limestone Coast'
-address: 'Millicent Road, Beachport SA 5280'
-website: 'https://beachportslsc.com.au/'
+title: Beachport Surf Life Saving Club
+slug: beachport-slsc
+permalink: /clubs/beachport-slsc/
+summary: A small Limestone Coast club offering summer Nippers, youth activities and seasonal patrols at Beachport.
+image: /assets/img/clubs/beachport-slsc.jpg
+suburb: Beachport
+region: Limestone Coast
+address: Millicent Rd, Beachport SA 5280
+website: https://beachportslsc.com.au/
 latitude: -37.4792
 longitude: 140.0124
-member_size: 'Regional club'
-membership_fee_note: 'Current public membership fees not verified in this pass. Confirm with club.'
-membership_fee_source: ''
-source_checked: '2026-06-30'
+member_size: Small (0–200 members)
+membership_fee_note: 'New active member 18+: $70; Social member: $10; Family membership: $150; Under 18: $70. 2026/27 fees
+  supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- training
+- community
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
+- beach-access
+- accessible-facilities
+- family-friendly
 verified_programs:
-  - 'Regional lifesaving'
-  - 'Volunteer patrols'
-  - 'Community water safety'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
 best_for:
-  - 'Limestone Coast families'
-  - 'Regional volunteers'
-  - 'People interested in community coastal safety'
+- Families on the Limestone Coast
+- Children and teenagers looking for a summer lifesaving program
+- Members wanting a small community-based club
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: No specific program listed
+multicultural_program: No specific program listed
+gym_facilities: No gym listed
 family_friendly: 'Yes'
-badge_label: 'Regional club'
-badge_type: 'community'
+badge_label: Regional club
+badge_type: community
+first_nations_program: No specific program listed
+activity_details:
+  junior: Most Sundays from December to February, 10:00 am–11:30 am.
+  youth: Youth sessions follow Nippers and generally continue until 1:00 pm.
+  lifesaving_patrolling: Typically Saturdays and Sundays between Boxing Day and Australia Day.
+facility_details:
+- Accessible public toilets (no changerooms)
+- Accessible beach access
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $70
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $10
+- name: Family membership
+  description: 2 adults and children under 21.
+  price: $150
+- name: Under 18
+  description: Anyone aged 5–18.
+  price: $70
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
+about: Beachport SLSC is a small Limestone Coast club with a strongly seasonal program centred on the summer holiday period.
+  Nippers and youth activities run through December to February, while patrols are typically provided between Boxing Day and
+  Australia Day. The club suits families and volunteers looking for a smaller community-based lifesaving environment.
+lead_contact_email: beachportslssa@gmail.com
+visit_note: Visit during Nippers or Youth sessions, or contact the club by email before attending.
 ---
 
-## Overview
+## About the club
 
-Beachport SLSC is the Limestone Coast surf life saving club listed by SLSSA for the Beachport community. It is best positioned for people living in or visiting the lower South East who want to participate in lifesaving or support regional coastal safety.
+Beachport SLSC is a small Limestone Coast club with a strongly seasonal program centred on the summer holiday period. Nippers and youth activities run through December to February, while patrols are typically provided between Boxing Day and Australia Day. The club suits families and volunteers looking for a smaller community-based lifesaving environment.
 
 ## What this club offers
 
-- Regional surf life saving and beach safety participation.
-- Volunteer roles around lifesaving, training, club operations and events.
-- Community connection for members in the Beachport area.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Training and program days should be confirmed with the club.
-- Prospective members should use the club website or SLSSA directory link to enquire.
+- **Junior activities:** Most Sundays from December to February, 10:00 am–11:30 am.
+- **Youth:** Youth sessions follow Nippers and generally continue until 1:00 pm.
+- **Lifesaving and patrolling:** Typically Saturdays and Sundays between Boxing Day and Australia Day.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Current fees were not clearly verified from public search results in this pass.
-- Profile should be updated once the club confirms current membership categories and costs.
+- **New active member 18+ — $70:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $10:** For members who want to participate in the club without patrolling.
+- **Family membership — $150:** 2 adults and children under 21.
+- **Under 18 — $70:** Anyone aged 5–18.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Regional club environment.
-- Likely to suit members who prefer a smaller community-based club rather than a large metropolitan club.
+- Accessible public toilets (no changerooms)
+- Accessible beach access
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Beachport if you are based on the Limestone Coast or want a regional club environment.
-- Confirm Nippers availability, training days and membership costs directly with the club.
+Visit during Nippers or Youth sessions, or contact the club by email before attending.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://beachportslsc.com.au/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

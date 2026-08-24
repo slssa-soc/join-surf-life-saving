@@ -1,111 +1,142 @@
 ---
 layout: club
-title: 'Seacliff Surf Life Saving Club'
-slug: 'seacliff-surf-life-saving-club'
-permalink: '/clubs/seacliff-surf-life-saving-club/'
-summary: 'A large metropolitan club with Nippers, surf sports, lifesaving training, hospitality and publicly listed 2025/26 membership fees.'
-image: '/assets/img/clubs/seacliff-surf-life-saving-club.jpg'
-suburb: 'Seacliff'
-region: 'Adelaide Metro'
-address: '248 Esplanade, Seacliff SA 5049'
-website: 'https://www.seacliffslsc.com.au/'
+title: Seacliff Surf Life Saving Club
+slug: seacliff-slsc
+permalink: /clubs/seacliff-slsc/
+summary: A large metropolitan club at Seacliff offering Nippers, patrols, broad surf sports, pool rescue and accessible facilities.
+image: /assets/img/clubs/seacliff-slsc.png
+suburb: Seacliff
+region: Adelaide Metro
+address: 248 Esplanade, Seacliff SA 5049
+website: https://www.seacliffslsc.com.au/
 latitude: -35.0342
 longitude: 138.5133
-member_size: 'Large metro club'
-membership_fee_note: 'Public 2025/26 fees listed on membership and Nipper registration pages.'
-membership_fee_source: 'https://www.seacliffslsc.com.au/membership/'
-source_checked: '2026-06-30'
+member_size: Large (401+ members)
+membership_fee_note: 'New active member 19+: $200; Social member: $60; Family membership: $580; Under 19: $150–$220. 2026/27
+  fees supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
-  - 'hospitality'
+- beach-access
+- accessible-facilities
+- gym
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'Surf sports academy'
-  - 'IRB training'
-  - 'Swimming training'
-  - 'Hospitality'
-  - 'Membership fees'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Inflatable Rescue Boat racing
+- Pool rescue
+- Surf sports support
 best_for:
-  - 'Families near Seacliff'
-  - 'Members comparing fees'
-  - 'Athletes interested in surf sports'
-  - 'People wanting bar/bistro facilities'
+- Families in Adelaide’s south-western suburbs
+- Members wanting a broad surf-sports program
+- People interested in patrols, training and accessible club facilities
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: No specific program listed
+multicultural_program: No specific program listed
+gym_facilities: Gym
 family_friendly: 'Yes'
-badge_label: 'Clear 2025/26 fees'
-badge_type: 'yellow'
+badge_label: Clear 2025/26 fees
+badge_type: yellow
+first_nations_program: No specific program listed
+activity_details:
+  junior: Saturdays from 1:30 pm; the supplied finish time is unclear and should be confirmed.
+  youth: Youth program available for ages 13–18; contact the club for current session details.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Inflatable Rescue Boat racing
+  - Pool rescue
+  surf_sports_support: true
+facility_details:
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+- Accessible beach access
+membership_options:
+- name: New active member 19+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $200
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $60
+- name: Family membership
+  description: 2 adults and children under 21.
+  price: $580
+- name: Under 19
+  description: 'Age 5–6: $150; age 7–13: $220; age 14–18: $180.'
+  price: $150–$220
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
+about: Seacliff SLSC is a large metropolitan club on Adelaide’s southern coastline, offering Nippers, youth participation,
+  patrols and a comprehensive surf-sports program. The club provides accessible facilities and opportunities to contribute
+  through coaching, officiating and administration as well as active lifesaving. It is a strong option for families and members
+  wanting a busy club with multiple participation pathways.
+lead_contact_email: secretary@seacliffslsc.com.au
+visit_note: Email the club administration team to arrange a suitable time to discuss joining. For Juniors, prospective families
+  can meet the team near the patrol tower on Saturday afternoons from 1:30 pm or contact the Juniors team by email.
 ---
 
-## Overview
+## About the club
 
-Seacliff SLSC publishes detailed 2025/26 membership fees, Nipper registration information, training information, surf sports academy information and hospitality details through the Seacliff Surfy.
+Seacliff SLSC is a large metropolitan club on Adelaide’s southern coastline, offering Nippers, youth participation, patrols and a comprehensive surf-sports program. The club provides accessible facilities and opportunities to contribute through coaching, officiating and administration as well as active lifesaving. It is a strong option for families and members wanting a busy club with multiple participation pathways.
 
 ## What this club offers
 
-- Nippers with Saturday sessions and optional additional weekly training.
-- Surf sports academy and athlete support.
-- IRB and lifesaving training opportunities.
-- Swimming training sessions at State Swim referenced.
-- Bar and bistro facilities.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue
+- Coaching, officiating and administration opportunities
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Nippers information says family membership includes approximately 16 Saturday Nipper sessions.
-- Optional additional training sessions are referenced, including run and board training.
-- Subsidised swim squad sessions are referenced.
-- Swimming training details for 2025 were to be confirmed.
+- **Junior activities:** Saturdays from 1:30 pm; the supplied finish time is unclear and should be confirmed.
+- **Youth:** Youth program available for ages 13–18; contact the club for current session details.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Junior U6 and U7: .
-- Junior U8 to U13: .
-- Youth 14-18: .
-- Active Member 19 and above: .
-- Family Membership: .
-- Second parent to a fully paid Nipper: .
-- Associate Member: .
+- **New active member 19+ — $200:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $60:** For members who want to participate in the club without patrolling.
+- **Family membership — $580:** 2 adults and children under 21.
+- **Under 19 — $150–$220:** Age 5–6: $150; age 7–13: $220; age 14–18: $180.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Large, established metro club with a strong junior, training and surf sports footprint.
-- Good fit for families who want structured Nippers and optional training extras.
-- Hospitality facilities may appeal to families wanting a social club setting.
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+- Accessible beach access
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Seacliff if you want a large metro club with clear fees and strong junior/sport pathways.
-- Good candidate for families comparing Nipper cost and inclusions.
-- Confirm current swim/training arrangements before joining.
+Email the club administration team to arrange a suitable time to discuss joining. For Juniors, prospective families can meet the team near the patrol tower on Saturday afternoons from 1:30 pm or contact the Juniors team by email.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.seacliffslsc.com.au/
-- Membership: https://www.seacliffslsc.com.au/membership/
-- Nipper registration: https://www.seacliffslsc.com.au/nipper-registration/
-- Nippers: https://www.seacliffslsc.com.au/home/about-nippers/
-- Training: https://www.seacliffslsc.com.au/training/
-- Surf sports academy: https://www.seacliffslsc.com.au/surf-sports-academy/
-- Contact: https://www.seacliffslsc.com.au/home/contact-us/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

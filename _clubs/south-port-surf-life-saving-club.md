@@ -1,103 +1,151 @@
 ---
 layout: club
-title: 'South Port Surf Life Saving Club'
-slug: 'south-port-surf-life-saving-club'
-permalink: '/clubs/south-port-surf-life-saving-club/'
-summary: 'A southern club at the mouth of the Onkaparinga River with Nippers, surf conditions, patrols, training and a relaxed beach environment.'
-image: '/assets/img/clubs/south-port-surf-life-saving-club.jpg'
-suburb: 'Port Noarlunga South'
-region: 'South Metro'
-address: 'Weatherald Terrace, Port Noarlunga South SA 5167'
-website: 'https://www.southportslsc.org.au/'
+title: South Port Surf Life Saving Club
+slug: south-port-slsc
+permalink: /clubs/south-port-slsc/
+summary: A medium-sized southern metropolitan club offering Nippers, the Squids youth program, patrols, broad surf sports
+  and adaptive participation.
+image: /assets/img/clubs/south-port-slsc.jpg
+suburb: Port Noarlunga South
+region: South Metro
+address: 50 Weatherald Terrace, Port Noarlunga South SA 5167
+website: https://www.southportslsc.org.au/
 latitude: -35.1595
 longitude: 138.4669
-member_size: 'Medium coastal club'
-membership_fee_note: 'Older annual report listed 2022/23 fees; current fees should be confirmed with club.'
-membership_fee_source: 'https://www.southportslsc.org.au/images/pdf/South_Port_Annual_Report_2021-22_LR.pdf'
-source_checked: '2026-06-30'
+member_size: Medium (201–400 members)
+membership_fee_note: 'New active member 18+: $210; Social member: $70; Family membership: $340; Under 18: $135. 2026/27 fees
+  supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
+- inclusive-programs
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
+- accessible-facilities
+- gym
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'Board training'
-  - 'Beach training'
-  - 'Pool training'
-  - 'Patrol information'
-  - 'Surf education'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Inflatable Rescue Boat racing
+- Pool rescue
+- Surf sports support
+- Adaptive participation is available; Starfish program details for 2026/27 are still to be confirmed.
+- No specific multicultural program is currently listed.
+- No specific First Nations program is currently listed.
+- Surf-sport training is scheduled across multiple weekdays; team-specific times vary.
 best_for:
-  - 'Southern suburbs families'
-  - 'People near Port Noarlunga South'
-  - 'Members interested in surf conditions and board/body surfing'
-  - 'Families wanting detailed junior training info'
+- Families around Port Noarlunga South and Onkaparinga
+- Young members looking for Nippers and a continuing youth pathway
+- Members interested in broad surf-sports training and weekend patrols
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Older annual report references gym membership; confirm current'
+  id: flexible
+  label: Flexible
+adaptive_program: Adaptive participation is available; Starfish program details for 2026/27 are still to be confirmed.
+multicultural_program: No specific multicultural program is currently listed.
+gym_facilities: Gym (active members have FOB access)
 family_friendly: 'Yes'
-badge_label: 'Surf beach'
-badge_type: 'blue'
+badge_label: Surf beach
+badge_type: blue
+about: South Port SLSC is a medium-sized southern metropolitan club at Port Noarlunga South, offering pathways from Nippers
+  through youth, patrols and competitive surf sports. Its Squids youth program provides monthly activities, while surf-sport
+  training runs across the week and patrols are typically rostered on weekend afternoons. The club also lists adaptive participation
+  and active-member gym access.
+first_nations_program: No specific First Nations program is currently listed.
+lead_contact_email: mail@southportslsc.org.au
+visit_note: Prospective members can visit on Saturdays from 1:30 pm–4:00 pm. Members can arrange another suitable time with
+  the club if needed.
+activity_details:
+  junior: Saturdays 2:00 pm–4:00 pm.
+  youth: Squids youth program with monthly activities.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons from 12:00 pm–5:00 pm.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Inflatable Rescue Boat racing
+  - Pool rescue
+  surf_sports_support: true
+  adaptive: Adaptive participation is available; Starfish program details for 2026/27 are still to be confirmed.
+  multicultural: No specific multicultural program is currently listed.
+  first_nations: No specific First Nations program is currently listed.
+  other_programs:
+  - Surf-sport training is scheduled across multiple weekdays; team-specific times vary.
+facility_details:
+- Gym (active members have FOB access)
+- Accessible toilet/changerooms
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $210
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $70
+- name: Family membership
+  description: 2 adults and up to 4 children.
+  price: $340
+- name: Under 18
+  description: Anyone under 18.
+  price: $135
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 ---
 
-## Overview
+## About the club
 
-South Port SLSC is located in the sand dunes at the mouth of the Onkaparinga River Estuary. Its public website describes the beach as favourable for board riders and body surfers and says the club has saved over 500 lives.
+South Port SLSC is a medium-sized southern metropolitan club at Port Noarlunga South, offering pathways from Nippers through youth, patrols and competitive surf sports. Its Squids youth program provides monthly activities, while surf-sport training runs across the week and patrols are typically rostered on weekend afternoons. The club also lists adaptive participation and active-member gym access.
 
 ## What this club offers
 
-- Nippers and junior training.
-- Saturday Nipper training.
-- Board training, beach training and pool training references.
-- Patrol information and surf education.
-- Relaxed beach environment.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue
+- Coaching, officiating and administration opportunities
+- Adaptive participation is available; Starfish program details for 2026/27 are still to be confirmed.
+- No specific multicultural program is currently listed.
+- No specific First Nations program is currently listed.
+- Surf-sport training is scheduled across multiple weekdays; team-specific times vary.
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Public junior information lists Saturday Nipper training from early October to mid-March.
-- U6/7 sessions are listed as 2:00pm to 3:30pm.
-- U8-13 sessions are listed as 2:00pm to 4:00pm.
-- Board training Monday and Wednesday 5:00pm, beach training Wednesday 4:30pm, and pool training Tuesday 7:00pm to 8:00pm were referenced in published junior information.
-- Parent/guardian must remain present during junior activities.
+- **Junior activities:** Saturdays 2:00 pm–4:00 pm.
+- **Youth:** Squids youth program with monthly activities.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons from 12:00 pm–5:00 pm.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Older 2022/23 annual report listed Community , Seniors , Family , Under 18s , Associate  and Gym .
-- Treat these as historic only and confirm current season fees with the club.
+- **New active member 18+ — $210:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $70:** For members who want to participate in the club without patrolling.
+- **Family membership — $340:** 2 adults and up to 4 children.
+- **Under 18 — $135:** Anyone under 18.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Relaxed southern beach club with a genuine surf environment.
-- Likely to suit families and members who want strong junior training and surf skills.
-- Good fit for people around Port Noarlunga South, Seaford and the Onkaparinga coast.
+- Gym (active members have FOB access)
+- Accessible toilet/changerooms
 
-## Who this club may suit
+## Visiting the club
 
-- Choose South Port if you want a southern club with surf conditions and detailed junior training structure.
-- Good option for children who want board, beach and pool training.
-- Confirm current fees, timetable and parent requirements before joining.
+Prospective members can visit on Saturdays from 1:30 pm–4:00 pm. Members can arrange another suitable time with the club if needed.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.southportslsc.org.au/
-- Juniors information: https://www.southportslsc.org.au/juniors
-- Junior training: https://www.southportslsc.org.au/juniors/item/117-junior-training-members-only
-- Annual report with historic fees: https://www.southportslsc.org.au/images/pdf/South_Port_Annual_Report_2021-22_LR.pdf
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

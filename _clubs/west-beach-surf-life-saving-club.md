@@ -1,97 +1,150 @@
 ---
 layout: club
-title: 'West Beach Surf Life Saving Club'
-slug: 'west-beach-surf-life-saving-club'
-permalink: '/clubs/west-beach-surf-life-saving-club/'
-summary: 'A major Adelaide metropolitan club with patrols, volunteering, surf sports, social connection, venue facilities and a strong community spirit.'
-image: '/assets/img/clubs/west-beach-surf-life-saving-club.jpg'
-suburb: 'West Beach'
-region: 'Adelaide Metro'
-address: 'Corner Seaview and West Beach Roads, West Beach SA 5024'
-website: 'https://www.westbeachslsc.com.au/'
+title: West Beach Surf Life Saving Club
+slug: west-beach-slsc
+permalink: /clubs/west-beach-slsc/
+summary: A large western metropolitan club offering age-based Nippers, youth, patrols, comprehensive surf sports and inclusive
+  participation programs.
+image: /assets/img/clubs/west-beach-slsc.png
+suburb: West Beach
+region: Adelaide Metro
+address: 1A Seaview Road, West Beach SA 5024
+website: https://westbeachslsc.com.au/
 latitude: -34.9466
 longitude: 138.5025
-member_size: 'Large metro club'
-membership_fee_note: 'Current public membership fees not verified in this pass. Confirm with club.'
-membership_fee_source: ''
-source_checked: '2026-06-30'
+member_size: Large (401+ members)
+membership_fee_note: 'New active member 18+: $190; Social member: $50; Family membership: $410; Under 18: $100–$190. 2026/27
+  fees supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
+- inclusive-programs
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
-  - 'hospitality'
+- beach-access
+- accessible-facilities
+- gym
+- family-friendly
 verified_programs:
-  - 'Compete'
-  - 'Volunteer'
-  - 'Food and beverage'
-  - 'Member resources'
-  - 'Community events'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Inflatable Rescue Boat racing
+- Pool rescue
+- Surf sports support
+- Adaptive program available.
+- Multicultural program available.
+- First Nations program available.
 best_for:
-  - 'Western metro families'
-  - 'Members wanting a large club'
-  - 'People interested in volunteering, sport or social connection'
-  - 'People near West Beach and Henley South'
+- Families in Adelaide’s western suburbs
+- Members wanting access to a comprehensive surf-sports program
+- People looking for adaptive, multicultural or First Nations participation pathways
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: Adaptive program available.
+multicultural_program: Multicultural program available.
+gym_facilities: Gym
 family_friendly: 'Yes'
-badge_label: 'Large metro club'
-badge_type: 'yellow'
+badge_label: Large metro club
+badge_type: yellow
+about: West Beach SLSC is a large metropolitan club on Adelaide’s western coastline with participation options across Nippers,
+  youth, lifesaving, patrols and all major surf-sport disciplines. The club also lists adaptive, multicultural and First Nations
+  programs, together with accessible beach and changeroom facilities. It is well placed for members seeking a broad range
+  of activities in a busy metropolitan club environment.
+first_nations_program: First Nations program available.
+lead_contact_email: admin@westbeachslsc.com.au
+visit_note: The supplied club information does not specify a regular drop-in time. No regular prospective-member drop-in time
+  was supplied.
+activity_details:
+  junior: Saturdays; session times vary by age group.
+  youth: Youth program available for ages 13–18; current session details should be confirmed with the club.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Inflatable Rescue Boat racing
+  - Pool rescue
+  surf_sports_support: true
+  adaptive: Adaptive program available.
+  multicultural: Multicultural program available.
+  first_nations: First Nations program available.
+facility_details:
+- Gym
+- Accessible toilet/changerooms
+- Accessible beach access
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $190
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $50
+- name: Family membership
+  description: A family group of 3 or more people at the same residential address where individual fees total or exceed $410.
+  price: $410
+- name: Under 18
+  description: 'Age 5–6: $100; age 7–12: $190; age 13–14: $120; age 15–18: $150.'
+  price: $100–$190
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 ---
 
-## Overview
+## About the club
 
-West Beach SLSC publicly describes itself as a gathering place for ocean lovers, adventurers and community spirit since 1956. Its public site invites people to compete, volunteer, or enjoy food, drinks and views.
+West Beach SLSC is a large metropolitan club on Adelaide’s western coastline with participation options across Nippers, youth, lifesaving, patrols and all major surf-sport disciplines. The club also lists adaptive, multicultural and First Nations programs, together with accessible beach and changeroom facilities. It is well placed for members seeking a broad range of activities in a busy metropolitan club environment.
 
 ## What this club offers
 
-- Lifesaving and volunteering.
-- Surf sports and competition participation.
-- Member resources.
-- Food and beverage / venue connection.
-- Community and social participation.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue
+- Coaching, officiating and administration opportunities
+- Adaptive program available.
+- Multicultural program available.
+- First Nations program available.
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Current training days were not captured from public snippets in this pass.
-- Prospective members should confirm Nippers, training and patrol requirements with the club.
+- **Junior activities:** Saturdays; session times vary by age group.
+- **Youth:** Youth program available for ages 13–18; current session details should be confirmed with the club.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Current public fee schedule was not verified in this pass.
-- Confirm membership fees directly with West Beach SLSC.
+- **New active member 18+ — $190:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $50:** For members who want to participate in the club without patrolling.
+- **Family membership — $410:** A family group of 3 or more people at the same residential address where individual fees total or exceed $410.
+- **Under 18 — $100–$190:** Age 5–6: $100; age 7–12: $190; age 13–14: $120; age 15–18: $150.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Large, social metropolitan club.
-- Good fit for people who want volunteering, sport and community spirit.
-- May suit families wanting a club with broader hospitality and social presence.
+- Gym
+- Accessible toilet/changerooms
+- Accessible beach access
 
-## Who this club may suit
+## Visiting the club
 
-- Choose West Beach if you want a major metro club with strong community and social presence.
-- Good option for people near West Beach, Henley South and Adelaide Airport.
-- Confirm Nippers, training times and current fees before joining.
+The supplied club information does not specify a regular drop-in time. No regular prospective-member drop-in time was supplied.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.westbeachslsc.com.au/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

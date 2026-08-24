@@ -1,106 +1,141 @@
 ---
 layout: club
-title: 'Port Elliot Surf Life Saving Club'
-slug: 'port-elliot-surf-life-saving-club'
-permalink: '/clubs/port-elliot-surf-life-saving-club/'
-summary: 'A Fleurieu Peninsula club at Horseshoe Bay with Nippers, Flying Fishes, Same Wave, lifesaving, surf sports and publicly listed membership categories.'
-image: '/assets/img/clubs/port-elliot-surf-life-saving-club.jpg'
-suburb: 'Port Elliot'
-region: 'Fleurieu Peninsula'
-address: 'Horseshoe Bay, Port Elliot SA 5212'
-website: 'https://portelliotslsc.com.au/'
+title: Port Elliot Surf Life Saving Club
+slug: port-elliot-slsc
+permalink: /clubs/port-elliot-slsc/
+summary: A large Fleurieu club at Port Elliot offering Nippers, patrols, surf-sports pathways, an adaptive program and member
+  facilities.
+image: /assets/img/clubs/port-elliot-slsc.jpg
+suburb: Port Elliot
+region: Fleurieu Peninsula
+address: 1 The Cutting, Port Elliot SA 5212
+website: https://portelliotslsc.com.au/
 latitude: -35.5324
 longitude: 138.6842
-member_size: 'Medium coastal club'
-membership_fee_note: 'Public Nipper registration page lists junior, full adult, Nipper associate and community membership fees. Confirm current season before publishing.'
-membership_fee_source: 'https://portelliotslsc.com.au/register-your-nippers'
-source_checked: '2026-06-30'
+member_size: Large (401+ members)
+membership_fee_note: 'New active member 18+: $210; Social member: $55; Family membership: $520; Under 18: $100; Associate
+  (Nipper parent): $40. 2026/27 fees supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
-  - 'inclusive-programs'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
+- inclusive-programs
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
-  - 'hospitality'
+- accessible-facilities
+- gym
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'Flying Fishes'
-  - 'Same Wave'
-  - 'Surf sports'
-  - 'Lifesaving'
-  - 'Membership categories'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Ski paddling
+- Surf boats
+- Surf sports support
+- Adaptive program available.
 best_for:
-  - 'Fleurieu families'
-  - 'Children aged 9-13 focused on Nippers'
-  - 'Members interested in inclusive programs'
-  - 'People near Port Elliot and Victor Harbor'
+- Families around Port Elliot and the Fleurieu
+- Members interested in patrols, surf boats and ski paddling
+- People seeking an adaptive participation pathway
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Same Wave listed'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: Adaptive program available.
+multicultural_program: No specific program listed
+gym_facilities: Gym
 family_friendly: 'Yes'
-badge_label: 'Horseshoe Bay'
-badge_type: 'blue'
+badge_label: Horseshoe Bay
+badge_type: blue
+first_nations_program: No specific program listed
+activity_details:
+  junior: Saturdays 1:00 pm–3:00 pm.
+  youth: Youth program available for ages 13–18; contact the club for current session details.
+  lifesaving_patrolling: Typically Saturday, Sunday and public-holiday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Ski paddling
+  - Surf boats
+  surf_sports_support: true
+  adaptive: Adaptive program available.
+facility_details:
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $210
+- name: Social member
+  description: No changeroom or gym access.
+  price: $55
+- name: Family membership
+  description: 2 adults + 2 children, or 1 adult + 3 children.
+  price: $520
+- name: Under 18
+  description: Children aged 5–17.
+  price: $100
+- name: Associate (Nipper parent)
+  description: Parent/associate membership.
+  price: $40
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
+about: Port Elliot SLSC is a large Fleurieu club with a strong mix of Nippers, lifesaving, patrols and surf sports. Members
+  can get involved in boards, beach events, ski paddling and surf boats, together with coaching, officiating and administration
+  support. The club also lists an adaptive program and provides facilities for active and social participation.
+lead_contact_email: info@portelliotslsc.com.au
+visit_note: The club indicates Saturdays from approximately 1:00 pm–2:00 pm between October and April, but recommends email
+  as the best way to arrange a membership discussion.
 ---
 
-## Overview
+## About the club
 
-Port Elliot SLSC is based at Horseshoe Bay and publicly lists Nippers, Flying Fishes, Same Wave and membership information. It is a strong Fleurieu Peninsula option for families and lifesaving volunteers.
+Port Elliot SLSC is a large Fleurieu club with a strong mix of Nippers, lifesaving, patrols and surf sports. Members can get involved in boards, beach events, ski paddling and surf boats, together with coaching, officiating and administration support. The club also lists an adaptive program and provides facilities for active and social participation.
 
 ## What this club offers
 
-- Nippers program for 9-13 year olds and under 8/9s wanting to compete in carnivals.
-- Flying Fishes junior pathway.
-- Same Wave inclusive program referenced in club access policy.
-- Lifesaving, membership, surf sports and training enquiries through club contact channels.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Ski paddling, Surf boats
+- Coaching, officiating and administration opportunities
+- Adaptive program available.
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Nippers page states the program runs on Saturdays between 1:00pm and 3:00pm.
-- Access policy references patrols, Nippers, training and Same Wave as operating contexts.
-- Current program dates should be confirmed each season.
+- **Junior activities:** Saturdays 1:00 pm–3:00 pm.
+- **Youth:** Youth program available for ages 13–18; contact the club for current session details.
+- **Lifesaving and patrolling:** Typically Saturday, Sunday and public-holiday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Ski paddling, Surf boats.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Junior membership including Nippers under 18 on 1 October: .
-- Full adult membership over 18: .
-- Nipper associate: .
-- Community membership listed publicly on the registration page.
-- One-off SLSSA training fee of  is referenced on the membership page for first adult training.
+- **New active member 18+ — $210:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $55:** No changeroom or gym access.
+- **Family membership — $520:** 2 adults + 2 children, or 1 adult + 3 children.
+- **Under 18 — $100:** Children aged 5–17.
+- **Associate (Nipper parent) — $40:** Parent/associate membership.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Fleurieu club with a strong bay-based identity.
-- Good fit for families around Port Elliot, Victor Harbor and nearby towns.
-- Inclusive programming references make it worth confirming options for members needing adapted participation.
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Port Elliot if Horseshoe Bay is your local or preferred beach.
-- Good candidate for families looking for clear junior membership pricing.
-- Confirm eligibility, current Nipper age bands and Same Wave details with the club.
+The club indicates Saturdays from approximately 1:00 pm–2:00 pm between October and April, but recommends email as the best way to arrange a membership discussion.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://portelliotslsc.com.au/
-- Membership: https://portelliotslsc.com.au/membership
-- Register Nippers: https://portelliotslsc.com.au/register-your-nippers
-- Nippers: https://portelliotslsc.com.au/nippers
-- Club: https://portelliotslsc.com.au/club
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

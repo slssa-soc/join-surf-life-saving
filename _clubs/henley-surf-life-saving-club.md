@@ -1,106 +1,169 @@
 ---
 layout: club
-title: 'Henley Surf Life Saving Club'
-slug: 'henley-surf-life-saving-club'
-permalink: '/clubs/henley-surf-life-saving-club/'
-summary: 'South Australiaâ€™s oldest surf life saving club, with Nippers, lifesaving, surf sports, training and publicly listed 2025/26 fees.'
-image: '/assets/img/clubs/henley-surf-life-saving-club.jpg'
-suburb: 'Henley Beach'
-region: 'Adelaide Metro'
-address: '246 The Esplanade, Henley Beach SA 5022'
-website: 'https://www.henleyslsc.com.au/'
+title: Henley Surf Life Saving Club
+slug: henley-slsc
+permalink: /clubs/henley-slsc/
+summary: A metropolitan club at Henley Beach offering Nippers, patrols, year-round training, surf sports and inclusive participation
+  programs.
+image: /assets/img/clubs/henley-slsc.jpg
+suburb: Henley Beach
+region: Adelaide Metro
+address: 246 Esplanade, Henley Beach SA 5022
+website: https://www.henleyslsc.com.au/
 latitude: -34.9207
 longitude: 138.4945
-member_size: 'Large metro club'
-membership_fee_note: 'Public 2025/26 pricing listed on club membership page.'
-membership_fee_source: 'https://www.henleyslsc.com.au/membership'
-source_checked: '2026-06-30'
+member_size: Medium (201–400 members)
+membership_fee_note: 'New active member 18+: $200; Social member: $50; Family membership: $440; Child aged 6–7: $100; Child
+  aged 8–13: $150; Youth aged 13–18: $150; Adaptive Nippers: $100. 2026/27 fees supplied by the club. Additional costs may
+  apply depending on the member’s activities.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
+- inclusive-programs
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
-  - 'hospitality'
+- beach-access
+- accessible-facilities
+- gym
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'Lifesaving'
-  - 'Surf sports'
-  - 'Training'
-  - 'Bronze/SRC pathways'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Pool rescue
+- Surf sports support
+- Adaptive program available.
+- Multicultural program available.
+- First Nations program available.
 best_for:
-  - 'Families near Henley Beach'
-  - 'Members wanting a historic club'
-  - 'Athletes interested in structured surf sports'
-  - 'People seeking lifesaving training'
+- Families in Adelaide’s western suburbs
+- New lifesavers who want training and a clear patrol pathway
+- Members interested in year-round junior training
+- People looking for adaptive, multicultural or First Nations participation pathways
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: Adaptive program available.
+multicultural_program: Multicultural program available.
+gym_facilities: Gym
 family_friendly: 'Yes'
-badge_label: 'Historic club'
-badge_type: 'yellow'
+badge_label: Historic club
+badge_type: yellow
+first_nations_program: First Nations program available.
+activity_details:
+  junior: 'October–March: Saturdays 12:45 pm, with mid-week training Thursdays at 4:30 pm. From April–August, Nippers aged
+    11+ are encouraged to join pool rescue training on Saturday afternoons. Nippers swim training runs year-round on Thursdays
+    at 7:30 pm at Seaton Swim Centre.'
+  youth: Youth program available for ages 13–18.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons, with around five rostered shifts per member each season.
+    Full training is provided and previous lifesaving experience is not required.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Pool rescue
+  surf_sports_support: true
+  adaptive: Adaptive program available.
+  multicultural: Multicultural program available.
+  first_nations: First Nations program available.
+facility_details:
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+- Accessible beach access
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $200
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $50
+- name: Family membership
+  description: Maximum combined fee for members living in one household.
+  price: $440
+- name: Child aged 6–7
+  description: Includes social membership for 2 parents/guardians.
+  price: $100
+- name: Child aged 8–13
+  description: Includes social membership for 2 parents/guardians.
+  price: $150
+- name: Youth aged 13–18
+  description: Includes social membership for 2 parents/guardians and competition fees for SA carnivals; craft and training
+    subsidies are available.
+  price: $150
+- name: Adaptive Nippers
+  description: Includes social membership for 2 parents/guardians.
+  price: $100
+membership_pricing_status: 2026/27 fees supplied by the club. Additional costs may apply depending on the member’s activities.
+about: Henley SLSC is a metropolitan club with year-round activity across junior development, lifesaving and surf sports.
+  Its Nippers program runs through summer with additional pool-rescue and swim training outside the main season, while patrol
+  members are supported with training and a manageable seasonal roster. The club also lists adaptive, multicultural and First
+  Nations participation programs.
+lead_contact_email: info@henleyslsc.com.au
+visit_note: Visit on Saturdays between 9:00 am and 10:00 am. Enter from the beach side via the ramp and head to the deck,
+  where the Saturday morning group can help with joining questions.
 ---
 
-## Overview
+## About the club
 
-Henley SLSC describes itself as South Australiaâ€™s oldest surf lifesaving organisation and highlights lifesaving, community and sport. The club publishes clear 2025/26 membership pricing and information for Nippers, lifesaving and surf sports.
+Henley SLSC is a metropolitan club with year-round activity across junior development, lifesaving and surf sports. Its Nippers program runs through summer with additional pool-rescue and swim training outside the main season, while patrol members are supported with training and a manageable seasonal roster. The club also lists adaptive, multicultural and First Nations participation programs.
 
 ## What this club offers
 
-- Nippers for children aged 5 to 13.
-- Lifesaving training including patrol and emergency care pathways.
-- Surf sports programs and athlete development.
-- Supporter membership option.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Pool rescue
+- Coaching, officiating and administration opportunities
+- Adaptive program available.
+- Multicultural program available.
+- First Nations program available.
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Lifesaving page describes training across first aid, advanced resuscitation, search and rescue and patrol captain pathways.
-- Surf sports page describes structured coaching support and team culture.
-- Current training times should be confirmed with the club.
+- **Junior activities:** October–March: Saturdays 12:45 pm, with mid-week training Thursdays at 4:30 pm. From April–August, Nippers aged 11+ are encouraged to join pool rescue training on Saturday afternoons. Nippers swim training runs year-round on Thursdays at 7:30 pm at Seaton Swim Centre.
+- **Youth:** Youth program available for ages 13–18.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons, with around five rostered shifts per member each season. Full training is provided and previous lifesaving experience is not required.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Pool rescue.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Bronze 18+ active: , or  for new members training.
-- Bronze 15-18: .
-- Youth 13-15: .
-- Junior U8-13: .
-- Tots U6-7: .
-- Supporter member: .
+- **New active member 18+ — $200:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $50:** For members who want to participate in the club without patrolling.
+- **Family membership — $440:** Maximum combined fee for members living in one household.
+- **Child aged 6–7 — $100:** Includes social membership for 2 parents/guardians.
+- **Child aged 8–13 — $150:** Includes social membership for 2 parents/guardians.
+- **Youth aged 13–18 — $150:** Includes social membership for 2 parents/guardians and competition fees for SA carnivals; craft and training subsidies are available.
+- **Adaptive Nippers — $100:** Includes social membership for 2 parents/guardians.
+- **Please note:** 2026/27 fees supplied by the club. Additional costs may apply depending on the member’s activities.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Historic club with strong lifesaving tradition.
-- Public material emphasises community safety, member development and sport excellence.
-- Good fit for families and members looking for a well-established metro club.
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+- Accessible beach access
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Henley if you value a long-established club with clear fee information.
-- Strong candidate for surf sports and lifesaving training pathways.
-- Good option for western-suburbs families.
+Visit on Saturdays between 9:00 am and 10:00 am. Enter from the beach side via the ramp and head to the deck, where the Saturday morning group can help with joining questions.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.henleyslsc.com.au/
-- Membership: https://www.henleyslsc.com.au/membership
-- Nippers: https://www.henleyslsc.com.au/nippers
-- Lifesaving: https://www.henleyslsc.com.au/lifesaving
-- Surf sports: https://www.henleyslsc.com.au/surf-sports
-- About: https://www.henleyslsc.com.au/about
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

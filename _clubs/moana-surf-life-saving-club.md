@@ -1,104 +1,148 @@
 ---
 layout: club
-title: 'Moana Surf Life Saving Club'
-slug: 'moana-surf-life-saving-club'
-permalink: '/clubs/moana-surf-life-saving-club/'
-summary: 'A southern coastal club with Nippers, Surf Babies, member education, training, patrols, junior activities and function facilities.'
-image: '/assets/img/clubs/moana-surf-life-saving-club.jpg'
-suburb: 'Moana'
-region: 'South Metro'
-address: 'The Esplanade, Moana SA 5169'
-website: 'https://moanaslsc.com.au/'
+title: Moana Surf Life Saving Club
+slug: moana-slsc
+permalink: /clubs/moana-slsc/
+summary: A southern metropolitan club offering Nippers, patrols, broad surf sports, accessible facilities and community programs.
+image: /assets/img/clubs/moana-slsc.jpg
+suburb: Moana
+region: South Metro
+address: Esplanade, Moana SA 5169
+website: https://moanaslsc.com.au/
 latitude: -35.1977
-longitude: 138.4690
-member_size: 'Medium coastal club'
-membership_fee_note: 'Public membership page includes junior membership  and family/Nipper parent membership information. Confirm current full fee schedule with club.'
-membership_fee_source: 'https://moanaslsc.com.au/membership-information/'
-source_checked: '2026-06-30'
+longitude: 138.469
+member_size: Medium (201–400 members)
+membership_fee_note: 'New active member 13+: $140; Social member: $70; Family membership: $320; Under 14: $100. 2026/27 fees
+  supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
-  - 'surf-babies'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
+- inclusive-programs
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
-  - 'hospitality'
+- beach-access
+- accessible-facilities
+- gym
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'Surf Babies'
-  - 'Training services'
-  - 'SRC/Bronze/Drone/IRB training references'
-  - 'Function venue'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Inflatable Rescue Boat racing
+- Surf sports support
+- Disabled surfing is offered on selected Sundays in October, February and March.
+- Wellness Tuesday, Tuesdays 1:00 pm–3:00 pm, a community music and social activity
 best_for:
-  - 'Southern suburbs families'
-  - 'Children aged 5-13'
-  - 'Families interested in Surf Babies or Nippers'
-  - 'Members wanting broad training options'
+- Families around Moana and the southern suburbs
+- Members wanting a broad surf-sports program
+- People interested in community and inclusive activities
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Use of club facilities excluding gym noted for some membership options'
+  id: flexible
+  label: Flexible
+adaptive_program: Disabled surfing is offered on selected Sundays in October, February and March.
+multicultural_program: No specific program listed
+gym_facilities: Gym
 family_friendly: 'Yes'
-badge_label: 'Southern beaches'
-badge_type: 'blue'
+badge_label: Southern beaches
+badge_type: blue
+first_nations_program: No specific program listed
+activity_details:
+  junior: Saturdays 1:30 pm–4:00 pm.
+  youth: Youth program available for ages 13–18; contact the club for current session details.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Inflatable Rescue Boat racing
+  surf_sports_support: true
+  adaptive: Disabled surfing is offered on selected Sundays in October, February and March.
+  other_programs:
+  - Wellness Tuesday, Tuesdays 1:00 pm–3:00 pm, a community music and social activity
+facility_details:
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+- Accessible beach access
+membership_options:
+- name: New active member 13+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $140
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $70
+- name: Family membership
+  description: 2 adults and any children under 18.
+  price: $320
+- name: Under 14
+  description: Age 5–13, including one complimentary guardian membership.
+  price: $100
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
+about: Moana SLSC is a medium-sized southern metropolitan club with Nippers, weekend patrols and a broad surf-sports program.
+  Alongside traditional lifesaving activities, the club supports accessible participation and community initiatives including
+  disabled surfing and its weekly Wellness Tuesday program. It suits members looking for both active lifesaving and a wider
+  community connection.
+lead_contact_email: president@moanaslsc.com.au
+visit_note: During the patrol season, the club registrar is generally at the club on Saturday afternoons. Contact the club
+  before attending if you would like to arrange a specific time.
 ---
 
-## Overview
+## About the club
 
-Moana SLSC publishes membership information, junior information and training services. Public material describes Nippers for children aged 5-13, Saturday afternoon sessions and member education as a core club function.
+Moana SLSC is a medium-sized southern metropolitan club with Nippers, weekend patrols and a broad surf-sports program. Alongside traditional lifesaving activities, the club supports accessible participation and community initiatives including disabled surfing and its weekly Wellness Tuesday program. It suits members looking for both active lifesaving and a wider community connection.
 
 ## What this club offers
 
-- Nippers for children from 5 to 13.
-- Surf Babies pathway referenced on club site.
-- Training services and member education.
-- Variety of training referenced, including SRC, Bronze, Drone and IRB.
-- Function and club venue facilities.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing
+- Coaching, officiating and administration opportunities
+- Disabled surfing is offered on selected Sundays in October, February and March.
+- Wellness Tuesday, Tuesdays 1:00 pm–3:00 pm, a community music and social activity
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Nippers publicly listed as Saturday afternoon from 1:30pm to 4:00pm.
-- Junior members gain skills through weekly junior nipper training during the surf lifesaving season.
-- Club website advises contacting Pete for training times and attendance registration.
+- **Junior activities:** Saturdays 1:30 pm–4:00 pm.
+- **Youth:** Youth program available for ages 13–18; contact the club for current session details.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Junior membership publicly listed as .
-- Nipper parent/guardian and family membership options are published on the club site.
-- Full current fee schedule should be confirmed with the club before publishing.
+- **New active member 13+ — $140:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $70:** For members who want to participate in the club without patrolling.
+- **Family membership — $320:** 2 adults and any children under 18.
+- **Under 14 — $100:** Age 5–13, including one complimentary guardian membership.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Family-focused southern beach club.
-- Public material emphasises community, junior development and training.
-- Good fit for families wanting a southern metro club with Nippers and broad training options.
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+- Accessible beach access
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Moana if you are in the southern suburbs and want Nippers on Saturday afternoons.
-- Good candidate for families interested in Surf Babies, Nippers and lifesaving training.
-- Confirm membership category and any gym/facility inclusions before joining.
+During the patrol season, the club registrar is generally at the club on Saturday afternoons. Contact the club before attending if you would like to arrange a specific time.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://moanaslsc.com.au/
-- Membership information: https://moanaslsc.com.au/membership-information/
-- Nippers: https://moanaslsc.com.au/nippers/
-- Training services: https://moanaslsc.com.au/training-services/
-- Contact: https://moanaslsc.com.au/contact/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

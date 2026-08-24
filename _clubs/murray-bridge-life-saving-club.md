@@ -1,85 +1,125 @@
 ---
 layout: club
-title: 'Murray Bridge Life Saving Club'
-slug: 'murray-bridge-life-saving-club'
-permalink: '/clubs/murray-bridge-life-saving-club/'
-summary: 'A regional inland life saving club supporting water safety, lifesaving training and community participation in the Murraylands.'
-image: '/assets/img/clubs/murray-bridge-life-saving-club.jpg'
-suburb: 'Murray Bridge'
-region: 'Murraylands'
-address: 'Murray Bridge SA 5253'
-website: 'https://www.mblsc.com.au/'
+title: Murray Bridge Life Saving Club
+slug: murray-bridge-lsc
+permalink: /clubs/murray-bridge-lsc/
+summary: An inland life saving club at Sturt Reserve offering junior and youth programs, surf-sport skills and community volunteering.
+image: /assets/img/clubs/murray-bridge-lsc.jpg
+suburb: Murray Bridge
+region: Murraylands
+address: Sturt Reserve, Murray Bridge SA
+website: https://www.mblsc.com.au/
 latitude: -35.1199
 longitude: 139.2738
-member_size: 'Regional life saving club'
-membership_fee_note: 'Current public fees not verified in this pass. Confirm with club.'
-membership_fee_source: ''
-source_checked: '2026-06-30'
+member_size: Small (0–200 members)
+membership_fee_note: 'New active member 16+: $75; Founding member: $40; Supporter member: $20; Family membership: Not available;
+  Under 16: $60. 2026/27 fees supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'training'
-  - 'volunteering'
-  - 'community'
-  - 'water-safety'
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
 facilities:
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
+- family-friendly
 verified_programs:
-  - 'Inland water safety'
-  - 'Lifesaving training'
-  - 'Regional community volunteering'
+- Nippers
+- Youth program
+- Boards
+- Beach sprints and flags
+- Swimming
+- Surf sports support
+- Future Lifesavers
 best_for:
-  - 'Murraylands families'
-  - 'People interested in inland water safety'
-  - 'Regional volunteers'
+- Families in Murray Bridge and the Murraylands
+- Children interested in life saving and surf-sport skills in an inland setting
+- Members looking for a small community club
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: No specific program listed
+multicultural_program: No specific program listed
+gym_facilities: No gym listed
 family_friendly: 'Yes'
-badge_label: 'Inland lifesaving'
-badge_type: 'community'
+badge_label: Inland lifesaving
+badge_type: community
+first_nations_program: No specific program listed
+activity_details:
+  junior: Nippers program available; the supplied 2026/27 session time is blank and should be confirmed with the club.
+  youth: Youth program available for ages 13–18; session times should be confirmed with the club.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  surf_sports_support: true
+  other_programs:
+  - Future Lifesavers
+facility_details:
+- Operates at Sturt Reserve with no permanent club facilities at this stage
+membership_options:
+- name: New active member 16+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $75
+- name: Founding member
+  description: Club membership category.
+  price: $40
+- name: Supporter member
+  description: Club supporter membership.
+  price: $20
+- name: Family membership
+  description: Not available.
+  price: Not available
+- name: Under 16
+  description: 'Age 5–13: $60; age 13–16: $60.'
+  price: $60
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
+about: Murray Bridge Life Saving Club provides an inland lifesaving pathway at Sturt Reserve in the Murraylands. The club
+  offers junior and youth participation, surf-sport skills and support roles without relying on a traditional coastal clubhouse.
+  It is a distinctive option for families who want lifesaving and aquatic-sport involvement closer to Murray Bridge.
+lead_contact_email: murraybridgelifesavingclub@gmail.com
+visit_note: Visit during Nipper sessions. Current session times should be confirmed with the club.
 ---
 
-## Overview
+## About the club
 
-Murray Bridge LSC is listed by SLSSA as part of the South Australian lifesaving club network. It is important to include because it supports the organisationâ€™s inland and regional water-safety footprint.
+Murray Bridge Life Saving Club provides an inland lifesaving pathway at Sturt Reserve in the Murraylands. The club offers junior and youth participation, surf-sport skills and support roles without relying on a traditional coastal clubhouse. It is a distinctive option for families who want lifesaving and aquatic-sport involvement closer to Murray Bridge.
 
 ## What this club offers
 
-- Regional lifesaving and water safety participation.
-- Community volunteering and training pathways.
-- Inland waterway context rather than surf beach environment.
+- Junior / Nippers activities
+- Youth activities
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming
+- Coaching, officiating and administration opportunities
+- Future Lifesavers
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Training days and program details should be confirmed with the club.
-- Use the club website or SLSSA directory listing for current contact information.
+- **Junior activities:** Nippers program available; the supplied 2026/27 session time is blank and should be confirmed with the club.
+- **Youth:** Youth program available for ages 13–18; session times should be confirmed with the club.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Current public fee schedule was not verified in this pass.
-- Confirm directly with Murray Bridge Life Saving Club.
+- **New active member 16+ — $75:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Founding member — $40:** Club membership category.
+- **Supporter member — $20:** Club supporter membership.
+- **Family membership — Not available:** Not available.
+- **Under 16 — $60:** Age 5–13: $60; age 13–16: $60.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Regional and inland lifesaving focus.
-- Good fit for members who do not live near the surf coast but want to participate in lifesaving.
+- Operates at Sturt Reserve with no permanent club facilities at this stage
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Murray Bridge LSC if you are in the Murraylands or want an inland lifesaving pathway.
-- Confirm program age groups, training days and fees directly with the club.
+Visit during Nipper sessions. Current session times should be confirmed with the club.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.mblsc.com.au/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

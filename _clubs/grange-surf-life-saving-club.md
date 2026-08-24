@@ -1,104 +1,144 @@
 ---
 layout: club
-title: 'Grange Surf Life Saving Club'
-slug: 'grange-surf-life-saving-club'
-permalink: '/clubs/grange-surf-life-saving-club/'
-summary: 'A western metropolitan club patrolling a long stretch of Adelaide coastline, with Nippers, surf sports, training and strong family participation.'
-image: '/assets/img/clubs/grange-surf-life-saving-club.jpg'
-suburb: 'Grange'
-region: 'Adelaide Metro'
-address: '497 Esplanade, Grange SA 5022'
-website: 'https://www.grangeslsc.asn.au/'
+title: Grange Surf Life Saving Club
+slug: grange-slsc
+permalink: /clubs/grange-slsc/
+summary: A large western metropolitan club offering Nippers, patrols, surf sports, pool rescue and strong competition pathways.
+image: /assets/img/clubs/grange-slsc.png
+suburb: Grange
+region: Adelaide Metro
+address: 497 Esplanade, Grange SA 5022
+website: https://www.grangeslsc.asn.au/
 latitude: -34.9028
 longitude: 138.4894
-member_size: 'Large metro club'
-membership_fee_note: 'Club directs members to the membership page and supports Sports Vouchers. Specific current prices were not captured in this pass.'
-membership_fee_source: 'https://www.grangeslsc.asn.au/membership'
-source_checked: '2026-06-30'
+member_size: Large (401+ members)
+membership_fee_note: 'New active member 15+: $260; Competing member: $330–$370; Social member: $75; Family membership: 15%
+  family discount; Under 15: $185–$330. 2026/27 fees supplied by the club. Competition fees include SLSSA carnivals and state
+  titles where specified.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
+- accessible-facilities
+- gym
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Tiny Tots'
-  - 'Nippers'
-  - 'Youth'
-  - 'Training'
-  - 'Surf sports'
-  - 'Come and Try Nippers'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Pool rescue
+- Surf sports support
 best_for:
-  - 'Western suburbs families'
-  - 'Children starting Nippers'
-  - 'Members interested in surf sports'
-  - 'People wanting a large beach club'
+- Families in Adelaide’s western suburbs
+- Members interested in competition and surf sports
+- People seeking both lifesaving and social club involvement
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: No specific program listed
+multicultural_program: No specific program listed
+gym_facilities: Gym
 family_friendly: 'Yes'
-badge_label: 'Western beaches'
-badge_type: 'blue'
+badge_label: Western beaches
+badge_type: blue
+first_nations_program: No specific program listed
+activity_details:
+  junior: Saturdays 1:00 pm–3:00 pm.
+  youth: Youth program available for ages 13–18; contact the club for current session details.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Pool rescue
+  surf_sports_support: true
+facility_details:
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+membership_options:
+- name: New active member 15+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $260
+- name: Competing member
+  description: 'Patrolling member involved in competitions. U15: $330; U17+: $370.'
+  price: $330–$370
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $75
+- name: Family membership
+  description: Families of 4 or more receive a 15% discount from the combined individual total.
+  price: 15% family discount
+- name: Under 15
+  description: 'Age 5–6 plus adult: $185; age 7–13 plus adult: $285; age 13–14: $330.'
+  price: $185–$330
+membership_pricing_status: 2026/27 fees supplied by the club. Competition fees include SLSSA carnivals and state titles where
+  specified.
+about: Grange SLSC is a large western metropolitan club offering a broad mix of lifesaving, Nippers and competitive surf sports.
+  Members can participate in patrols, major surf-sport disciplines and support roles such as coaching, officiating and administration.
+  The club’s scale and competition pathways make it a strong option for families and members wanting regular training and
+  structured development.
+lead_contact_email: mail@grangeslsc.asn.au
+visit_note: The Registrar can arrange meetings with prospective members outside business hours. The club is generally open
+  Friday nights from 6:00 pm. During October–March, Nippers run Saturdays 1:00 pm–3:00 pm and patrol members may also be available
+  on weekends from 12:00 pm–5:00 pm.
 ---
 
-## Overview
+## About the club
 
-Grange SLSC publicly describes providing voluntary service along 6 km of one of Adelaideâ€™s busiest stretches of beach. Its public pages include Nippers, training, surf sports, Come and Try information and membership renewal information.
+Grange SLSC is a large western metropolitan club offering a broad mix of lifesaving, Nippers and competitive surf sports. Members can participate in patrols, major surf-sport disciplines and support roles such as coaching, officiating and administration. The club’s scale and competition pathways make it a strong option for families and members wanting regular training and structured development.
 
 ## What this club offers
 
-- Tiny Tots for 5 years to under 7.
-- Nippers for under 8 to under 13.
-- Youth and adult training pathways.
-- Junior and senior surf sports.
-- Come and Try Nippers sessions.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Pool rescue
+- Coaching, officiating and administration opportunities
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Training page describes programs for Tiny Tots, Nippers and Youth.
-- Surf sports communications include training times and locations via Facebook closed group and Team App.
-- Come and Try Nippers offers two free sessions during the season.
+- **Junior activities:** Saturdays 1:00 pm–3:00 pm.
+- **Youth:** Youth program available for ages 13–18; contact the club for current session details.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Pool rescue.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Membership page references Sports Vouchers and membership payment process.
-- Specific current rates were not captured from public snippets in this pass.
-- Confirm current fee schedule with Grange SLSC before publishing.
+- **New active member 15+ — $260:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Competing member — $330–$370:** Patrolling member involved in competitions. U15: $330; U17+: $370.
+- **Social member — $75:** For members who want to participate in the club without patrolling.
+- **Family membership — 15% family discount:** Families of 4 or more receive a 15% discount from the combined individual total.
+- **Under 15 — $185–$330:** Age 5–6 plus adult: $185; age 7–13 plus adult: $285; age 13–14: $330.
+- **Please note:** 2026/27 fees supplied by the club. Competition fees include SLSSA carnivals and state titles where specified.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Large western-suburbs club with Nippers, youth and surf sports pathways.
-- Strong family participation around junior programs.
-- Good fit for members wanting a busy metro beach club with structured training.
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Grange if you are in the western suburbs and want a club with strong junior and surf sports pathways.
-- Good option for families who want Come and Try before committing.
-- Confirm fees and current training channels with the club.
+The Registrar can arrange meetings with prospective members outside business hours. The club is generally open Friday nights from 6:00 pm. During October–March, Nippers run Saturdays 1:00 pm–3:00 pm and patrol members may also be available on weekends from 12:00 pm–5:00 pm.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.grangeslsc.asn.au/
-- Membership: https://www.grangeslsc.asn.au/membership
-- Training: https://www.grangeslsc.asn.au/training
-- About Nippers: https://www.grangeslsc.asn.au/about-nippers
-- Come and Try: https://www.grangeslsc.asn.au/come-and-try
-- Surf sports: https://www.grangeslsc.asn.au/surf-sports
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

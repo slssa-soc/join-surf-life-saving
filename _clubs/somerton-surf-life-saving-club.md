@@ -1,106 +1,151 @@
 ---
 layout: club
-title: 'Somerton Surf Life Saving Club'
-slug: 'somerton-surf-life-saving-club'
-permalink: '/clubs/somerton-surf-life-saving-club/'
-summary: 'A metropolitan club at Somerton Park with Nippers, patrols, surf sports, training timetable information, SomerSquad and bar/bistro facilities.'
-image: '/assets/img/clubs/somerton-surf-life-saving-club.jpg'
-suburb: 'Somerton Park'
-region: 'Adelaide Metro'
-address: 'Corner Repton Road and Esplanade, Somerton Park SA 5044'
-website: 'https://somertonsurfclub.com.au/wp/'
-latitude: -34.9980
+title: Somerton Surf Life Saving Club
+slug: somerton-slsc
+permalink: /clubs/somerton-slsc/
+summary: A large metropolitan club at Somerton Park offering Nippers, youth activities, patrols, broad surf sports and an
+  adaptive program.
+image: /assets/img/clubs/somerton-slsc.jpg
+suburb: Somerton Park
+region: Adelaide Metro
+address: Esplanade & Repton Rd, Somerton Park SA 5044
+website: http://somertonsurfclub.com.au/wp/
+latitude: -34.998
 longitude: 138.5143
-member_size: 'Medium metro club'
-membership_fee_note: 'Membership categories and fees page exists, but exact public fee values were not captured in this pass. Confirm with club.'
-membership_fee_source: 'https://somertonsurfclub.com.au/wp/membership-categories/'
-source_checked: '2026-06-30'
+member_size: Large (401+ members)
+membership_fee_note: 'New active member 18+: $235 ($195 full-time student); Social member: $75; Family membership: $495; Child
+  aged 5–7: $230; Child aged 7–13: $325; Youth aged 13–18: $260. A 10% discount applies if paid before 31 October. Additional
+  competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
+- inclusive-programs
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
-  - 'hospitality'
+- accessible-facilities
+- gym
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'SomerSquad'
-  - 'Patrol roster'
-  - 'Surf boats'
-  - 'IRB racing'
-  - 'Swimming'
-  - 'Training timetable'
-  - 'Bar and bistro'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Inflatable Rescue Boat racing
+- Pool rescue
+- Surf sports support
+- Adaptive program available.
 best_for:
-  - 'Families near Somerton Park'
-  - 'Members wanting a mid-sized metro club'
-  - 'Surf sports participants'
-  - 'People interested in patrol and training'
+- Families in Adelaide’s south-western coastal suburbs
+- Members seeking strong surf-sports and patrol pathways
+- People interested in adaptive participation
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: Adaptive program available.
+multicultural_program: No specific program listed
+gym_facilities: Gym
 family_friendly: 'Yes'
-badge_label: 'Metro club'
-badge_type: 'blue'
+badge_label: Metro club
+badge_type: blue
+first_nations_program: No specific program listed
+activity_details:
+  junior: Saturdays 2:00 pm–4:00 pm.
+  youth: Typically Saturdays from 2:00 pm.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Inflatable Rescue Boat racing
+  - Pool rescue
+  surf_sports_support: true
+  adaptive: Adaptive program available.
+facility_details:
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $235 ($195 full-time student)
+- name: Social member
+  description: Price varies by social/community membership type.
+  price: $75
+- name: Family membership
+  description: Includes immediate family members aged 21 or younger, unless a full-time student.
+  price: $495
+- name: Child aged 5–7
+  description: Includes guardian membership.
+  price: $230
+- name: Child aged 7–13
+  description: Includes guardian membership.
+  price: $325
+- name: Youth aged 13–18
+  description: Includes guardian non-award membership.
+  price: $260
+membership_pricing_status: A 10% discount applies if paid before 31 October. Additional competition or program costs may apply.
+about: Somerton SLSC is a large metropolitan club at Somerton Park with Nippers, youth activities, patrols and a comprehensive
+  surf-sports program. The club also lists an adaptive program and provides gym, restaurant and accessible changeroom facilities.
+  It is likely to suit families and members looking for strong sport and lifesaving pathways within an active club environment.
+lead_contact_email: secretary@somertonsurfclub.com.au
+visit_note: Club officers are typically at the club on Saturdays from 1:30 pm–4:00 pm.
 ---
 
-## Overview
+## About the club
 
-Somerton Surf Club publishes membership category information, junior/Nipper information, patrol details, surf sports and a training timetable. The club also has bar and bistro facilities.
+Somerton SLSC is a large metropolitan club at Somerton Park with Nippers, youth activities, patrols and a comprehensive surf-sports program. The club also lists an adaptive program and provides gym, restaurant and accessible changeroom facilities. It is likely to suit families and members looking for strong sport and lifesaving pathways within an active club environment.
 
 ## What this club offers
 
-- Nippers for age 5 to under 13.
-- SomerSquad referenced in club membership/navigation.
-- Surf boats, IRB racing, swimming and training timetable information.
-- Patrol roster and lifesaving information.
-- Bar and bistro facilities.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue
+- Coaching, officiating and administration opportunities
+- Adaptive program available.
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Training timetable page includes club swim and ski training references.
-- Nippers General Information states new members must register and pay before taking part.
-- Current full training timetable should be checked on the club website.
+- **Junior activities:** Saturdays 2:00 pm–4:00 pm.
+- **Youth:** Typically Saturdays from 2:00 pm.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Inflatable Rescue Boat racing, Pool rescue.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Membership categories and fees page exists.
-- Exact current fee values were not captured from public snippets in this pass.
-- Confirm current categories and costs with the club before publishing.
+- **New active member 18+ — $235 ($195 full-time student):** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $75:** Price varies by social/community membership type.
+- **Family membership — $495:** Includes immediate family members aged 21 or younger, unless a full-time student.
+- **Child aged 5–7 — $230:** Includes guardian membership.
+- **Child aged 7–13 — $325:** Includes guardian membership.
+- **Youth aged 13–18 — $260:** Includes guardian non-award membership.
+- **Please note:** A 10% discount applies if paid before 31 October. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Mid-sized metropolitan club with a broad spread of lifesaving, junior, sport and social facilities.
-- Good fit for families around Somerton Park and Glenelg South.
-- Useful option for members interested in surf sports disciplines.
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Somerton if you want a metro club with Nippers, sport and hospitality facilities.
-- Good option for families near Somerton Park, Glenelg South and Brighton.
-- Confirm current fee table and training timetable before joining.
+Club officers are typically at the club on Saturdays from 1:30 pm–4:00 pm.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://somertonsurfclub.com.au/wp/
-- Want to join: https://somertonsurfclub.com.au/wp/want-to-join/
-- Membership categories: https://somertonsurfclub.com.au/wp/membership-categories/
-- Nippers: https://somertonsurfclub.com.au/wp/nippers-general-information/
-- Training timetable: https://somertonsurfclub.com.au/wp/training-timetable/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

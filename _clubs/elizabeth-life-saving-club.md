@@ -1,88 +1,98 @@
 ---
 layout: club
-title: 'Elizabeth Life Saving Club'
-slug: 'elizabeth-life-saving-club'
-permalink: '/clubs/elizabeth-life-saving-club/'
-summary: 'A northern Adelaide life saving club focused on water safety, swimming, training and lifesaving participation away from the surf beach environment.'
-image: '/assets/img/clubs/elizabeth-life-saving-club.jpg'
-suburb: 'Elizabeth'
-region: 'Northern Adelaide'
-address: 'Elizabeth Aquadome, Crockerton Road, Elizabeth SA 5112'
-website: 'https://elizabethlifesavingclub.org/'
+title: Elizabeth Life Saving Club
+slug: elizabeth-lsc
+permalink: /clubs/elizabeth-lsc/
+summary: A small pool-based life saving club in Elizabeth focused on water-safety education and pool rescue for children and
+  teenagers.
+image: /assets/img/clubs/elizabeth-lsc.png
+suburb: Elizabeth
+region: Northern Adelaide
+address: 1 Crockerton Rd, Elizabeth SA 5112
+website: https://elizabethlifesavingclub.org/
 latitude: -34.7197
 longitude: 138.6686
-member_size: 'Community life saving club'
-membership_fee_note: 'Current public membership fees not verified in this pass. Confirm with club.'
-membership_fee_source: ''
-source_checked: '2026-06-30'
+member_size: Small (0–200 members)
+membership_fee_note: The club has asked that membership prices not be published publicly. Contact the club directly for current
+  fees and availability.
+source_checked: '2026-08-24'
 age_groups:
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- families
 interests:
-  - 'training'
-  - 'volunteering'
-  - 'community'
-  - 'water-safety'
+- nippers
+- surf-sports
+- training
+- community
 facilities:
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
+- accessible-facilities
+- family-friendly
 verified_programs:
-  - 'Water safety'
-  - 'Swimming and lifesaving skills'
-  - 'Community volunteering'
+- Pool-based water-safety program
+- Youth program
+- Pool rescue
+- Pool-based water-safety lessons for infants to teenagers
 best_for:
-  - 'Northern Adelaide families'
-  - 'People seeking a non-beach lifesaving pathway'
-  - 'Members interested in water safety and swimming skills'
+- Families in Adelaide’s northern suburbs
+- Children and teenagers looking for pool-based water-safety skills
+- People interested in pool rescue rather than beach-based programs
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'No surf-club gym listed'
+  id: flexible
+  label: Flexible
+adaptive_program: No specific program listed
+multicultural_program: No specific program listed
+gym_facilities: No gym listed
 family_friendly: 'Yes'
-badge_label: 'Community lifesaving'
-badge_type: 'community'
+badge_label: Community lifesaving
+badge_type: community
+first_nations_program: No specific program listed
+activity_details:
+  junior: Pool-based water-safety lessons are offered for infants through to teenagers.
+  youth: Teenagers are included in the club’s pool-based water-safety program.
+  surf_sports:
+  - Pool rescue
+  other_programs:
+  - Pool-based water-safety lessons for infants to teenagers
+facility_details:
+- Accessible toilet/changerooms
+membership_options: []
+membership_pricing_status: The club has asked that membership prices not be published publicly. Contact the club directly
+  for current fees and availability.
+about: Elizabeth Life Saving Club is different from South Australia’s beach-based surf clubs, operating a pool-based program
+  in Adelaide’s northern suburbs. Its focus is water-safety education for infants through to teenagers, together with pool
+  rescue activity. It may suit families seeking structured aquatic safety and lifesaving skills in an inland pool environment.
+lead_contact_email: null
+visit_note: Prospective members can visit on Sunday mornings between 9:15 am and 12:00 pm.
 ---
 
-## Overview
+## About the club
 
-Elizabeth Life Saving Club is an important part of the SLSSA network. Its public history describes the club as starting in 1963 from the principle that every child has the right to be taught to swim, with lessons historically held on Saturday mornings.
+Elizabeth Life Saving Club is different from South Australia’s beach-based surf clubs, operating a pool-based program in Adelaide’s northern suburbs. Its focus is water-safety education for infants through to teenagers, together with pool rescue activity. It may suit families seeking structured aquatic safety and lifesaving skills in an inland pool environment.
 
 ## What this club offers
 
-- Water safety and swimming-focused lifesaving participation.
-- Community-based lifesaving pathway away from the surf beach.
-- Volunteer roles supporting local water safety.
+- Pool-based water-safety lessons
+- Youth activities
+- Surf sports and competition: Pool rescue
+- Pool-based water-safety lessons for infants to teenagers
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- The club history references Saturday morning lessons from 8:00am to 9:30am historically.
-- Current program times and membership details should be confirmed with the club.
+- **Water-safety program:** Pool-based water-safety lessons are offered for infants through to teenagers.
+- **Youth:** Teenagers are included in the club’s pool-based water-safety program.
+- **Surf sports:** Pool rescue.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Current public fees were not verified in this pass.
-- Confirm directly with Elizabeth Life Saving Club.
+- The club has asked that membership prices not be published publicly. Contact the club directly for current fees and availability.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Strong community and water-safety education focus.
-- Good fit for northern Adelaide families who may not live near the beach.
-- Important inclusion in the finder because it supports the broader lifesaving movement.
+- Accessible toilet/changerooms
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Elizabeth LSC if you are in northern Adelaide and want a water-safety or swimming-oriented lifesaving pathway.
-- Confirm current program days, age groups and costs directly with the club.
+Prospective members can visit on Sunday mornings between 9:15 am and 12:00 pm.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://elizabethlifesavingclub.org/
-- Club history: https://elizabethlifesavingclub.org/the-club/
-- Facebook: https://www.facebook.com/elizabethlifesavingclubinc/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

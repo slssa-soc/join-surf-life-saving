@@ -1,100 +1,109 @@
 ---
 layout: club
-title: 'Robe Surf Life Saving Club'
-slug: 'robe-surf-life-saving-club'
-permalink: '/clubs/robe-surf-life-saving-club/'
-summary: 'A growing Limestone Coast club with a January Nippers program, summer patrols and a regional community lifesaving focus.'
-image: '/assets/img/clubs/robe-surf-life-saving-club.jpg'
-suburb: 'Robe'
-region: 'Limestone Coast'
-address: 'Robe SA 5276'
-website: 'https://www.robesls.club/'
+title: Robe Surf Life Saving Club
+slug: robe-slsc
+permalink: /clubs/robe-slsc/
+summary: A small Limestone Coast club offering Nippers, seasonal patrols and entry-level surf-sport activities in Robe.
+image: /assets/img/clubs/robe-slsc.png
+suburb: Robe
+region: Limestone Coast
+address: Robe SA 5276
+website: https://www.robesls.club/
 latitude: -37.1646
 longitude: 139.7606
-member_size: 'Regional club'
-membership_fee_note: 'Public 2023/24 fee examples listed. Confirm current season fees before publishing.'
-membership_fee_source: 'https://www.robesls.club/nippers-1'
-source_checked: '2026-06-30'
+member_size: Small (0–200 members)
+membership_fee_note: 'New active member 18+: $50; Social member: $30; Family membership: $120; Under 18: $50. 2026/27 fees
+  supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- community
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
+- family-friendly
 verified_programs:
-  - 'January Nippers'
-  - 'Growing patrol service'
-  - 'Training courses'
-  - 'Starfish referenced with Nippers'
+- Nippers
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
 best_for:
-  - 'Limestone Coast families'
-  - 'January holiday participation'
-  - 'Regional volunteers'
-  - 'Families wanting a short seasonal Nippers program'
+- Families in Robe and the Limestone Coast
+- Children starting Nippers
+- Members wanting a small community lifesaving club
 commitment:
-  id: 'seasonal'
-  label: 'Seasonal'
-adaptive_program: 'Starfish referenced; confirm with club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: seasonal
+  label: Seasonal
+adaptive_program: No specific program listed
+multicultural_program: No specific program listed
+gym_facilities: No gym listed
 family_friendly: 'Yes'
-badge_label: 'Regional January Nippers'
-badge_type: 'community'
+badge_label: Regional January Nippers
+badge_type: community
+first_nations_program: No specific program listed
+activity_details:
+  junior: Saturdays 10:00 am–12:00 pm.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+facility_details: []
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $50
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $30
+- name: Family membership
+  description: Minimum 1 adult and 2 children.
+  price: $120
+- name: Under 18
+  description: Age 5–18; ages 5–13 must be accompanied by an adult.
+  price: $50
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
+about: Robe SLSC is a small Limestone Coast club with Nippers, weekend patrols and selected entry-level surf-sport activities.
+  Its smaller membership base and community setting may appeal to families and volunteers who want a local, hands-on lifesaving
+  environment. The club’s supplied information focuses on simple pathways into Nippers, active membership and social participation.
+lead_contact_email: contact@robesls.club
+visit_note: Visit on Saturdays from 10:00 am–12:00 pm during Nippers, or contact the club before attending.
 ---
 
-## Overview
+## About the club
 
-Robe SLSC says it was established in 2011 and affiliated in 2022. Its public material highlights a successful Nippers program running in January each year and a growing summer patrol service around Robe.
+Robe SLSC is a small Limestone Coast club with Nippers, weekend patrols and selected entry-level surf-sport activities. Its smaller membership base and community setting may appeal to families and volunteers who want a local, hands-on lifesaving environment. The club’s supplied information focuses on simple pathways into Nippers, active membership and social participation.
 
 ## What this club offers
 
-- January Nippers program.
-- Growing summer patrol service around Robe.
-- Training courses and volunteer lifesaving roles.
-- Regional community water safety and club development.
+- Junior / Nippers activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Nippers development program is designed for children aged 5-13.
-- Activities include beach sprints, flags, boards, wading, body surfing, relays, swimming and water safety.
-- Training courses page promotes skills, accreditation and volunteer opportunities.
+- **Junior activities:** Saturdays 10:00 am–12:00 pm.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- 2023/24 Junior Activity Member 5-13 years: .
-- 2023/24 Cadet Member 13-15 years: .
-- 2023/24 first parent of Junior or Cadet Member: .
-- Confirm current season rates before publishing.
+- **New active member 18+ — $50:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $30:** For members who want to participate in the club without patrolling.
+- **Family membership — $120:** Minimum 1 adult and 2 children.
+- **Under 18 — $50:** Age 5–18; ages 5–13 must be accompanied by an adult.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Small but growing regional club.
-- Good fit for families in Robe or seasonal visitors who can commit during January.
-- Public materials emphasise safe, welcoming participation and confidence building.
+- No facilities were confirmed in the supplied 2026/27 information. Use the enquiry form if a particular facility is important to you.
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Robe if you are in the Limestone Coast or regularly spend January at Robe.
-- Good fit for children wanting an intensive summer holiday Nippers program.
-- Confirm current dates and fees because the club has a seasonal pattern.
+Visit on Saturdays from 10:00 am–12:00 pm during Nippers, or contact the club before attending.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.robesls.club/
-- Nippers: https://www.robesls.club/nippers
-- Nippers fees page: https://www.robesls.club/nippers-1
-- Training courses: https://www.robesls.club/training-courses
-- What's on: https://www.robesls.club/whats-on-1
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

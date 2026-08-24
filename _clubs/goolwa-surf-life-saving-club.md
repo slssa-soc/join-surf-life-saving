@@ -1,100 +1,130 @@
 ---
 layout: club
-title: 'Goolwa Surf Life Saving Club'
-slug: 'goolwa-surf-life-saving-club'
-permalink: '/clubs/goolwa-surf-life-saving-club/'
-summary: 'A Fleurieu Peninsula club at Goolwa Beach with Nippers, patrols, training and publicly listed membership categories.'
-image: '/assets/img/clubs/goolwa-surf-life-saving-club.jpg'
-suburb: 'Goolwa Beach'
-region: 'Fleurieu Peninsula'
-address: 'Beach Road, Goolwa SA 5214'
-website: 'https://goolwaslsc.com.au/'
-latitude: -35.5180
+title: Goolwa Surf Life Saving Club
+slug: goolwa-slsc
+permalink: /clubs/goolwa-slsc/
+summary: A small Fleurieu club at Goolwa Beach offering Nippers, patrols, surf boats, IRB racing and community participation.
+image: /assets/img/clubs/goolwa-slsc.jpg
+suburb: Goolwa Beach
+region: Fleurieu Peninsula
+address: 1 Beach Rd, Goolwa Beach SA 5214
+website: https://goolwaslsc.com.au/
+latitude: -35.518
 longitude: 138.7816
-member_size: 'Medium coastal club'
-membership_fee_note: 'Publicly listed fees include family and active/youth categories; confirm current season rates before publishing.'
-membership_fee_source: 'https://goolwaslsc.com.au/join-us/'
-source_checked: '2026-06-30'
+member_size: Small (0–200 members)
+membership_fee_note: 'New active member 18+: $150; Social member: $80; Family membership: $350; Under 18: $80–$180. The club
+  marked membership pricing as under review. Listed amounts should be confirmed before relying on them for 2026/27.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
+- accessible-facilities
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'Patrols'
-  - 'Courses and training'
-  - 'Youth members'
-  - 'Active award members'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Surf boats
+- Inflatable Rescue Boat racing
+- Surf sports support
 best_for:
-  - 'Goolwa and Fleurieu families'
-  - 'Members seeking a clear fee schedule'
-  - 'People interested in patrol and junior pathways'
+- Families around Goolwa and the lower Fleurieu
+- Members interested in surf boats or IRB racing
+- People looking for a small coastal club
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: No specific program listed
+multicultural_program: No specific program listed
+gym_facilities: No gym listed
 family_friendly: 'Yes'
-badge_label: 'Clear fee info'
-badge_type: 'blue'
+badge_label: Clear fee info
+badge_type: blue
+first_nations_program: No specific program listed
+activity_details:
+  junior: Sundays 9:45 am–12:00 pm.
+  youth: Youth program available for ages 13–18; contact the club for current session details.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Surf boats
+  - Inflatable Rescue Boat racing
+  surf_sports_support: true
+facility_details:
+- Restaurant
+- Accessible toilet/changerooms
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $150
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $80
+- name: Family membership
+  description: 2 adults and 2 children.
+  price: $350
+- name: Under 18
+  description: 'Age 5–13 plus one adult: $180; age 13–17: $80.'
+  price: $80–$180
+membership_pricing_status: The club marked membership pricing as under review. Listed amounts should be confirmed before relying
+  on them for 2026/27.
+about: Goolwa SLSC is a small Fleurieu club based at Goolwa Beach. Its program includes Nippers, weekend patrols and selected
+  surf-sport disciplines, with particular opportunities in surf boats and IRB racing. The club is likely to suit families
+  and volunteers who want a smaller coastal club with a strong local community focus.
+lead_contact_email: info@goolwaslsc.com.au
+visit_note: During the patrol season, prospective members can visit from 12:00 pm on Saturdays or throughout Sunday. You can
+  also contact the club before attending.
 ---
 
-## Overview
+## About the club
 
-Goolwa SLSC publishes membership information and fees for families, active/award members and youth members. It is a strong option for families on the Fleurieu Peninsula who want a structured surf lifesaving club pathway.
+Goolwa SLSC is a small Fleurieu club based at Goolwa Beach. Its program includes Nippers, weekend patrols and selected surf-sport disciplines, with particular opportunities in surf boats and IRB racing. The club is likely to suit families and volunteers who want a smaller coastal club with a strong local community focus.
 
 ## What this club offers
 
-- Nippers and family membership pathways.
-- Active and award member pathways for patrolling members.
-- Courses and training information.
-- Regional coastal community participation.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Surf boats, Inflatable Rescue Boat racing
+- Coaching, officiating and administration opportunities
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Club website includes courses and training information.
-- Nipper and family participation requires parent membership with a child in the Nipper program.
-- Current training timetable should be confirmed each season.
+- **Junior activities:** Sundays 9:45 am–12:00 pm.
+- **Youth:** Youth program available for ages 13–18; contact the club for current session details.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Surf boats, Inflatable Rescue Boat racing.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Family one-parent examples publicly listed: 1 adult and 1 child ; 1 adult and 2 children ; 1 adult and 3 children ; 1 adult and 4+ children .
-- Family two-parent examples publicly listed: 2 adults and 2 children ; 2 adults with 3+ children .
-- Active/Award member publicly listed as .
-- Youth member publicly listed as .
+- **New active member 18+ — $150:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $80:** For members who want to participate in the club without patrolling.
+- **Family membership — $350:** 2 adults and 2 children.
+- **Under 18 — $80–$180:** Age 5–13 plus one adult: $180; age 13–17: $80.
+- **Please note:** The club marked membership pricing as under review. Listed amounts should be confirmed before relying on them for 2026/27.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Family-oriented coastal club.
-- Good fit for members who want clear joining categories and a regional beach community.
-- Likely to suit both junior families and adult patrolling members.
+- Restaurant
+- Accessible toilet/changerooms
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Goolwa if you are in the Goolwa/Fleurieu area and want a clear family joining pathway.
-- Good candidate for families comparing costs across clubs.
-- Confirm current season rates and Sports Voucher treatment before joining.
+During the patrol season, prospective members can visit from 12:00 pm on Saturdays or throughout Sunday. You can also contact the club before attending.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://goolwaslsc.com.au/
-- Join us: https://goolwaslsc.com.au/join-us/
-- Courses and training: https://goolwaslsc.com.au/courses-training/
-- Nippers: https://goolwaslsc.com.au/nippers/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

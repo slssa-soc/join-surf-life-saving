@@ -1,101 +1,165 @@
 ---
 layout: club
-title: 'Glenelg Surf Life Saving Club'
-slug: 'glenelg-surf-life-saving-club'
-permalink: '/clubs/glenelg-surf-life-saving-club/'
-summary: 'A prominent metropolitan club on the Glenelg foreshore, offering Nippers, lifesaving, training, patrols, surf sports and a highly visible beach community.'
-image: '/assets/img/clubs/glenelg-surf-life-saving-club.jpg'
-suburb: 'Glenelg'
-region: 'Adelaide Metro'
-address: 'The Foreshore, Glenelg SA 5045'
-website: 'https://www.glenelgslsc.com.au/'
+title: Glenelg Surf Life Saving Club
+slug: glenelg-slsc
+permalink: /clubs/glenelg-slsc/
+summary: A large metropolitan club at Glenelg offering Nippers, patrols, broad surf-sports pathways, year-round swimming and
+  member facilities.
+image: /assets/img/clubs/glenelg-slsc.jpg
+suburb: Glenelg
+region: Adelaide Metro
+address: 20 Holdfast Promenade, Glenelg SA 5045
+website: https://www.glenelgslsc.com.au/
 latitude: -34.9806
 longitude: 138.5091
-member_size: 'Large metro club'
-membership_fee_note: 'Public snippets identify a membership fees page and 2025/26 junior guide. Confirm final current fees from the club before publishing.'
-membership_fee_source: 'https://www.glenelgslsc.com.au/want-to-join/membership-fees'
-source_checked: '2026-06-30'
+member_size: Large (401+ members)
+membership_fee_note: 'New active member 15+: $190; Social member: $80; Family membership: $400; Child aged 5–7: $120; Child
+  aged 7–13: $170; Child aged 13–15: To be confirmed. The supplied document says 2026/27 membership pricing was still to be
+  confirmed in August. Treat listed amounts as provisional until confirmed by the club.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'surf-sports'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
+- inclusive-programs
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
-  - 'hospitality'
+- beach-access
+- accessible-facilities
+- gym
+- restaurant
+- family-friendly
 verified_programs:
-  - 'Nippers'
-  - 'Junior training'
-  - 'Patrol roster'
-  - 'Training and proficiencies'
-  - 'Surf sports'
-  - 'Club swim'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Swimming
+- Ski paddling
+- Surf boats
+- Pool rescue
+- Surf sports support
+- The club is seeking expressions of interest to establish an adaptive program for participants with diverse needs.
+- Education and awareness days can be delivered for multicultural community groups on request.
+- Year-round swimming on Tuesday and Thursday evenings
+- IRB racing with dedicated Nipper and Senior programs
 best_for:
-  - 'Families near Glenelg'
-  - 'Members wanting a central high-profile beach club'
-  - 'People interested in busy beach patrols and junior sport'
+- Families around Glenelg and the western/south-western suburbs
+- Members wanting a broad surf-sports program
+- People interested in year-round swimming and lifesaving
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: The club is seeking expressions of interest to establish an adaptive program for participants with diverse
+  needs.
+multicultural_program: Education and awareness days can be delivered for multicultural community groups on request.
+gym_facilities: Gym
 family_friendly: 'Yes'
-badge_label: 'High-profile metro club'
-badge_type: 'yellow'
+badge_label: High-profile metro club
+badge_type: yellow
+first_nations_program: No specific program listed
+activity_details:
+  junior: Saturdays 2:00 pm–4:00 pm. Winter training is also listed on Sundays from 3:00 pm.
+  youth: Winter youth training is underway, with mid-week and Saturday sessions plus other catch-ups.
+  lifesaving_patrolling: Typically Saturday and Sunday afternoons.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  - Swimming
+  - Ski paddling
+  - Surf boats
+  - Pool rescue
+  surf_sports_support: true
+  adaptive: The club is seeking expressions of interest to establish an adaptive program for participants with diverse needs.
+  multicultural: Education and awareness days can be delivered for multicultural community groups on request.
+  other_programs:
+  - Year-round swimming on Tuesday and Thursday evenings
+  - IRB racing with dedicated Nipper and Senior programs
+facility_details:
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+- Accessible beach access
+membership_options:
+- name: New active member 15+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion; includes bar and bistro
+    member discounts.
+  price: $190
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $80
+- name: Family membership
+  description: 2 adults and up to 4 children; includes bar and bistro member discounts.
+  price: $400
+- name: Child aged 5–7
+  description: Parent must also hold a membership.
+  price: $120
+- name: Child aged 7–13
+  description: Parent must also hold a membership.
+  price: $170
+- name: Child aged 13–15
+  description: The supplied document contains a corrupted fee value and requires confirmation.
+  price: To be confirmed
+membership_pricing_status: The supplied document says 2026/27 membership pricing was still to be confirmed in August. Treat
+  listed amounts as provisional until confirmed by the club.
+about: Glenelg SLSC is a large metropolitan club at one of Adelaide’s busiest coastal precincts. The club offers Nippers,
+  youth activities, patrols and a wide surf-sports program, with year-round swimming and additional winter training opportunities.
+  It also supports community inclusion initiatives and is developing further adaptive participation opportunities.
+lead_contact_email: secretary@glenelgslsc.com.au
+visit_note: Contact the club to arrange an appointment with someone who can discuss membership.
 ---
 
-## Overview
+## About the club
 
-Glenelg SLSC is located at one of Adelaideâ€™s best-known beaches, close to the CBD and public activity around the Glenelg foreshore. Public club pages include Nippers, training and lifesaving information.
+Glenelg SLSC is a large metropolitan club at one of Adelaide’s busiest coastal precincts. The club offers Nippers, youth activities, patrols and a wide surf-sports program, with year-round swimming and additional winter training opportunities. It also supports community inclusion initiatives and is developing further adaptive participation opportunities.
 
 ## What this club offers
 
-- Nippers and junior sport pathway.
-- Lifesaving patrols, training and proficiencies.
-- Surf sports and carnivals.
-- Central metropolitan beach location with high visibility.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Pool rescue
+- Coaching, officiating and administration opportunities
+- The club is seeking expressions of interest to establish an adaptive program for participants with diverse needs.
+- Education and awareness days can be delivered for multicultural community groups on request.
+- Year-round swimming on Tuesday and Thursday evenings
+- IRB racing with dedicated Nipper and Senior programs
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Public 2025/26 junior guide snippets state Saturday training from 1:30pm to 3:45pm with an all-member club swim.
-- Club website includes training and proficiencies information.
-- Current times should be confirmed with the club.
+- **Junior activities:** Saturdays 2:00 pm–4:00 pm. Winter training is also listed on Sundays from 3:00 pm.
+- **Youth:** Winter youth training is underway, with mid-week and Saturday sessions plus other catch-ups.
+- **Lifesaving and patrolling:** Typically Saturday and Sunday afternoons.
+- **Surf sports:** Boards, Beach sprints and flags, Swimming, Ski paddling, Surf boats, Pool rescue.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- A public membership fees page exists, but the site is JavaScript-rendered in search results.
-- Public snippets identify Nipper and parent membership requirements; confirm exact 2025/26 rates with the club before publishing.
+- **New active member 15+ — $190:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion; includes bar and bistro member discounts.
+- **Social member — $80:** For members who want to participate in the club without patrolling.
+- **Family membership — $400:** 2 adults and up to 4 children; includes bar and bistro member discounts.
+- **Child aged 5–7 — $120:** Parent must also hold a membership.
+- **Child aged 7–13 — $170:** Parent must also hold a membership.
+- **Child aged 13–15 — To be confirmed:** The supplied document contains a corrupted fee value and requires confirmation.
+- **Please note:** The supplied document says 2026/27 membership pricing was still to be confirmed in August. Treat listed amounts as provisional until confirmed by the club.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Large, visible metropolitan club at a busy tourist and community beach.
-- Likely suited to families and members comfortable in a busier club environment.
-- Good option for people who want access to a wide range of lifesaving, sport and junior pathways.
+- Gym
+- Restaurant
+- Accessible toilet/changerooms
+- Accessible beach access
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Glenelg if you want a central metro club at a high-profile beach.
-- Good fit for families interested in Nippers and surf sports.
-- Confirm current fees and Saturday training details before joining.
+Contact the club to arrange an appointment with someone who can discuss membership.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://www.glenelgslsc.com.au/
-- Want to join: https://www.glenelgslsc.com.au/want-to-join
-- Membership fees: https://www.glenelgslsc.com.au/want-to-join/membership-fees
-- Junior sports/training: https://www.glenelgslsc.com.au/junior-sports/training
-- Contact: https://www.glenelgslsc.com.au/contact
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.

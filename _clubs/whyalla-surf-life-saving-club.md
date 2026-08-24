@@ -1,95 +1,133 @@
 ---
 layout: club
-title: 'Whyalla Surf Life Saving Club'
-slug: 'whyalla-surf-life-saving-club'
-permalink: '/clubs/whyalla-surf-life-saving-club/'
-summary: 'A regional Upper Spencer Gulf club with lifesaving patrols, Nippers, training and community water safety.'
-image: '/assets/img/clubs/whyalla-surf-life-saving-club.jpg'
-suburb: 'Whyalla'
-region: 'Upper Spencer Gulf'
-address: 'Whyalla Foreshore, Whyalla SA 5600'
-website: 'https://whyallaslsc.com.au/'
+title: Whyalla Surf Life Saving Club
+slug: whyalla-slsc
+permalink: /clubs/whyalla-slsc/
+summary: A small Upper Spencer Gulf club offering Sunday Nippers, weekend patrols, selected surf sports and adaptive participation.
+image: /assets/img/clubs/whyalla-slsc.jpg
+suburb: Whyalla
+region: Upper Spencer Gulf
+address: 1B Cudmore Terrace Beach Rd, Whyalla SA 5600
+website: https://whyallaslsc.com.au/
 latitude: -33.0338
 longitude: 137.5841
-member_size: 'Regional club'
-membership_fee_note: 'Current public membership fees not verified in this pass. Confirm with club.'
-membership_fee_source: ''
-source_checked: '2026-06-30'
+member_size: Small (0–200 members)
+membership_fee_note: 'New active member 18+: $100; Social member: $50; Family membership: N/A; Under 18: $100. 2026/27 fees
+  supplied by the club. Additional competition or program costs may apply.'
+source_checked: '2026-08-24'
 age_groups:
-  - 'nippers'
-  - 'youth'
-  - 'adults'
-  - 'families'
+- nippers
+- youth
+- adults
+- families
 interests:
-  - 'lifesaving-patrols'
-  - 'nippers'
-  - 'training'
-  - 'volunteering'
-  - 'community'
+- lifesaving-patrols
+- nippers
+- surf-sports
+- training
+- volunteering
+- community
+- inclusive-programs
 facilities:
-  - 'beach-access'
-  - 'clubrooms'
-  - 'family-friendly'
-  - 'training'
+- beach-access
+- accessible-facilities
+- family-friendly
 verified_programs:
-  - 'Surf Rescue Certificate'
-  - 'Bronze Medallion pathway'
-  - 'Nippers water safety'
-  - 'Beach patrols'
+- Nippers
+- Youth program
+- Lifesaving and patrolling
+- Boards
+- Beach sprints and flags
+- Surf sports support
+- Adaptive program available.
 best_for:
-  - 'Whyalla families'
-  - 'Upper Spencer Gulf volunteers'
-  - 'People interested in regional beach safety'
-  - 'Youth aged 13+ starting SRC'
+- Families in Whyalla and the Upper Spencer Gulf
+- Children beginning Nippers
+- Members interested in weekend patrols and a smaller community club
 commitment:
-  id: 'flexible'
-  label: 'Flexible'
-adaptive_program: 'Ask club'
-multicultural_program: 'Ask club'
-gym_facilities: 'Ask club'
+  id: flexible
+  label: Flexible
+adaptive_program: Adaptive program available.
+multicultural_program: No specific program listed
+gym_facilities: No gym listed
 family_friendly: 'Yes'
-badge_label: 'Regional lifesaving'
-badge_type: 'community'
+badge_label: Regional lifesaving
+badge_type: community
+about: Whyalla SLSC is a small Upper Spencer Gulf club providing junior activities, weekend patrols and selected surf-sport
+  opportunities. Nippers run on Sundays during the patrol season and the club also lists adaptive participation and surf-sports
+  support roles. Members should be aware that scheduled demolition may limit access to normal club facilities during the 2026/27
+  season.
+first_nations_program: No specific program listed
+lead_contact_email: su49344@bigpond.net.au
+visit_note: During the patrol season, prospective members can generally visit on Saturdays and Sundays between 9:00 am and
+  1:00 pm.
+activity_details:
+  junior: Sundays from 10:00 am, commencing 25 October and continuing to the end of the patrol season.
+  youth: Youth program available for ages 13–18; current session details should be confirmed with the club.
+  lifesaving_patrolling: Typically Saturdays and Sundays from 9:00 am–1:00 pm.
+  surf_sports:
+  - Boards
+  - Beach sprints and flags
+  surf_sports_support: true
+  adaptive: Adaptive program available.
+facility_details:
+- Accessible beach access
+- Accessible public toilets
+- Club facilities may be unavailable during the 2026/27 season because demolition is scheduled for November 2026; no dedicated
+  changerooms are expected during this period
+membership_options:
+- name: New active member 18+
+  description: Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+  price: $100
+- name: Social member
+  description: For members who want to participate in the club without patrolling.
+  price: $50
+- name: Family membership
+  description: Not available.
+  price: N/A
+- name: Under 18
+  description: Anyone under 18. Sports Vouchers are available where applicable.
+  price: $100
+membership_pricing_status: 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 ---
 
-## Overview
+## About the club
 
-Whyalla SLSC is SLSSAâ€™s Upper Spencer Gulf surf life saving club. Its public lifesaver page explains the Surf Rescue Certificate as a stepping stone to the Bronze Medallion and a minimum standard for water safety at Nippers and similar events.
+Whyalla SLSC is a small Upper Spencer Gulf club providing junior activities, weekend patrols and selected surf-sport opportunities. Nippers run on Sundays during the patrol season and the club also lists adaptive participation and surf-sports support roles. Members should be aware that scheduled demolition may limit access to normal club facilities during the 2026/27 season.
 
 ## What this club offers
 
-- Surf lifesaving patrols.
-- Surf Rescue Certificate and Bronze Medallion pathway.
-- Water safety support for Nippers and similar events.
-- Regional community volunteering.
+- Junior / Nippers activities
+- Youth activities
+- Lifesaving and patrolling
+- Surf sports and competition: Boards, Beach sprints and flags
+- Coaching, officiating and administration opportunities
+- Adaptive program available.
 
-## Training, Nippers and member activity
+## Programs and activity times
 
-- Surf Rescue Certificate is described as originally intended for young people aged 13 to 15, but open to anyone over 13.
-- Bronze Medallion is described as the minimum standard generally required for full patrolling duties.
-- Current training dates and fees should be confirmed with the club.
+- **Junior activities:** Sundays from 10:00 am, commencing 25 October and continuing to the end of the patrol season.
+- **Youth:** Youth program available for ages 13–18; current session details should be confirmed with the club.
+- **Lifesaving and patrolling:** Typically Saturdays and Sundays from 9:00 am–1:00 pm.
+- **Surf sports:** Boards, Beach sprints and flags.
+- **Surf-sports support:** Coaching, officiating and administration opportunities are listed by the club.
 
-## Membership fees and joining notes
+## Membership and fees
 
-- Current public fee schedule was not verified in this pass.
-- Confirm fees directly with Whyalla SLSC.
+- **New active member 18+ — $100:** Patrolling member or member training for the Surf Rescue Certificate/Bronze Medallion.
+- **Social member — $50:** For members who want to participate in the club without patrolling.
+- **Family membership — N/A:** Not available.
+- **Under 18 — $100:** Anyone under 18. Sports Vouchers are available where applicable.
+- **Please note:** 2026/27 fees supplied by the club. Additional competition or program costs may apply.
 
-## Culture and club fit
+## Facilities and accessibility
 
-- Regional club supporting the Whyalla foreshore and Upper Spencer Gulf.
-- Good fit for families and volunteers who want regional community service.
-- Practical pathway for youth and adults wanting lifesaving awards.
+- Accessible beach access
+- Accessible public toilets
+- Club facilities may be unavailable during the 2026/27 season because demolition is scheduled for November 2026; no dedicated changerooms are expected during this period
 
-## Who this club may suit
+## Visiting the club
 
-- Choose Whyalla if you are in the Upper Spencer Gulf and want a regional surf lifesaving pathway.
-- Good option for youth aged 13+ interested in SRC and water safety.
-- Confirm Nippers availability, training dates and fees with the club.
+During the patrol season, prospective members can generally visit on Saturdays and Sundays between 9:00 am and 1:00 pm.
 
-## Profile sources and review notes
-
-- SLSSA SA Clubs directory: https://www.surflifesavingsa.com.au/sa-clubs
-- Club website: https://whyallaslsc.com.au/
-- Become a life saver: https://whyallaslsc.com.au/become-a-life-saver/
-
-This profile is intended to help prospective members compare clubs. Details such as fees, training times, program availability and facilities should be confirmed with the club before public launch.
+Program times, fees and facility availability can change during the season. Use the enquiry form before joining or attending for the first time.
