@@ -12,18 +12,11 @@ permalink: /
       There is a role in Surf Life Saving for everyone. Find the club and membership option that feels like the right fit for you.
     </p>
 
-    <div class="club-guide-promo">
-      <div class="club-guide-promo__content">
-        <strong>Not sure where to start?</strong>
-        <span>
-          Answer three quick questions and we'll narrow down the clubs.
-        </span>
-      </div>
-
+    <div class="browse-hero__actions">
       <button
         class="button button--primary"
         type="button"
-        data-club-guide-open
+        data-open-club-helper
       >
         Help me choose a club
       </button>
@@ -378,13 +371,13 @@ permalink: /
       <h2>No clubs match those filters</h2>
 
       <p>
-        Try changing your filters, increasing the distance, or use the guided club finder to help narrow down your options.
+        Try changing your filters or increasing the distance.
       </p>
 
       <button
         class="button button--primary"
         type="button"
-        data-club-guide-open
+        data-open-club-helper
       >
         Help me choose a club
       </button>
@@ -404,35 +397,28 @@ permalink: /
 </script>
 
 <div
-  class="club-helper"
-  data-club-helper
+  class="club-helper-modal"
+  data-helper-modal
+  hidden
 >
-  <button
-    class="club-helper__toggle"
-    type="button"
-    data-helper-toggle
-  >
-    <span
-      class="club-helper__toggle-icon"
-      aria-hidden="true"
-    >
-      ?
-    </span>
-
-    <span class="club-helper__toggle-label">
-      Help me choose
-    </span>
-  </button>
+  <div
+    class="club-helper-modal__backdrop"
+    data-helper-close
+    aria-hidden="true"
+  ></div>
 
   <section
     class="club-helper__panel"
     data-helper-panel
-    hidden
-    aria-label="Find the right club"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="club-helper-title"
   >
     <div class="club-helper__header">
       <div>
-        <h2>Find the right club</h2>
+        <h2 id="club-helper-title">
+          Find the right club
+        </h2>
 
         <p class="club-helper__intro">
           3 quick questions to narrow your options.

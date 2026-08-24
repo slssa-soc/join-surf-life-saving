@@ -6,6 +6,8 @@ const helperState = {
   location: null
 };
 
+let lastHelperTrigger = null;
+
 function normaliseValue(value) {
   return String(value || "").trim().toLowerCase();
 }
@@ -29,7 +31,10 @@ function toNumber(value) {
   }
 
   const number = Number(value);
-  return Number.isFinite(number) ? number : null;
+
+  return Number.isFinite(number)
+    ? number
+    : null;
 }
 
 function toRadians(degrees) {
@@ -128,6 +133,7 @@ function populateNativeLocationDatalist() {
       document.createElement("option");
 
     option.value = location.label;
+
     datalist.appendChild(option);
   });
 }
@@ -136,7 +142,8 @@ function updateLocationAutocompleteState(field) {
   const listId =
     field.getAttribute("data-location-list-id");
 
-  const value = field.value.trim();
+  const value =
+    field.value.trim();
 
   if (!listId) {
     return;
@@ -152,6 +159,14 @@ function updateLocationAutocompleteState(field) {
   }
 }
 
+function locationResult(location) {
+  return {
+    label: location.label,
+    latitude: Number(location.latitude),
+    longitude: Number(location.longitude)
+  };
+}
+
 function getStoredCurrentLocation() {
   try {
     const stored =
@@ -163,7 +178,8 @@ function getStoredCurrentLocation() {
       return null;
     }
 
-    const parsed = JSON.parse(stored);
+    const parsed =
+      JSON.parse(stored);
 
     if (
       typeof parsed.latitude === "number" &&
@@ -229,7 +245,8 @@ function getSelectedValues(name) {
 }
 
 function findLocationByInput(value) {
-  const query = normaliseValue(value);
+  const query =
+    normaliseValue(value);
 
   if (!query) {
     return null;
@@ -239,36 +256,32 @@ function findLocationByInput(value) {
     const storedLocation =
       getStoredCurrentLocation();
 
-    if (storedLocation) {
-      return {
-        label: "your current location",
-        latitude: storedLocation.latitude,
-        longitude: storedLocation.longitude
-      };
+    if (!storedLocation) {
+      return null;
     }
 
-    return null;
+    return {
+      label: "your current location",
+      latitude: storedLocation.latitude,
+      longitude: storedLocation.longitude
+    };
   }
 
-  const locations = getSaLocations();
+  const locations =
+    getSaLocations();
 
   const exactLabelMatch =
     locations.find(function (location) {
       return (
-        normaliseValue(location.label) === query
+        normaliseValue(location.label) ===
+        query
       );
     });
 
   if (exactLabelMatch) {
-    return {
-      label: exactLabelMatch.label,
-      latitude: Number(
-        exactLabelMatch.latitude
-      ),
-      longitude: Number(
-        exactLabelMatch.longitude
-      )
-    };
+    return locationResult(
+      exactLabelMatch
+    );
   }
 
   const exactSuburbMatch =
@@ -280,15 +293,33 @@ function findLocationByInput(value) {
     });
 
   if (exactSuburbMatch) {
-    return {
-      label: exactSuburbMatch.label,
-      latitude: Number(
-        exactSuburbMatch.latitude
-      ),
-      longitude: Number(
-        exactSuburbMatch.longitude
-      )
-    };
+    return locationResult(
+      exactSuburbMatch
+    );
+  }
+
+  if (query.length < 4) {
+    return null;
+  }
+
+  const prefixMatches =
+    locations.filter(function (location) {
+      const label =
+        normaliseValue(location.label);
+
+      const suburb =
+        normaliseValue(location.suburb);
+
+      return (
+        label.startsWith(query) ||
+        suburb.startsWith(query)
+      );
+    });
+
+  if (prefixMatches.length === 1) {
+    return locationResult(
+      prefixMatches[0]
+    );
   }
 
   return null;
@@ -300,7 +331,10 @@ function getSelectedOrigin() {
       "[data-filter='origin']"
     );
 
-  if (!originField || !originField.value) {
+  if (
+    !originField ||
+    !originField.value
+  ) {
     return null;
   }
 
@@ -322,10 +356,8 @@ function getCurrentFilters() {
 
   return {
     age: getSelectedValues("age"),
-    interest:
-      getSelectedValues("interest"),
-    facility:
-      getSelectedValues("facility"),
+    interest: getSelectedValues("interest"),
+    facility: getSelectedValues("facility"),
     origin: origin
       ? origin.value.trim()
       : "",
@@ -387,6 +419,7 @@ function updateCardDistance(card, origin) {
     }
 
     card.dataset.distance = "";
+
     return null;
   }
 
@@ -394,12 +427,22 @@ function updateCardDistance(card, origin) {
     getClubCoordinates(card);
 
   if (!clubCoordinates) {
+    if (inlineLabel) {
+      inlineLabel.hidden = true;
+      inlineLabel.textContent = "";
+    }
+
+    if (fallback) {
+      fallback.hidden = true;
+    }
+
     if (actionLabel) {
       actionLabel.textContent =
         "Distance unavailable";
     }
 
     card.dataset.distance = "";
+
     return null;
   }
 
@@ -426,7 +469,8 @@ function updateCardDistance(card, origin) {
   }
 
   if (actionLabel) {
-    actionLabel.textContent = formatted;
+    actionLabel.textContent =
+      formatted;
   }
 
   card.dataset.distance =
@@ -445,7 +489,9 @@ function hasAnyMatch(
 
   return selectedValues.some(
     function (value) {
-      return availableValues.includes(value);
+      return availableValues.includes(
+        value
+      );
     }
   );
 }
@@ -456,16 +502,25 @@ function clubMatchesFilters(
   origin
 ) {
   const ageGroups =
-    splitDataList(card.dataset.ageGroups);
+    splitDataList(
+      card.dataset.ageGroups
+    );
 
   const interests =
-    splitDataList(card.dataset.interests);
+    splitDataList(
+      card.dataset.interests
+    );
 
   const facilities =
-    splitDataList(card.dataset.facilities);
+    splitDataList(
+      card.dataset.facilities
+    );
 
   const distanceKm =
-    updateCardDistance(card, origin);
+    updateCardDistance(
+      card,
+      origin
+    );
 
   if (
     !hasAnyMatch(
@@ -515,19 +570,28 @@ function updateFilterUrl(filters) {
 
   filters.age.forEach(
     function (value) {
-      params.append("age", value);
+      params.append(
+        "age",
+        value
+      );
     }
   );
 
   filters.interest.forEach(
     function (value) {
-      params.append("interest", value);
+      params.append(
+        "interest",
+        value
+      );
     }
   );
 
   filters.facility.forEach(
     function (value) {
-      params.append("facility", value);
+      params.append(
+        "facility",
+        value
+      );
     }
   );
 
@@ -568,15 +632,20 @@ function updateLocationStatus(
       "Type a suburb or town, or use your current location.",
       "info"
     );
+
     return;
   }
 
-  if (filters.origin && !origin) {
+  if (
+    filters.origin &&
+    !origin
+  ) {
     if (filters.origin.length < 4) {
       setLocationStatus(
         "Type at least 4 characters to search.",
         "info"
       );
+
       return;
     }
 
@@ -584,6 +653,7 @@ function updateLocationStatus(
       "Select a location from the suggestions.",
       "warning"
     );
+
     return;
   }
 
@@ -599,6 +669,7 @@ function updateLocationStatus(
         ".",
       "success"
     );
+
     return;
   }
 
@@ -722,7 +793,8 @@ function applyFilters() {
         origin
       );
 
-    card.hidden = !isVisible;
+    card.hidden =
+      !isVisible;
 
     if (isVisible) {
       visibleCount += 1;
@@ -787,16 +859,21 @@ function setCheckboxesFromUrl(
       )
     );
 
-  inputs.forEach(function (input) {
-    if (input.value === "") {
-      input.checked =
-        values.length === 0;
-      return;
-    }
+  inputs.forEach(
+    function (input) {
+      if (input.value === "") {
+        input.checked =
+          values.length === 0;
 
-    input.checked =
-      values.includes(input.value);
-  });
+        return;
+      }
+
+      input.checked =
+        values.includes(
+          input.value
+        );
+    }
+  );
 }
 
 function setFiltersFromUrl() {
@@ -841,19 +918,21 @@ function setFiltersFromUrl() {
     .querySelectorAll(
       "select[data-filter]"
     )
-    .forEach(function (field) {
-      const key =
-        field.getAttribute(
-          "data-filter"
-        );
+    .forEach(
+      function (field) {
+        const key =
+          field.getAttribute(
+            "data-filter"
+          );
 
-      const value =
-        params.get(key);
+        const value =
+          params.get(key);
 
-      if (value) {
-        field.value = value;
+        if (value) {
+          field.value = value;
+        }
       }
-    });
+    );
 }
 
 function clearFilters() {
@@ -864,6 +943,7 @@ function clearFilters() {
 
   if (originField) {
     originField.value = "";
+
     updateLocationAutocompleteState(
       originField
     );
@@ -873,20 +953,25 @@ function clearFilters() {
     .querySelectorAll(
       "select[data-filter]"
     )
-    .forEach(function (field) {
-      field.value = "";
-    });
+    .forEach(
+      function (field) {
+        field.value = "";
+      }
+    );
 
   document
     .querySelectorAll(
       "input[data-filter-check]"
     )
-    .forEach(function (input) {
-      input.checked =
-        input.value === "";
-    });
+    .forEach(
+      function (input) {
+        input.checked =
+          input.value === "";
+      }
+    );
 
   clearStoredCurrentLocation();
+
   applyFilters();
 }
 
@@ -1006,6 +1091,7 @@ function useCurrentLocation(callback) {
         callback(true);
       }
     },
+
     function () {
       setLocationStatus(
         "Location access was not allowed. Type a suburb or town instead.",
@@ -1019,6 +1105,7 @@ function useCurrentLocation(callback) {
         callback(false);
       }
     },
+
     {
       enableHighAccuracy: false,
       timeout: 10000,
@@ -1076,21 +1163,24 @@ function setCheckedValues(
         name +
         "'][data-filter-check]"
     )
-    .forEach(function (input) {
-      if (input.value === "") {
-        input.checked =
-          normalisedValues.length ===
-          0;
-        return;
-      }
+    .forEach(
+      function (input) {
+        if (input.value === "") {
+          input.checked =
+            normalisedValues.length ===
+            0;
 
-      input.checked =
-        normalisedValues.includes(
-          normaliseValue(
-            input.value
-          )
-        );
-    });
+          return;
+        }
+
+        input.checked =
+          normalisedValues.includes(
+            normaliseValue(
+              input.value
+            )
+          );
+      }
+    );
 }
 
 function setInterestValues(values) {
@@ -1103,37 +1193,43 @@ function setInterestValues(values) {
     .querySelectorAll(
       "input[name='interest'][data-filter-check]"
     )
-    .forEach(function (input) {
-      input.checked =
-        normalisedValues.includes(
-          normaliseValue(
-            input.value
-          )
-        );
-    });
+    .forEach(
+      function (input) {
+        input.checked =
+          normalisedValues.includes(
+            normaliseValue(
+              input.value
+            )
+          );
+      }
+    );
 }
 
 function getHelperAgeFilters() {
   if (
-    helperState.age === "child"
+    helperState.age ===
+    "child"
   ) {
     return ["nippers"];
   }
 
   if (
-    helperState.age === "youth"
+    helperState.age ===
+    "youth"
   ) {
     return ["youth"];
   }
 
   if (
-    helperState.age === "adult"
+    helperState.age ===
+    "adult"
   ) {
     return ["adults"];
   }
 
   if (
-    helperState.age === "family"
+    helperState.age ===
+    "family"
   ) {
     return ["families"];
   }
@@ -1225,7 +1321,10 @@ function applyHelperFilters() {
       "[data-sort-clubs]"
     );
 
-  if (origin && sortField) {
+  if (
+    origin &&
+    sortField
+  ) {
     sortField.value =
       "distance";
   }
@@ -1239,9 +1338,9 @@ function resetHelperState() {
   helperState.location = null;
 }
 
-function getHelperContentElement() {
+function getHelperModalElement() {
   return document.querySelector(
-    "[data-helper-content]"
+    "[data-helper-modal]"
   );
 }
 
@@ -1251,9 +1350,13 @@ function getHelperPanelElement() {
   );
 }
 
-function getHelperStepLabel(
-  stepNumber
-) {
+function getHelperContentElement() {
+  return document.querySelector(
+    "[data-helper-content]"
+  );
+}
+
+function getHelperStepLabel(stepNumber) {
   return `
     <div
       class="club-helper__progress"
@@ -1264,6 +1367,96 @@ function getHelperStepLabel(
       <span class="${stepNumber >= 3 ? "is-active" : ""}"></span>
     </div>
   `;
+}
+
+function focusFirstHelperControl() {
+  const panel =
+    getHelperPanelElement();
+
+  if (!panel) {
+    return;
+  }
+
+  const target =
+    panel.querySelector(
+      "[data-helper-answer], [data-helper-location-input], [data-helper-show-results], button"
+    );
+
+  if (target) {
+    target.focus();
+  }
+}
+
+function openClubHelper(trigger) {
+  const modal =
+    getHelperModalElement();
+
+  if (!modal) {
+    return false;
+  }
+
+  lastHelperTrigger =
+    trigger || document.activeElement;
+
+  modal.hidden = false;
+
+  document.body.classList.add(
+    "club-helper-open"
+  );
+
+  renderHelperStart();
+
+  window.setTimeout(
+    focusFirstHelperControl,
+    50
+  );
+
+  return true;
+}
+
+function closeClubHelper(
+  restoreFocus
+) {
+  const modal =
+    getHelperModalElement();
+
+  if (!modal) {
+    return;
+  }
+
+  modal.hidden = true;
+
+  document.body.classList.remove(
+    "club-helper-open"
+  );
+
+  if (
+    restoreFocus !== false &&
+    lastHelperTrigger &&
+    typeof lastHelperTrigger.focus ===
+      "function"
+  ) {
+    lastHelperTrigger.focus();
+  }
+}
+
+function openClubHelperFromTrigger(
+  trigger
+) {
+  if (openClubHelper(trigger)) {
+    return;
+  }
+
+  const targetUrl =
+    trigger
+      ? trigger.getAttribute(
+          "data-helper-target-url"
+        )
+      : null;
+
+  window.location.href =
+    targetUrl ||
+    "/?helper=open#clubs";
 }
 
 function renderHelperStart() {
@@ -1428,10 +1621,18 @@ function renderHelperLocationStep() {
       "[data-location-field]"
     );
 
-  const existingOrigin =
+  let existingOrigin =
     existingOriginField
       ? existingOriginField.value
       : "";
+
+  if (
+    normaliseValue(
+      existingOrigin
+    ) === "current location"
+  ) {
+    existingOrigin = "";
+  }
 
   content.innerHTML = `
     ${getHelperStepLabel(3)}
@@ -1441,7 +1642,7 @@ function renderHelperLocationStep() {
     </h3>
 
     <p class="club-helper__message">
-      We'll use this to find the closest matches.
+      We'll use this to find the closest clubs.
     </p>
 
     <label class="club-helper__field">
@@ -1457,34 +1658,37 @@ function renderHelperLocationStep() {
       >
     </label>
 
-    <div class="club-helper__options">
+    <div class="club-helper__location-actions">
       <button
+        class="button button--primary"
         type="button"
         data-helper-location-continue
       >
-        <strong>Use this location</strong>
+        Use this suburb or town
       </button>
 
       <button
+        class="button button--outline"
         type="button"
         data-helper-location-current
       >
-        <strong>Use my current location</strong>
-      </button>
-
-      <button
-        type="button"
-        data-helper-location-skip
-      >
-        <strong>Skip for now</strong>
+        Use my current location
       </button>
     </div>
+
+    <button
+      type="button"
+      class="club-helper__text-button"
+      data-helper-location-skip
+    >
+      Skip location
+    </button>
 
     <p
       class="club-helper__hint"
       data-helper-location-message
     >
-      Type at least 4 characters and select a suggestion.
+      Type at least 4 characters. You can press Enter once you've entered your location.
     </p>
 
     <div class="club-helper__actions">
@@ -1512,122 +1716,98 @@ function renderHelperLocationStep() {
   }
 }
 
-function getVisibleClubRecommendations(
-  limit
-) {
-  const cards =
-    Array.from(
-      document.querySelectorAll(
-        "[data-club-card]"
-      )
-    ).filter(function (card) {
-      return !card.hidden;
-    });
-
-  const origin =
-    getSelectedOrigin();
-
-  const sorted =
-    cards.slice().sort(
-      function (a, b) {
-        if (origin) {
-          const aDistance =
-            toNumber(
-              a.dataset.distance
-            );
-
-          const bDistance =
-            toNumber(
-              b.dataset.distance
-            );
-
-          if (
-            aDistance === null &&
-            bDistance === null
-          ) {
-            return String(
-              a.dataset.title || ""
-            ).localeCompare(
-              String(
-                b.dataset.title || ""
-              )
-            );
-          }
-
-          if (aDistance === null) {
-            return 1;
-          }
-
-          if (bDistance === null) {
-            return -1;
-          }
-
-          return (
-            aDistance -
-            bDistance
-          );
-        }
-
-        return String(
-          a.dataset.title || ""
-        ).localeCompare(
-          String(
-            b.dataset.title || ""
-          )
-        );
-      }
+function submitHelperTypedLocation() {
+  const helperLocationInput =
+    document.querySelector(
+      "[data-helper-location-input]"
     );
 
-  return sorted.slice(
-    0,
-    limit || 3
-  );
+  const originField =
+    document.querySelector(
+      "[data-location-field]"
+    );
+
+  const message =
+    document.querySelector(
+      "[data-helper-location-message]"
+    );
+
+  const value =
+    helperLocationInput
+      ? helperLocationInput.value.trim()
+      : "";
+
+  if (!value) {
+    if (message) {
+      message.textContent =
+        "Enter a suburb or town, or skip location.";
+
+      message.dataset.statusType =
+        "warning";
+    }
+
+    return;
+  }
+
+  const location =
+    findLocationByInput(value);
+
+  if (!location) {
+    if (message) {
+      message.textContent =
+        "Select a suburb or town from the suggestions. If several places have similar names, type a little more.";
+
+      message.dataset.statusType =
+        "warning";
+    }
+
+    return;
+  }
+
+  clearStoredCurrentLocation();
+
+  if (originField) {
+    originField.value =
+      location.label;
+
+    updateLocationAutocompleteState(
+      originField
+    );
+  }
+
+  if (helperLocationInput) {
+    helperLocationInput.value =
+      location.label;
+  }
+
+  const radiusField =
+    document.querySelector(
+      "[data-filter='radius']"
+    );
+
+  if (
+    radiusField &&
+    !radiusField.value
+  ) {
+    radiusField.value = "25";
+  }
+
+  helperState.location =
+    "suburb";
+
+  renderHelperResults();
 }
 
-function getCardRecommendationData(
-  card
-) {
-  const title =
-    card.dataset.title ||
-    "Surf Life Saving club";
-
-  const summaryElement =
-    card.querySelector(
-      ".club-card__summary"
-    );
-
-  const distanceElement =
-    card.querySelector(
-      "[data-card-distance]"
-    );
-
-  const profileLink =
-    card.querySelector(
-      ".club-card__actions a[href], .club-card__body h2 a[href]"
-    );
-
-  const leadButton =
-    card.querySelector(
-      "[data-lead-club]"
-    );
-
-  return {
-    title: title,
-    summary: summaryElement
-      ? summaryElement.textContent.trim()
-      : "",
-    distance: distanceElement
-      ? distanceElement.textContent.trim()
-      : "",
-    profileUrl: profileLink
-      ? profileLink.getAttribute("href")
-      : "#",
-    clubSlug: leadButton
-      ? leadButton.getAttribute(
-          "data-lead-club"
-        )
-      : ""
-  };
+function getVisibleClubCount() {
+  return Array.from(
+    document.querySelectorAll(
+      "[data-club-card]"
+    )
+  ).filter(
+    function (card) {
+      return !card.hidden;
+    }
+  ).length;
 }
 
 function renderHelperResults() {
@@ -1640,136 +1820,94 @@ function renderHelperResults() {
     return;
   }
 
-  const visibleCards =
-    getVisibleClubRecommendations(4);
-
-  const countElement =
-    document.querySelector(
-      "[data-results-count]"
-    );
-
   const visibleCount =
-    countElement
-      ? countElement.textContent
-      : String(
-          visibleCards.length
-        );
+    getVisibleClubCount();
 
-  const origin =
-    getSelectedOrigin();
-
-  if (
-    visibleCards.length === 0
-  ) {
+  if (visibleCount === 0) {
     content.innerHTML = `
-      <div class="club-helper__result-header">
+      ${getHelperStepLabel(3)}
+
+      <div class="club-helper__result">
         <h3 class="club-helper__question">
-          No close match yet
+          No clubs match all of those choices
         </h3>
-      </div>
 
-      <p class="club-helper__message">
-        Try a wider search or change one of your answers.
-      </p>
+        <p class="club-helper__message">
+          Try widening the search or changing one of your answers.
+        </p>
 
-      <div class="club-helper__options">
-        <button
-          type="button"
-          data-helper-broaden-search
-        >
-          <strong>Broaden the search</strong>
-        </button>
+        <div class="club-helper__result-actions">
+          <button
+            class="button button--primary"
+            type="button"
+            data-helper-broaden-search
+          >
+            Broaden the search
+          </button>
 
-        <button
-          type="button"
-          data-helper-start-over
-        >
-          <strong>Start again</strong>
-        </button>
+          <button
+            class="button button--outline"
+            type="button"
+            data-helper-start-over
+          >
+            Start again
+          </button>
+        </div>
       </div>
     `;
 
     return;
   }
 
-  const recommendationHtml =
-    visibleCards
-      .map(function (card) {
-        const data =
-          getCardRecommendationData(
-            card
-          );
-
-        const distanceText =
-          origin &&
-          data.distance &&
-          data.distance !==
-            "Distance unavailable"
-            ? `<span>${escapeHtml(data.distance)}</span>`
-            : "";
-
-        return `
-          <article class="club-helper__recommendation">
-            <div>
-              <h4>${escapeHtml(data.title)}</h4>
-              ${distanceText}
-
-              ${
-                data.summary
-                  ? `<p>${escapeHtml(data.summary)}</p>`
-                  : ""
-              }
-            </div>
-
-            <div class="club-helper__recommendation-actions">
-              <a href="${escapeHtml(data.profileUrl)}">
-                View profile
-              </a>
-
-              <button
-                type="button"
-                data-lead-club="${escapeHtml(data.clubSlug)}"
-                data-helper-club-title="${escapeHtml(data.title)}"
-              >
-                Send my details
-              </button>
-            </div>
-          </article>
-        `;
-      })
-      .join("");
+  const matchText =
+    visibleCount === 1
+      ? "1 club matches your choices"
+      : visibleCount +
+        " clubs match your choices";
 
   content.innerHTML = `
-    <div class="club-helper__result-header">
+    ${getHelperStepLabel(3)}
+
+    <div class="club-helper__result">
+      <div class="club-helper__result-icon" aria-hidden="true">
+        ✓
+      </div>
+
       <h3 class="club-helper__question">
-        Your closest matches
+        ${escapeHtml(matchText)}
       </h3>
-    </div>
 
-    <p class="club-helper__message">
-      ${escapeHtml(visibleCount)} clubs match your answers. Here are some places to start.
-    </p>
+      <p class="club-helper__message">
+        We've applied your preferences to the club list. You can now compare the matching clubs and choose the one that feels right for you.
+      </p>
 
-    <div class="club-helper__recommendations">
-      ${recommendationHtml}
-    </div>
+      <div class="club-helper__result-actions">
+        <button
+          class="button button--primary"
+          type="button"
+          data-helper-show-results
+        >
+          Show matching clubs
+        </button>
+      </div>
 
-    <div class="club-helper__actions club-helper__actions--split">
-      <button
-        type="button"
-        class="club-helper__text-button"
-        data-helper-back="location"
-      >
-        Back
-      </button>
+      <div class="club-helper__actions club-helper__actions--split">
+        <button
+          type="button"
+          class="club-helper__text-button"
+          data-helper-back="location"
+        >
+          Back
+        </button>
 
-      <button
-        type="button"
-        class="club-helper__text-button"
-        data-helper-start-over
-      >
-        Start again
-      </button>
+        <button
+          type="button"
+          class="club-helper__text-button"
+          data-helper-start-over
+        >
+          Start again
+        </button>
+      </div>
     </div>
   `;
 }
@@ -1780,45 +1918,41 @@ function broadenHelperSearch() {
       "[data-filter='radius']"
     );
 
-  if (radiusField) {
-    radiusField.value = "100";
+  const origin =
+    getSelectedOrigin();
+
+  if (
+    origin &&
+    radiusField
+  ) {
+    radiusField.value =
+      "100";
+  } else {
+    helperState.interest =
+      null;
   }
 
-  applyFilters();
   renderHelperResults();
 }
 
-function openClubHelper() {
-  const panel =
-    getHelperPanelElement();
+function showHelperResultsOnPage() {
+  closeClubHelper(false);
 
-  if (!panel) {
-    return false;
-  }
-
-  panel.hidden = false;
-  renderHelperStart();
-
-  return true;
-}
-
-function openClubHelperFromHeader() {
-  const targetUrlButton =
+  const results =
     document.querySelector(
-      "[data-open-club-helper]"
+      ".browse-results"
     );
 
-  const targetUrl =
-    targetUrlButton
-      ? targetUrlButton.getAttribute(
-          "data-helper-target-url"
-        )
-      : "/?helper=open#clubs";
-
-  if (!openClubHelper()) {
-    window.location.href =
-      targetUrl ||
-      "/?helper=open#clubs";
+  if (results) {
+    window.setTimeout(
+      function () {
+        results.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      },
+      50
+    );
   }
 }
 
@@ -1837,6 +1971,7 @@ document.addEventListener(
       );
 
       applyFilters();
+
       return;
     }
 
@@ -1883,6 +2018,7 @@ document.addEventListener(
       );
 
       applyFilters();
+
       return;
     }
 
@@ -1892,6 +2028,7 @@ document.addEventListener(
       )
     ) {
       applyFilters();
+
       return;
     }
 
@@ -1905,6 +2042,7 @@ document.addEventListener(
       );
 
       applyFilters();
+
       return;
     }
 
@@ -1919,26 +2057,52 @@ document.addEventListener(
 );
 
 document.addEventListener(
+  "keydown",
+  function (event) {
+    if (
+      event.key === "Enter" &&
+      event.target.matches(
+        "[data-helper-location-input]"
+      )
+    ) {
+      event.preventDefault();
+
+      submitHelperTypedLocation();
+
+      return;
+    }
+
+    if (event.key === "Escape") {
+      const modal =
+        getHelperModalElement();
+
+      if (
+        modal &&
+        !modal.hidden
+      ) {
+        closeClubHelper();
+
+        return;
+      }
+    }
+  }
+);
+
+document.addEventListener(
   "click",
   function (event) {
-    const openHeaderHelper =
+    const openHelperButton =
       event.target.closest(
         "[data-open-club-helper]"
       );
 
-    if (openHeaderHelper) {
+    if (openHelperButton) {
       event.preventDefault();
-      openClubHelperFromHeader();
-      return;
-    }
 
-    const openPromoHelper =
-      event.target.closest(
-        "[data-club-guide-open]"
+      openClubHelperFromTrigger(
+        openHelperButton
       );
 
-    if (openPromoHelper) {
-      openClubHelper();
       return;
     }
 
@@ -1949,6 +2113,7 @@ document.addEventListener(
 
     if (clearButton) {
       clearFilters();
+
       return;
     }
 
@@ -1959,6 +2124,7 @@ document.addEventListener(
 
     if (currentLocationButton) {
       useCurrentLocation();
+
       return;
     }
 
@@ -1976,12 +2142,18 @@ document.addEventListener(
       const parts =
         answer.split(":");
 
-      const key = parts[0];
-      const value = parts[1];
+      const key =
+        parts[0];
+
+      const value =
+        parts[1];
 
       if (key === "age") {
-        helperState.age = value;
+        helperState.age =
+          value;
+
         renderHelperInterestStep();
+
         return;
       }
 
@@ -1990,6 +2162,7 @@ document.addEventListener(
           value;
 
         renderHelperLocationStep();
+
         return;
       }
     }
@@ -2007,16 +2180,19 @@ document.addEventListener(
 
       if (step === "age") {
         renderHelperAgeStep();
+
         return;
       }
 
       if (step === "interest") {
         renderHelperInterestStep();
+
         return;
       }
 
       if (step === "location") {
         renderHelperLocationStep();
+
         return;
       }
     }
@@ -2027,76 +2203,8 @@ document.addEventListener(
       );
 
     if (helperLocationContinue) {
-      const helperLocationInput =
-        document.querySelector(
-          "[data-helper-location-input]"
-        );
+      submitHelperTypedLocation();
 
-      const originField =
-        document.querySelector(
-          "[data-location-field]"
-        );
-
-      const message =
-        document.querySelector(
-          "[data-helper-location-message]"
-        );
-
-      const value =
-        helperLocationInput
-          ? helperLocationInput.value.trim()
-          : "";
-
-      if (!value) {
-        if (message) {
-          message.textContent =
-            "Enter a suburb or town, or skip this step.";
-
-          message.dataset.statusType =
-            "warning";
-        }
-
-        return;
-      }
-
-      if (!findLocationByInput(value)) {
-        if (message) {
-          message.textContent =
-            "Select a location from the suggestions.";
-
-          message.dataset.statusType =
-            "warning";
-        }
-
-        return;
-      }
-
-      clearStoredCurrentLocation();
-
-      if (originField) {
-        originField.value = value;
-
-        updateLocationAutocompleteState(
-          originField
-        );
-      }
-
-      const radiusField =
-        document.querySelector(
-          "[data-filter='radius']"
-        );
-
-      if (
-        radiusField &&
-        !radiusField.value
-      ) {
-        radiusField.value = "25";
-      }
-
-      helperState.location =
-        "suburb";
-
-      renderHelperResults();
       return;
     }
 
@@ -2111,22 +2219,24 @@ document.addEventListener(
 
       useCurrentLocation(
         function (success) {
-          if (success) {
-            const radiusField =
-              document.querySelector(
-                "[data-filter='radius']"
-              );
-
-            if (
-              radiusField &&
-              !radiusField.value
-            ) {
-              radiusField.value =
-                "25";
-            }
-
-            renderHelperResults();
+          if (!success) {
+            return;
           }
+
+          const radiusField =
+            document.querySelector(
+              "[data-filter='radius']"
+            );
+
+          if (
+            radiusField &&
+            !radiusField.value
+          ) {
+            radiusField.value =
+              "25";
+          }
+
+          renderHelperResults();
         }
       );
 
@@ -2167,6 +2277,7 @@ document.addEventListener(
         "any";
 
       renderHelperResults();
+
       return;
     }
 
@@ -2177,6 +2288,18 @@ document.addEventListener(
 
     if (broadenSearchButton) {
       broadenHelperSearch();
+
+      return;
+    }
+
+    const showResultsButton =
+      event.target.closest(
+        "[data-helper-show-results]"
+      );
+
+    if (showResultsButton) {
+      showHelperResultsOnPage();
+
       return;
     }
 
@@ -2187,6 +2310,18 @@ document.addEventListener(
 
     if (helperStartOver) {
       renderHelperStart();
+
+      return;
+    }
+
+    const helperClose =
+      event.target.closest(
+        "[data-helper-close]"
+      );
+
+    if (helperClose) {
+      closeClubHelper();
+
       return;
     }
 
@@ -2215,60 +2350,6 @@ document.addEventListener(
           clubTitle: clubTitle
         });
       }
-
-      return;
-    }
-
-    const helperToggle =
-      event.target.closest(
-        "[data-helper-toggle]"
-      );
-
-    if (helperToggle) {
-      const panel =
-        getHelperPanelElement();
-
-      if (panel) {
-        panel.hidden =
-          !panel.hidden;
-
-        if (!panel.hidden) {
-          renderHelperStart();
-        }
-      }
-
-      return;
-    }
-
-    const helperClose =
-      event.target.closest(
-        "[data-helper-close]"
-      );
-
-    if (helperClose) {
-      const panel =
-        getHelperPanelElement();
-
-      if (panel) {
-        panel.hidden = true;
-      }
-    }
-  }
-);
-
-document.addEventListener(
-  "keydown",
-  function (event) {
-    if (event.key === "Escape") {
-      const panel =
-        getHelperPanelElement();
-
-      if (
-        panel &&
-        !panel.hidden
-      ) {
-        panel.hidden = true;
-      }
     }
   }
 );
@@ -2295,13 +2376,14 @@ document.addEventListener(
     }
 
     setFiltersFromUrl();
+
     applyFilters();
 
     if (
       initialParams.get("helper") ===
       "open"
     ) {
-      openClubHelperFromHeader();
+      openClubHelper();
     }
   }
 );
