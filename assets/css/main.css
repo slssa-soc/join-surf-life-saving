@@ -168,12 +168,14 @@ main {
 }
 
 .eyebrow {
-  margin: 0 0 6px;
-  color: var(--slssa-blue);
-  font-size: 0.82rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  margin: 0 0 0.6rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #0057b8;
 }
 
 .browse-hero h1 {
