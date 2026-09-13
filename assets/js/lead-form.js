@@ -1,6 +1,8 @@
 const LEAD_DETAILS_STORAGE_KEY = "joinSlssaLeadDetails";
+
 const LEAD_API_URL =
-  window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+  window.location.hostname === "127.0.0.1" ||
+  window.location.hostname === "localhost"
     ? "http://localhost:7071/api/lead"
     : "https://func-join-slssa-prod-d3hwbvgygng2cdeh.australiasoutheast-01.azurewebsites.net/api/lead";
 
@@ -14,7 +16,10 @@ function getLeadForm() {
 
 function getFieldValue(form, name) {
   const field = form.elements[name];
-  return field ? String(field.value || "").trim() : "";
+
+  return field
+    ? String(field.value || "").trim()
+    : "";
 }
 
 function setFieldValue(form, name, value) {
@@ -25,13 +30,98 @@ function setFieldValue(form, name, value) {
   }
 }
 
+function getLabelTextForField(field) {
+  const wrappingLabel = field.closest("label");
+
+  if (wrappingLabel) {
+    const span = wrappingLabel.querySelector("span");
+
+    if (span) {
+      return span.textContent.trim();
+    }
+
+    return wrappingLabel.textContent.trim();
+  }
+
+  if (field.id) {
+    const explicitLabel = document.querySelector(
+      "label[for='" + field.id + "']"
+    );
+
+    if (explicitLabel) {
+      return explicitLabel.textContent.trim();
+    }
+  }
+
+  return "";
+}
+
+function getLeadInterestValues(form) {
+  return Array.from(
+    form.querySelectorAll("[data-lead-interest]:checked")
+  )
+    .map(function (field) {
+      return String(field.value || "").trim();
+    })
+    .filter(Boolean);
+}
+
+function getLeadInterestLabels(form) {
+  return Array.from(
+    form.querySelectorAll("[data-lead-interest]:checked")
+  )
+    .map(function (field) {
+      return {
+        name: "Interest",
+        value:
+          String(field.dataset.leadInterestLabel || "").trim() ||
+          getLabelTextForField(field) ||
+          String(field.value || "").trim()
+      };
+    })
+    .filter(function (item) {
+      return item.value;
+    });
+}
+
+function setLeadInterestValues(form, values) {
+  const selectedValues = new Set(
+    Array.isArray(values)
+      ? values.map(function (value) {
+          return String(value || "").trim();
+        })
+      : []
+  );
+
+  form
+    .querySelectorAll("[data-lead-interest]")
+    .forEach(function (field) {
+      field.checked = selectedValues.has(
+        String(field.value || "").trim()
+      );
+    });
+}
+
+function getSelectedPageInterests() {
+  return Array.from(
+    document.querySelectorAll(
+      "input[name='interest'][data-filter-check]:checked"
+    )
+  )
+    .map(function (field) {
+      return String(field.value || "").trim();
+    })
+    .filter(Boolean);
+}
+
 function saveReusableLeadDetails(form) {
   const details = {
     name: getFieldValue(form, "name"),
     email: getFieldValue(form, "email"),
     phone: getFieldValue(form, "phone"),
     suburb: getFieldValue(form, "suburb"),
-    about: getFieldValue(form, "about")
+    about: getFieldValue(form, "about"),
+    interests: getLeadInterestValues(form)
   };
 
   try {
@@ -46,13 +136,19 @@ function saveReusableLeadDetails(form) {
 
 function getReusableLeadDetails() {
   try {
-    const stored = window.localStorage.getItem(LEAD_DETAILS_STORAGE_KEY);
+    const stored = window.localStorage.getItem(
+      LEAD_DETAILS_STORAGE_KEY
+    );
 
     if (!stored) {
       return {};
     }
 
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored);
+
+    return parsed && typeof parsed === "object"
+      ? parsed
+      : {};
   } catch (error) {
     return {};
   }
@@ -66,123 +162,148 @@ function restoreReusableLeadDetails(form) {
   setFieldValue(form, "phone", details.phone);
   setFieldValue(form, "suburb", details.suburb);
   setFieldValue(form, "about", details.about);
-}
 
-function getLabelTextForField(field) {
-  const wrappingLabel = field.closest("label");
+  const pageInterests = getSelectedPageInterests();
 
-  if (wrappingLabel) {
-    return wrappingLabel.textContent.trim();
+  /*
+   * Current browse/wizard selections take priority.
+   * If none are selected, fall back to the interests saved
+   * from the user's previous enquiry.
+   */
+  if (pageInterests.length > 0) {
+    setLeadInterestValues(
+      form,
+      pageInterests
+    );
+
+    return;
   }
 
-  if (field.id) {
-    const explicitLabel = document.querySelector("label[for='" + field.id + "']");
+  if (Array.isArray(details.interests)) {
+    setLeadInterestValues(
+      form,
+      details.interests
+    );
 
-    if (explicitLabel) {
-      return explicitLabel.textContent.trim();
-    }
+    return;
   }
 
-  return "";
+  setLeadInterestValues(
+    form,
+    []
+  );
 }
 
-function getSelectedFilterLabels() {
+function getSelectedFilterLabels(form) {
   const labels = [];
 
-  const originField = document.querySelector("input[data-filter='origin']");
+  const originField = document.querySelector(
+    "input[data-filter='origin']"
+  );
 
-  if (originField && originField.value.trim()) {
+  if (
+    originField &&
+    originField.value.trim()
+  ) {
     labels.push({
       name: "Location",
       value: originField.value.trim()
     });
   }
 
-  document.querySelectorAll("select[data-filter]").forEach(function (field) {
-    if (!field.value) {
-      return;
-    }
+  document
+    .querySelectorAll("select[data-filter]")
+    .forEach(function (field) {
+      if (!field.value) {
+        return;
+      }
 
-    const selectedOption = field.options ? field.options[field.selectedIndex] : null;
+      const selectedOption =
+        field.options
+          ? field.options[field.selectedIndex]
+          : null;
 
-    if (!selectedOption) {
-      return;
-    }
+      if (!selectedOption) {
+        return;
+      }
 
-    labels.push({
-      name: field.id === "filter-origin" ? "Location" : "Distance",
-      value: selectedOption.textContent.trim()
+      let groupName = "Filter";
+
+      if (
+        field.id === "filter-radius" ||
+        field.dataset.filter === "radius"
+      ) {
+        groupName = "Distance";
+      }
+
+      labels.push({
+        name: groupName,
+        value: selectedOption.textContent.trim()
+      });
     });
-  });
 
-  document.querySelectorAll("input[data-filter-check]:checked").forEach(function (field) {
-    if (!field.value) {
-      return;
-    }
+  document
+    .querySelectorAll(
+      "input[data-filter-check]:checked"
+    )
+    .forEach(function (field) {
+      /*
+       * Interests are controlled by the enquiry form.
+       * Do not also send the browse-page interest checkbox,
+       * otherwise the same interest could be duplicated.
+       */
+      if (
+        !field.value ||
+        field.name === "interest"
+      ) {
+        return;
+      }
 
-    let groupName = "Filter";
+      let groupName = "Filter";
 
-    if (field.name === "age") {
-      groupName = "Age group";
-    }
+      if (field.name === "age") {
+        groupName = "Age group";
+      }
 
-    if (field.name === "interest") {
-      groupName = "Interest";
-    }
+      if (field.name === "facility") {
+        groupName = "Facility";
+      }
 
-    if (field.name === "facility") {
-  groupName = "Facility";
-}
-
-    labels.push({
-      name: groupName,
-      value: getLabelTextForField(field)
+      labels.push({
+        name: groupName,
+        value: getLabelTextForField(field)
+      });
     });
-  });
+
+  labels.push.apply(
+    labels,
+    getLeadInterestLabels(form)
+  );
 
   return labels;
 }
 
-function updateLeadFilterSummary() {
-  const summary = document.querySelector("[data-lead-filter-summary]");
-  const list = document.querySelector("[data-lead-filter-list]");
-
-  if (!summary || !list) {
-    return;
-  }
-
-  const filters = getSelectedFilterLabels();
-
-  list.innerHTML = "";
-
-  if (filters.length === 0) {
-    summary.hidden = true;
-    return;
-  }
-
-  filters.forEach(function (filter) {
-    const item = document.createElement("li");
-    item.textContent = filter.name + ": " + filter.value;
-    list.appendChild(item);
-  });
-
-  summary.hidden = false;
-}
-
 function showLeadMessage(message, type) {
-  const messageElement = document.querySelector("[data-lead-message]");
+  const messageElement = document.querySelector(
+    "[data-lead-message]"
+  );
 
   if (!messageElement) {
     return;
   }
 
   messageElement.textContent = message;
-  messageElement.dataset.messageType = type || "success";
+
+  messageElement.dataset.messageType =
+    type || "success";
+
   messageElement.hidden = false;
 }
 
 function clearLeadMessage() {
-  const messageElement = document.querySelector("[data-lead-message]");
+  const messageElement = document.querySelector(
+    "[data-lead-message]"
+  );
 
   if (!messageElement) {
     return;
@@ -193,14 +314,20 @@ function clearLeadMessage() {
 }
 
 function setSubmitState(form, isSubmitting) {
-  const submitButton = form.querySelector("button[type='submit']");
+  const submitButton = form.querySelector(
+    "button[type='submit']"
+  );
 
   if (!submitButton) {
     return;
   }
 
   submitButton.disabled = isSubmitting;
-  submitButton.textContent = isSubmitting ? "Sending..." : "Send my details";
+
+  submitButton.textContent =
+    isSubmitting
+      ? "Sending..."
+      : "Send my details";
 }
 
 function openLeadForm(context) {
@@ -211,25 +338,37 @@ function openLeadForm(context) {
     return;
   }
 
-  const clubName = modal.querySelector("[data-lead-club-name]");
-  const clubSlug = modal.querySelector("[data-lead-club-slug]");
+  const clubName = modal.querySelector(
+    "[data-lead-club-name]"
+  );
+
+  const clubSlug = modal.querySelector(
+    "[data-lead-club-slug]"
+  );
 
   if (clubName) {
-    clubName.textContent = context.clubTitle || "Selected surf life saving club";
+    clubName.textContent =
+      context.clubTitle ||
+      "Selected surf life saving club";
   }
 
   if (clubSlug) {
-    clubSlug.value = context.clubSlug || "";
+    clubSlug.value =
+      context.clubSlug || "";
   }
 
   restoreReusableLeadDetails(form);
-  updateLeadFilterSummary();
   clearLeadMessage();
 
   modal.hidden = false;
-  document.body.classList.add("lead-modal-open");
 
-  const firstField = form.querySelector("input[name='name']");
+  document.body.classList.add(
+    "lead-modal-open"
+  );
+
+  const firstField = form.querySelector(
+    "input[name='name']"
+  );
 
   if (firstField) {
     window.setTimeout(function () {
@@ -246,40 +385,95 @@ function closeLeadForm() {
   }
 
   modal.hidden = true;
-  document.body.classList.remove("lead-modal-open");
+
+  document.body.classList.remove(
+    "lead-modal-open"
+  );
 }
 
 function buildLeadPayload(form) {
   return {
-    clubSlug: getFieldValue(form, "clubSlug"),
-    name: getFieldValue(form, "name"),
-    email: getFieldValue(form, "email"),
-    phone: getFieldValue(form, "phone"),
-    suburb: getFieldValue(form, "suburb"),
-    about: getFieldValue(form, "about"),
-    filters: getSelectedFilterLabels(),
-    consent: Boolean(form.elements.consent && form.elements.consent.checked),
-    sourcePage: window.location.pathname + window.location.search,
-    submittedAt: new Date().toISOString()
+    clubSlug: getFieldValue(
+      form,
+      "clubSlug"
+    ),
+
+    name: getFieldValue(
+      form,
+      "name"
+    ),
+
+    email: getFieldValue(
+      form,
+      "email"
+    ),
+
+    phone: getFieldValue(
+      form,
+      "phone"
+    ),
+
+    suburb: getFieldValue(
+      form,
+      "suburb"
+    ),
+
+    about: getFieldValue(
+      form,
+      "about"
+    ),
+
+    filters: getSelectedFilterLabels(
+      form
+    ),
+
+    consent: Boolean(
+      form.elements.consent &&
+      form.elements.consent.checked
+    ),
+
+    sourcePage:
+      window.location.pathname +
+      window.location.search,
+
+    submittedAt:
+      new Date().toISOString()
   };
 }
 
 async function submitLeadPayload(payload) {
-  const response = await fetch(LEAD_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  });
+  const response = await fetch(
+    LEAD_API_URL,
+    {
+      method: "POST",
 
-  const result = await response.json().catch(function () {
-    return {};
-  });
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-  if (!response.ok || !result.ok) {
-    const error = new Error(result.message || "The enquiry could not be submitted.");
-    error.details = result.errors || [];
+      body: JSON.stringify(payload)
+    }
+  );
+
+  const result =
+    await response
+      .json()
+      .catch(function () {
+        return {};
+      });
+
+  if (
+    !response.ok ||
+    !result.ok
+  ) {
+    const error = new Error(
+      result.message ||
+      "The enquiry could not be submitted."
+    );
+
+    error.details =
+      result.errors || [];
+
     throw error;
   }
 
@@ -296,51 +490,87 @@ async function handleLeadSubmit(event) {
     return;
   }
 
-  const payload = buildLeadPayload(form);
+  const payload =
+    buildLeadPayload(form);
 
   saveReusableLeadDetails(form);
+
   clearLeadMessage();
-  setSubmitState(form, true);
+
+  setSubmitState(
+    form,
+    true
+  );
 
   try {
-    const result = await submitLeadPayload(payload);
+    const result =
+      await submitLeadPayload(
+        payload
+      );
 
     showLeadMessage(
-  "Thanks — your details have been sent to " +
-    result.clubName +
-    ". You can send your details to another club without retyping them.",
-  "success"
-);
+      "Thanks — your details have been sent to " +
+        result.clubName +
+        ". You can send your details to another club without retyping them.",
+      "success"
+    );
   } catch (error) {
-    const detailText = error.details && error.details.length
-      ? " " + error.details.join(" ")
-      : "";
+    const detailText =
+      error.details &&
+      error.details.length
+        ? " " +
+          error.details.join(" ")
+        : "";
 
     showLeadMessage(
-      error.message + detailText,
+      error.message +
+        detailText,
       "error"
     );
   } finally {
-    setSubmitState(form, false);
+    setSubmitState(
+      form,
+      false
+    );
   }
 }
 
-document.addEventListener("click", function (event) {
-  if (event.target.closest("[data-lead-close]")) {
-    closeLeadForm();
+document.addEventListener(
+  "click",
+  function (event) {
+    if (
+      event.target.closest(
+        "[data-lead-close]"
+      )
+    ) {
+      closeLeadForm();
+    }
   }
-});
+);
 
-document.addEventListener("keydown", function (event) {
-  if (event.key === "Escape") {
-    closeLeadForm();
+document.addEventListener(
+  "keydown",
+  function (event) {
+    if (
+      event.key === "Escape"
+    ) {
+      closeLeadForm();
+    }
   }
-});
+);
 
-document.addEventListener("submit", function (event) {
-  if (event.target.matches("[data-lead-form]")) {
-    handleLeadSubmit(event);
+document.addEventListener(
+  "submit",
+  function (event) {
+    if (
+      event.target.matches(
+        "[data-lead-form]"
+      )
+    ) {
+      handleLeadSubmit(event);
+    }
   }
-});
+);
 
-window.openLeadForm = openLeadForm;
+window.openLeadForm =
+  openLeadForm;

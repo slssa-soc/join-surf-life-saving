@@ -551,24 +551,50 @@ permalink: /
         </label>
       </div>
 
+      <fieldset class="lead-preferences">
+        <legend>
+          What are you interested in?
+        </legend>
+
+        <p class="lead-preferences__intro">
+          Select any that apply. We’ll include these with your enquiry.
+        </p>
+
+        <div class="lead-preferences__options">
+          {% for interest in site.data.taxonomy.interests %}
+            {% assign interest_id = interest.id | default: interest.value | default: interest %}
+            {% assign interest_label = interest.label | default: interest.name | default: interest.title | default: interest_id %}
+
+            {% if interest_id and interest_label %}
+              <label class="lead-preference-option">
+                <input
+                  type="checkbox"
+                  name="leadInterest"
+                  value="{{ interest_id }}"
+                  data-lead-interest
+                  data-lead-interest-label="{{ interest_label | escape }}"
+                >
+
+                <span>
+                  {{ interest_label }}
+                </span>
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </fieldset>
+
       <label>
-        <span>Anything you'd like the club to know?</span>
+        <span>
+          Anything you'd like the club to know?
+        </span>
 
         <textarea
           name="about"
           rows="4"
-          placeholder="Optional"
+          placeholder="For example, I’m interested in joining with my children, learning lifesaving skills or getting involved with surf boats."
         ></textarea>
       </label>
-
-      <div
-        class="lead-filter-summary"
-        data-lead-filter-summary
-        hidden
-      >
-        <h3>Your preferences</h3>
-        <ul data-lead-filter-list></ul>
-      </div>
 
       <label class="consent-row">
         <input
