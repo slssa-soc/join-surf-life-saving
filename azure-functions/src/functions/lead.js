@@ -3,6 +3,10 @@ const { TableClient } = require("@azure/data-tables");
 const { ClientSecretCredential } = require("@azure/identity");
 const crypto = require("crypto");
 
+const { AsyncLocalStorage } = require('node:async_hooks');
+const { readSettings } = require('../lib/settings');
+const deliveryContext = new AsyncLocalStorage();
+
 const REQUIRED_FIELDS = ["clubSlug", "name", "email", "consent"];
 const GRAPH_SCOPE = "https://graph.microsoft.com/.default";
 
@@ -166,6 +170,7 @@ function getRoutingTableName() {
 }
 
 function getApiMode() {
+  if (deliveryContext.getStore()) return deliveryContext.getStore().mode;
   const value = String(process.env.LEAD_API_MODE || "test")
     .trim()
     .toLowerCase();
@@ -176,6 +181,7 @@ function getApiMode() {
 }
 
 function isEmailEnabled() {
+  if (deliveryContext.getStore()) return deliveryContext.getStore().emailEnabled;
   return (
     String(process.env.LEAD_EMAIL_ENABLED || "")
       .trim()
@@ -1034,9 +1040,7 @@ function getDeliveryRecipient(club, apiMode) {
     return club.recipientEmail;
   }
 
-  const testRecipient = getRequiredSetting(
-    "LEAD_TEST_RECIPIENT"
-  );
+  const testRecipient = deliveryContext.getStore()?.testRecipient || getRequiredSetting('LEAD_TEST_RECIPIENT');
 
   if (!isValidEmail(testRecipient)) {
     throw new Error(
@@ -1191,6 +1195,10 @@ app.http("lead", {
       return optionsResponse(request);
     }
 
+    let configuration;
+    try { configuration = await readSettings(); }
+    catch { return jsonResponse(request, 503, { ok: false, message: 'Enquiries are temporarily unavailable. Please try again shortly.' }); }
+    return deliveryContext.run(configuration, async () => {
     let rawPayload;
 
     try {
@@ -1404,5 +1412,6 @@ app.http("lead", {
         leadId: storageResult.rowKey
       }
     );
+    });
   }
 });

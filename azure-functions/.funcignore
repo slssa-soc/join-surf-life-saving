@@ -1,0 +1,4 @@
+node_modules/@azure/msal-browser/
+node_modules/@microsoft/
+local.settings.json
+*.log

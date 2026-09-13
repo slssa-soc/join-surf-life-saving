@@ -10,6 +10,9 @@
   "dependencies": {
     "@azure/data-tables": "^13.3.2",
     "@azure/functions": "^4.7.0",
-    "@azure/identity": "^4.13.1"
+    "@azure/identity": "^4.13.1",
+    "@azure/msal-browser": "^4.30.0",
+    "@microsoft/applicationinsights-web": "^3.4.4",
+    "jose": "^6.2.12"
   }
 }

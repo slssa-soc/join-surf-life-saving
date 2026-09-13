@@ -508,6 +508,8 @@ async function handleLeadSubmit(event) {
         payload
       );
 
+    window.joinTrackLead?.();
+
     showLeadMessage(
       "Thanks — your details have been sent to " +
         result.clubName +
