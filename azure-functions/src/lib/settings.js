@@ -5,7 +5,7 @@ function fallback() {
   return { mode: process.env.LEAD_API_MODE === 'production' ? 'production' : 'test', testRecipient: process.env.LEAD_TEST_RECIPIENT || 'soc.manager@surflifesavingsa.com.au', emailEnabled: process.env.LEAD_EMAIL_ENABLED === 'true' };
 }
 async function readSettings() {
-  try { return await client().getEntity('settings', 'delivery'); }
+  try { const row = await client().getEntity('settings', 'delivery'); return { ...row, ...validateSettings(row) }; }
   catch (e) { if (e.statusCode === 404) return { ...fallback(), etag: null }; throw e; }
 }
 function validateSettings(body) {
