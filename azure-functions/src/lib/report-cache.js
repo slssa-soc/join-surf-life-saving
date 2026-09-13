@@ -27,7 +27,7 @@ function createReportCache(getTable, now = Date.now) {
     await t.createTable().catch(e=>{if(e.statusCode!==409) throw e;});
     const row = await read(t,key);
     if (row?.expiresAt > now() && row.parts) return response(row);
-    if (row?.nextAttemptAt > now()) return response(row, 'Azure has delayed the next billing update. The dashboard will retry after the time shown.');
+    if (row?.nextAttemptAt > now()) return response(row, 'The billing update is delayed. The dashboard will retry after the time shown.');
     if (row?.leaseUntil > now()) return response(row, 'A billing update is in progress.');
     const lease = {...row, partitionKey:'reports', rowKey:key, leaseUntil:now()+90000};
     delete lease.etag; delete lease.timestamp;
@@ -49,7 +49,7 @@ function createReportCache(getTable, now = Date.now) {
     } catch(e) {
       const cooldown = {...lease, leaseUntil:0, nextAttemptAt:now()+(e.retryMs || 300000)};
       await t.updateEntity(cooldown,'Replace',{etag:locked.etag}).catch(()=>{});
-      if(e.status===429) return response(cooldown,'Azure is limiting billing requests. The last available figures are shown when available.');
+      if(e.status===429) return response(cooldown,'Billing requests are temporarily limited. The last available figures are shown when available.');
       if(row?.parts) return response(cooldown,'The billing update failed. Showing the last successful figures.');
       throw e;
     }

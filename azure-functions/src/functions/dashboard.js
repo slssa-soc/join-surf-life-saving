@@ -15,7 +15,7 @@ function json(status, body) { return { status, headers, jsonBody: body }; }
 async function azure(url, scope, body) {
   const token = await credential.getToken(scope);
   const res = await fetch(url, { method: body ? 'POST' : 'GET', headers: { Authorization: `Bearer ${token.token}`, 'Content-Type': 'application/json', ClientType:'JoinSLSSADashboard' }, ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(25000) });
-  if (!res.ok) throw Object.assign(new Error(`Azure returned ${res.status}. ${res.status === 429 ? 'Billing requests are temporarily limited.' : 'The report could not be loaded.'}`), { status: res.status === 429 ? 429 : 502, retryMs:retryDelay(res.headers) });
+  if (!res.ok) throw Object.assign(new Error(`The reporting service returned ${res.status}. ${res.status === 429 ? 'Billing requests are temporarily limited.' : 'The report could not be loaded.'}`), { status: res.status === 429 ? 429 : 502, retryMs:retryDelay(res.headers) });
   return res.json();
 }
 async function audit(actor, action, detail, result = 'requested') {
@@ -103,7 +103,7 @@ app.http('dashboard-data', {
       if (resource === 'costs') {
         return json(200, await cachedReport(`costs-${new Date().toISOString().slice(0,7)}`, 6*3600000, async () => {
         const data = await azure(`https://management.azure.com/subscriptions/${subscription}/providers/Microsoft.CostManagement/query?api-version=2025-03-01`, 'https://management.azure.com/.default', { type: 'ActualCost', timeframe: 'MonthToDate', dataset: { granularity: 'Daily', aggregation: { totalCost: { name: 'Cost', function: 'Sum' } }, grouping: [{ type: 'Dimension', name: 'ServiceName' }] } });
-        return { ...data, scope: 'Join System subscription', note: 'Billing figures refresh at most every six hours. Azure billing is delayed. Projections use average daily spend from completed days this month; 6 and 12 months assume the same daily rate.' };
+        return { ...data, scope: 'Join System subscription', note: 'Billing figures refresh at most every six hours. Billing data can be delayed. Projections use average daily spend from completed days this month; 6 and 12 months assume the same daily rate.' };
         }));
       }
       return json(404, { error: 'Not found' });
