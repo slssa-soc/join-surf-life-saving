@@ -6,6 +6,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { authenticate } = require('../lib/auth');
 const settings = require('../lib/settings');
+const { retryDelay, cachedReport } = require('../lib/report-cache');
 const credential = new DefaultAzureCredential();
 const subscription = process.env.DASHBOARD_SUBSCRIPTION_ID || 'e2b00106-f5be-47d3-9709-589887295fd6';
 function table(name) { return TableClient.fromConnectionString(process.env.AzureWebJobsStorage, name); }
@@ -13,8 +14,8 @@ const headers = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosnif
 function json(status, body) { return { status, headers, jsonBody: body }; }
 async function azure(url, scope, body) {
   const token = await credential.getToken(scope);
-  const res = await fetch(url, { method: body ? 'POST' : 'GET', headers: { Authorization: `Bearer ${token.token}`, 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(25000) });
-  if (!res.ok) throw Object.assign(new Error(`Azure returned ${res.status}. Check dashboard access to this service.`), { status: res.status === 429 ? 429 : 502 });
+  const res = await fetch(url, { method: body ? 'POST' : 'GET', headers: { Authorization: `Bearer ${token.token}`, 'Content-Type': 'application/json', ClientType:'JoinSLSSADashboard' }, ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(25000) });
+  if (!res.ok) throw Object.assign(new Error(`Azure returned ${res.status}. ${res.status === 429 ? 'Billing requests are temporarily limited.' : 'The report could not be loaded.'}`), { status: res.status === 429 ? 429 : 502, retryMs:retryDelay(res.headers) });
   return res.json();
 }
 async function audit(actor, action, detail, result = 'requested') {
@@ -40,7 +41,7 @@ app.http('dashboard-assets', {
   handler: async request => {
     const asset = request.params.asset || 'index.html';
     if (asset === 'config') return json(200, { tenantId: process.env.DASHBOARD_TENANT_ID || '', clientId: process.env.DASHBOARD_CLIENT_ID || '' });
-    const allowed = { 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
+    const allowed = { 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
     if (!allowed[asset]) return json(404, { error: 'Not found' });
     return { status: 200, headers: { ...headers, 'Content-Type': allowed[asset], 'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://login.microsoftonline.com; frame-src https://login.microsoftonline.com; frame-ancestors 'none'; base-uri 'none'; form-action 'self'", 'X-Frame-Options': 'DENY' }, body: fs.readFileSync(path.join(__dirname, '../../public', asset), 'utf8') };
   }
@@ -96,13 +97,14 @@ app.http('dashboard-data', {
       if (resource === 'analytics') {
         const { days } = dateRange(url);
         const appId = process.env.DASHBOARD_INSIGHTS_APP_ID || '170eb745-4899-4885-97b4-c6987d9830de';
-        const query = `let p = pageViews | where timestamp > ago(${days}d) | where tostring(customDimensions.site) == 'join'; let e = customEvents | where timestamp > ago(${days}d) | where tostring(customDimensions.site) == 'join'; union (p | summarize value=count() by label='Page views' | extend kind='total'), (p | summarize value=dcount(user_Id) by label='Visitors' | extend kind='total'), (p | summarize value=dcount(session_Id) by label='Sessions' | extend kind='total'), (p | summarize value=count() by label=format_datetime(timestamp,'yyyy-MM-dd') | extend kind='daily'), (p | summarize value=count() by label=tostring(customDimensions.referrer) | extend kind='source'), (p | summarize value=count() by label=tostring(customDimensions.device) | extend kind='device'), (p | summarize value=count() by label=name | top 15 by value desc | extend kind='page'), (e | summarize value=count() by label=name | extend kind='event')`;
+        const query = `let p = pageViews | where timestamp > ago(${days}d) | where tostring(customDimensions.site) == 'join'; let e = customEvents | where timestamp > ago(${days}d) | where tostring(customDimensions.site) == 'join'; union (p | summarize value=count() by label='Page views' | extend category='total'), (p | summarize value=dcount(user_Id) by label='Visitors' | extend category='total'), (p | summarize value=dcount(session_Id) by label='Sessions' | extend category='total'), (p | summarize value=count() by label=format_datetime(timestamp,'yyyy-MM-dd') | extend category='daily'), (p | summarize value=count() by label=tostring(customDimensions.referrer) | extend category='source'), (p | summarize value=count() by label=tostring(customDimensions.device) | extend category='device'), (p | summarize value=count() by label=name | top 15 by value desc | extend category='page'), (e | summarize value=count() by label=name | extend category='event')`;
         return json(200, await azure(`https://api.applicationinsights.io/v1/apps/${appId}/query`, 'https://api.applicationinsights.io/.default', { query }));
       }
       if (resource === 'costs') {
-        const start = new Date(); start.setUTCDate(1); start.setUTCHours(0, 0, 0, 0);
+        return json(200, await cachedReport(`costs-${new Date().toISOString().slice(0,7)}`, 6*3600000, async () => {
         const data = await azure(`https://management.azure.com/subscriptions/${subscription}/providers/Microsoft.CostManagement/query?api-version=2025-03-01`, 'https://management.azure.com/.default', { type: 'ActualCost', timeframe: 'MonthToDate', dataset: { granularity: 'Daily', aggregation: { totalCost: { name: 'Cost', function: 'Sum' } }, grouping: [{ type: 'Dimension', name: 'ServiceName' }] } });
-        return json(200, { ...data, fetchedAt: new Date().toISOString(), scope: 'Join System subscription', note: 'Azure billing is delayed. Projections use average daily spend from completed days this month; 6 and 12 months assume the same daily rate.' });
+        return { ...data, scope: 'Join System subscription', note: 'Billing figures refresh at most every six hours. Azure billing is delayed. Projections use average daily spend from completed days this month; 6 and 12 months assume the same daily rate.' };
+        }));
       }
       return json(404, { error: 'Not found' });
     } catch (e) {
