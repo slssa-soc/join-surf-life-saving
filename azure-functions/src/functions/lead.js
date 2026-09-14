@@ -5,6 +5,7 @@ const crypto = require("crypto");
 
 const { AsyncLocalStorage } = require('node:async_hooks');
 const { readSettings } = require('../lib/settings');
+const { normalise: normaliseAttribution } = require('../../public/attribution');
 const deliveryContext = new AsyncLocalStorage();
 
 const REQUIRED_FIELDS = ["clubSlug", "name", "email", "consent"];
@@ -123,6 +124,7 @@ function normalisePayload(payload) {
     filters: normaliseFilters(payload.filters),
     consent: Boolean(payload.consent),
     sourcePage: cleanString(payload.sourcePage, 500),
+    attribution: normaliseAttribution(payload.attribution),
     submittedAt: cleanString(payload.submittedAt, 80)
   };
 }
@@ -303,6 +305,13 @@ async function storeLeadSubmission(payload, club) {
     consent: payload.consent,
 
     sourcePage: payload.sourcePage,
+    source: payload.attribution.source,
+    channel: payload.attribution.channel,
+    campaign: payload.attribution.campaign,
+    campaignMedium: payload.attribution.medium,
+    campaignContent: payload.attribution.content,
+    campaignTerm: payload.attribution.term,
+    landingPage: payload.attribution.landingPage,
 
     clientSubmittedAt: payload.submittedAt,
     submittedAt: createdAt,

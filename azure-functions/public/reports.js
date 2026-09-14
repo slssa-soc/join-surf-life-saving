@@ -1,14 +1,16 @@
 function serviceLabel(name) { return String(name || 'Other services').replace(/\bAzure\b\s*/gi, '').trim(); }
 function analyticsReport(result, compact = false) {
-  const t = result.tables?.[0];
-  const values = t ? t.rows.map(row=>Object.fromEntries(t.columns.map((c,i)=>[c.name,row[i]]))) : [];
-  const items = category=>values.filter(r=>r.category===category).map(r=>[r.label,r.value]).sort((a,b)=>b[1]-a[1]);
-  const totals = Object.fromEntries(items('total')), events = Object.fromEntries(items('event'));
-  const conversion = totals.Sessions ? `${((events.lead_submitted || 0)/totals.Sessions*100).toFixed(1)}%` : '—';
-  const summary = `<div class="metrics">${metric('Page views',totals['Page views'] || 0)}${metric('Visitors',totals.Visitors || 0,'Browser-based estimate')}${metric('Sessions',totals.Sessions || 0)}${metric('Enquiries per session',conversion,'Tracked submissions ÷ sessions')}</div>`;
-  const note = !totals['Page views'] ? '<p class="banner">No website traffic recorded for this period yet. Tracking starts when the website update is published.</p>' : '';
-  if (compact) return summary + note + '<button class="secondary" data-open-view="analytics">View website insights</button>';
-  return summary + note + `<div class="grid">${panel('Popular pages',bars(items('page')))}${panel('Traffic sources',bars(items('source')))}${panel('Enquiry journey',bars(items('event')))}${panel('Devices',bars(items('device')))}</div><p class="footnote">Analytics may take a few minutes to appear and may be blocked by browsers. Lead records are the source of truth for enquiries. No enquiry contact details are collected in analytics.</p>`;
+  const values=reportRows(result);
+  const items=category=>values.filter(r=>r.category===category).map(r=>[r.label,r.value]).sort((a,b)=>b[1]-a[1]);
+  const totals=Object.fromEntries(items('total')),eventSessions=Object.fromEntries(items('eventSessions'));
+  const conversion=totals.Sessions ? ((eventSessions.lead_submitted||0)/totals.Sessions*100).toFixed(1)+'%' : '—';
+  const summary='<div class="metrics">'+metric('Page views',totals['Page views']||0)+metric('Visitors',totals.Visitors||0,'Browser-based estimate')+metric('Sessions',totals.Sessions||0)+metric('Sessions with an enquiry',conversion,'Tracked submissions; not memberships')+'</div>';
+  const note=!totals['Page views']?'<p class="banner">No traffic matches this period and test-data filter yet. New activity may take a few minutes to appear.</p>':'';
+  const coverage=totals['Unclassified views']?'<p class="footnote">'+totals['Unclassified views']+' page views have no test/production tag and remain included. Older tracking cannot be separated retrospectively.</p>':'';
+  const sources='<div class="grid">'+panel('Traffic sources · tracked sessions',bars(sourceSummary(items('source'))))+panel('Sources generating enquiries',bars(sourceEnquiries()))+'</div>';
+  if(compact)return summary+note+coverage+sources+'<button class="secondary" data-open-view="analytics">View campaign and website insights</button>';
+  const channelRows=items('channel').filter(([label])=>label);
+  return summary+note+coverage+panel('Traffic over time',trafficTrend(items('daily')))+sources+'<div class="grid">'+panel('Traffic channels · tracked sessions',bars(channelRows))+panel('Enquiry journey · sessions',bars([['Visited the website',totals.Sessions||0],['Started an enquiry',eventSessions.form_started||0],['Submitted an enquiry',eventSessions.lead_submitted||0]]))+'</div>'+panel('Campaign performance',campaignPerformance(items))+panel('Club engagement',clubEngagement(items))+'<div class="grid">'+panel('Popular pages · views',bars(items('page')))+panel('Landing pages · sessions',bars(items('landing')))+panel('Devices · views',bars(items('device')))+panel('Tagged campaign terms',bars(items('term')))+'</div>'+panel('Google search terms','<p>Google search-query reporting needs a verified Search Console property. It is not connected. Campaign terms above are supplied in tagged links; they are not visitors’ actual Google searches.</p>')+panel('Create a campaign link',campaignLinkForm())+'<p class="footnote">Sources are identified from referring websites and campaign labels. Some apps hide the referring source; tagged links improve attribution. Sessions may appear under more than one source if a visitor returns through another campaign. Saved enquiries can include visitors whose browsers block analytics. These figures do not confirm membership enrolments.</p>';
 }
 function costReport(result, compact = false) {
   const notice = result.notice ? `<div class="banner">${esc(result.notice)}${result.retryAt ? ` Next update after ${esc(time(result.retryAt))}.` : ''}</div>` : '';

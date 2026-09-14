@@ -13,6 +13,7 @@ async function token() {
   catch (e) { if (e instanceof msal.InteractionRequiredAuthError) { await auth.acquireTokenRedirect({scopes:[scope], account}); } throw e; }
 }
 async function api(resource, body) {
+  if (!body && /^(leads|analytics)(\?|$)/.test(resource)) resource += (resource.includes('?')?'&':'?')+'includeTest='+$('show-test-data').checked;
   const response = await fetch(`/api/dashboard-api/${resource}`, { method:body ? 'PUT':'GET', headers:{ Authorization:`Bearer ${await token()}`, ...(body ? {'Content-Type':'application/json'} : {}) }, ...(body ? {body:JSON.stringify(body)} : {}) });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || 'Request failed');
@@ -57,7 +58,7 @@ async function load() {
       if (run !== serial) return;
       if (view === 'overview') {
         const production = records.filter(r=>r.leadApiMode === 'production');
-        $('content').innerHTML = '<div id="routing-health"></div><div class="metrics">' + metric('Enquiries received',records.length,'Includes test enquiries') + metric('Production enquiries',production.length) + metric('Clubs receiving enquiries',new Set(production.map(r=>r.clubSlug)).size,'Production enquiries only') + metric('Email failures',records.filter(r=>r.emailDeliveryStatus==='failed').length,'All modes') + '</div>' + panel('Website insights','<div id="overview-insights">' + empty('Loading website insights…') + '</div>') + panel('System costs','<div id="overview-costs">' + empty('Loading billing figures…') + '</div>') + panel('Latest enquiries',enquiryFilters()) + '<div class="grid">' + panel('Enquiries by club',bars(group(production,'clubName'))) + panel('Email activity',bars(group(records,'emailDeliveryStatus')) + '<p class="footnote">“Sent” means accepted by the email service. Inbox delivery is not confirmed.</p>') + '</div>';
+        $('content').innerHTML = '<div id="routing-health"></div><div class="metrics">' + metric('Enquiries received',records.length,$('show-test-data').checked?'Includes test data':'Test data hidden') + metric('People enquiring',new Set(records.map(r=>String(r.email||'').toLowerCase()).filter(Boolean)).size,'Distinct email addresses; not members') + metric('Clubs receiving enquiries',new Set(records.map(r=>r.clubSlug)).size,'Within the reporting filter') + metric('Email failures',records.filter(r=>r.emailDeliveryStatus==='failed').length,$('show-test-data').checked?'Includes test data':'Test data hidden') + '</div>' + panel('Website insights','<div id="overview-insights">' + empty('Loading website insights…') + '</div>') + panel('System costs','<div id="overview-costs">' + empty('Loading billing figures…') + '</div>') + panel('Latest enquiries','<p class="footnote">Enquiries express interest in membership. Completed memberships take place outside this website and are not recorded here.</p>'+enquiryFilters()) + '<div class="grid">' + panel('Enquiries by club',bars(group(records,'clubName'))) + panel('Email activity',bars(group(records,'emailDeliveryStatus')) + '<p class="footnote">“Sent” means accepted by the email service. Inbox delivery is not confirmed.</p>') + '</div>';
         bindFilters();
         const section = async (id, resource, render) => {
           try { const result = await api(resource); if (run===serial && $(id)) $(id).innerHTML=render(result); }
@@ -81,8 +82,9 @@ async function load() {
       $('content').innerHTML = panel('Email delivery', `<p>This controls the whole live Join system. Changes apply to enquiries that start after saving; emails already in progress may still complete using their original settings.</p><form id="settings-form" class="form-stack"><label>Delivery mode<select id="delivery-mode"><option value="test" ${s.mode==='test'?'selected':''}>Test — send to test recipient</option><option value="production" ${s.mode==='production'?'selected':''}>Production — send to clubs</option></select></label><label>Test recipient<input id="test-recipient" required type="email" maxlength="180" value="${esc(s.testRecipient)}"></label><label class="check"><input id="email-enabled" type="checkbox" ${s.emailEnabled?'checked':''}>Enable enquiry emails</label><div class="banner">In test mode, no emails will be sent to clubs. Enquiries remain saved and are marked as test enquiries.</div><button type="submit">Save delivery settings</button><p class="footnote">${s.updatedBy ? `Last changed by ${esc(s.updatedBy)} · ${esc(time(s.updatedAt))}` : 'Using the existing email configuration.'}</p></form>`);
       $('settings-form').addEventListener('submit',saveSettings);
     } else if (view === 'analytics') {
-      const result = await api('analytics?days='+days);
+      const [result, leadRows] = await Promise.all([api('analytics?days='+days),api('leads?days='+days)]);
       if (run !== serial) return;
+      records=leadRows;
       $('content').innerHTML = analyticsReport(result);
     } else if (view === 'costs') {
       const result = await api('costs');
@@ -133,7 +135,7 @@ $('content').addEventListener('click',async event=>{
     const row = records.find(r=>r.rowKey===lead.dataset.lead);
     let preferences = row.filtersJson;
     try { preferences = JSON.parse(row.filtersJson || '[]').map(f=>f.name+': '+f.value).join('\n'); } catch {}
-    const fields = [['Received',time(row.submittedAt)],['Name',row.name],['Email',row.email],['Phone',row.phone],['Suburb',row.suburb],['Club',row.clubName],['About',row.about],['Preferences',preferences],['Consent',row.consent?'Given':'Not recorded'],['Source page',row.sourcePage],['Mode',row.leadApiMode],['Email status',statusLabel(row)],['Reference',row.rowKey]];
+    const fields = [['Received',time(row.submittedAt)],['Name',row.name],['Email',row.email],['Phone',row.phone],['Suburb',row.suburb],['Club',row.clubName],['About',row.about],['Preferences',preferences],['Consent',row.consent?'Given':'Not recorded'],['Traffic source',row.source||'Not recorded'],['Channel',row.channel||'Not recorded'],['Campaign',row.campaign||'Not recorded'],['Landing page',row.landingPage||'Not recorded'],['Source page',row.sourcePage],['Mode',row.leadApiMode],['Email status',statusLabel(row)],['Reference',row.rowKey]];
     $('detail-content').innerHTML = `<h2>Enquiry details</h2><dl>${fields.map(([key,value])=>`<dt>${esc(key)}</dt><dd>${esc(value || '—')}</dd>`).join('')}</dl>`;
     $('detail').showModal();
   }
@@ -152,10 +154,11 @@ $('close-detail').onclick = ()=>$('detail').close();
 function navigate(next) { view=next; document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view)); load(); }
 document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>navigate(button.dataset.view));
 document.addEventListener('click',event=>{const button=event.target.closest('[data-open-view]'); if(button) navigate(button.dataset.openView);});
+$('show-test-data').onchange=()=>{filterState['mode-filter']='';load();};
 $('period').onchange=load; $('refresh').onclick=load;
 $('sign-in').onclick=()=>auth.loginRedirect({scopes:[scope]});
 $('sign-out').onclick=()=>auth.logoutRedirect({postLogoutRedirectUri:location.origin+'/api/dashboard'});
-setInterval(()=>{if(auth?.getAllAccounts().length && !['settings','clubs','leads'].includes(view) && !document.activeElement?.closest('.filters') && !$('detail').open && !document.hidden) load();},60000);
+setInterval(()=>{if(auth?.getAllAccounts().length && !['settings','clubs','leads'].includes(view) && !document.activeElement?.closest('.filters, .form-stack') && !$('campaign-link-form')?.dataset.dirty && !$('detail').open && !document.hidden) load();},60000);
 (async()=>{
   try {
     const config = await (await fetch('/api/dashboard/config')).json();

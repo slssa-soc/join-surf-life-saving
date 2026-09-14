@@ -432,6 +432,8 @@ function buildLeadPayload(form) {
       form.elements.consent.checked
     ),
 
+    attribution: window.joinGetAttribution?.() || {},
+
     sourcePage:
       window.location.pathname +
       window.location.search,
@@ -508,7 +510,7 @@ async function handleLeadSubmit(event) {
         payload
       );
 
-    window.joinTrackLead?.();
+    window.joinTrackLead?.(result.mode);
 
     showLeadMessage(
       "Thanks — your details have been sent to " +

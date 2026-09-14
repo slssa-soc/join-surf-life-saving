@@ -7,6 +7,7 @@ const crypto = require('node:crypto');
 const { authenticate } = require('../lib/auth');
 const settings = require('../lib/settings');
 const { retryDelay, cachedReport } = require('../lib/report-cache');
+const { analyticsQuery } = require('../lib/analytics-query');
 const credential = new DefaultAzureCredential();
 const subscription = process.env.DASHBOARD_SUBSCRIPTION_ID || 'e2b00106-f5be-47d3-9709-589887295fd6';
 function table(name) { return TableClient.fromConnectionString(process.env.AzureWebJobsStorage, name); }
@@ -36,12 +37,16 @@ function dateRange(url) {
   if (![7, 30, 90, 365].includes(days)) throw Object.assign(new Error('Invalid date range.'), { status: 400 });
   return { days, since: new Date(Date.now() - days * 86400000).toISOString() };
 }
+app.http('tracking-config',{methods:['GET'],authLevel:'anonymous',route:'tracking-config',handler:async()=>{
+  let mode='unknown';try{mode=(await settings.readSettings()).mode;}catch{}
+  return {status:200,headers:{'Content-Type':'application/json','Access-Control-Allow-Origin':'https://join.surflifesavingsa.com.au','Cache-Control':'no-store'},jsonBody:{mode}};
+}});
 app.http('dashboard-assets', {
   methods: ['GET'], authLevel: 'anonymous', route: 'dashboard/{asset?}',
   handler: async request => {
     const asset = request.params.asset || 'index.html';
     if (asset === 'config') return json(200, { tenantId: process.env.DASHBOARD_TENANT_ID || '', clientId: process.env.DASHBOARD_CLIENT_ID || '' });
-    const allowed = { 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
+    const allowed = { 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'attribution.js': 'text/javascript; charset=utf-8', 'campaign.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
     if (!allowed[asset]) return json(404, { error: 'Not found' });
     return { status: 200, headers: { ...headers, 'Content-Type': allowed[asset], 'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://login.microsoftonline.com; frame-src https://login.microsoftonline.com; frame-ancestors 'none'; base-uri 'none'; form-action 'self'", 'X-Frame-Options': 'DENY' }, body: fs.readFileSync(path.join(__dirname, '../../public', asset), 'utf8') };
   }
@@ -87,7 +92,7 @@ app.http('dashboard-data', {
       if (resource === 'leads') {
         const { since } = dateRange(url);
         const rows = await list(table(process.env.LEAD_TABLE_NAME || 'LeadSubmissions'), odata`submittedAt ge ${since}`);
-        return json(200, rows.sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)).map(({ emailHash, ...row }) => row));
+        return json(200, rows.filter(r=>url.searchParams.get('includeTest')==='true'||r.leadApiMode!=='test').sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)).map(({ emailHash, ...row }) => row));
       }
       if (resource === 'audit') {
         const { since } = dateRange(url);
@@ -97,7 +102,7 @@ app.http('dashboard-data', {
       if (resource === 'analytics') {
         const { days } = dateRange(url);
         const appId = process.env.DASHBOARD_INSIGHTS_APP_ID || '170eb745-4899-4885-97b4-c6987d9830de';
-        const query = `let p = pageViews | where timestamp > ago(${days}d) | where tostring(customDimensions.site) == 'join'; let e = customEvents | where timestamp > ago(${days}d) | where tostring(customDimensions.site) == 'join'; union (p | summarize value=count() by label='Page views' | extend category='total'), (p | summarize value=dcount(user_Id) by label='Visitors' | extend category='total'), (p | summarize value=dcount(session_Id) by label='Sessions' | extend category='total'), (p | summarize value=count() by label=format_datetime(timestamp,'yyyy-MM-dd') | extend category='daily'), (p | summarize value=count() by label=tostring(customDimensions.referrer) | extend category='source'), (p | summarize value=count() by label=tostring(customDimensions.device) | extend category='device'), (p | summarize value=count() by label=name | top 15 by value desc | extend category='page'), (e | summarize value=count() by label=name | extend category='event')`;
+        const query = analyticsQuery(days, url.searchParams.get('includeTest')==='true');
         return json(200, await azure(`https://api.applicationinsights.io/v1/apps/${appId}/query`, 'https://api.applicationinsights.io/.default', { query }));
       }
       if (resource === 'costs') {
