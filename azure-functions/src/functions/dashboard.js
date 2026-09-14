@@ -1,4 +1,6 @@
 const { app } = require('@azure/functions');
+app.setup({ enableHttpStream: true });
+const { snapshotStream } = require('../lib/live-stream');
 const { TableClient, odata } = require('@azure/data-tables');
 const { DefaultAzureCredential } = require('@azure/identity');
 const fs = require('node:fs');
@@ -46,14 +48,12 @@ app.http('dashboard-assets', {
   handler: async request => {
     const asset = request.params.asset || 'index.html';
     if (asset === 'config') return json(200, { tenantId: process.env.DASHBOARD_TENANT_ID || '', clientId: process.env.DASHBOARD_CLIENT_ID || '' });
-    const allowed = { 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'attribution.js': 'text/javascript; charset=utf-8', 'campaign.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
+    const allowed = { 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'live.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'attribution.js': 'text/javascript; charset=utf-8', 'campaign.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
     if (!allowed[asset]) return json(404, { error: 'Not found' });
     return { status: 200, headers: { ...headers, 'Content-Type': allowed[asset], 'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://login.microsoftonline.com; frame-src https://login.microsoftonline.com; frame-ancestors 'none'; base-uri 'none'; form-action 'self'", 'X-Frame-Options': 'DENY' }, body: fs.readFileSync(path.join(__dirname, '../../public', asset), 'utf8') };
   }
 });
-app.http('dashboard-data', {
-  methods: ['GET', 'PUT'], authLevel: 'anonymous', route: 'dashboard-api/{resource}',
-  handler: async (request, context) => {
+async function dashboardData(request, context) {
     try {
       const actor = await authenticate(request);
       const resource = request.params.resource;
@@ -108,7 +108,7 @@ app.http('dashboard-data', {
       if (resource === 'costs') {
         return json(200, await cachedReport(`costs-${new Date().toISOString().slice(0,7)}`, 6*3600000, async () => {
         const data = await azure(`https://management.azure.com/subscriptions/${subscription}/providers/Microsoft.CostManagement/query?api-version=2025-03-01`, 'https://management.azure.com/.default', { type: 'ActualCost', timeframe: 'MonthToDate', dataset: { granularity: 'Daily', aggregation: { totalCost: { name: 'Cost', function: 'Sum' } }, grouping: [{ type: 'Dimension', name: 'ServiceName' }] } });
-        return { ...data, scope: 'Join System subscription', note: 'Billing figures refresh at most every six hours. Billing data can be delayed. Projections use average daily spend from completed days this month; 6 and 12 months assume the same daily rate.' };
+        return { ...data, scope: 'Join system', note: 'Billing figures refresh at most every six hours. Billing data can be delayed. Projections use average daily spend from completed days this month; 6 and 12 months assume the same daily rate.' };
         }));
       }
       return json(404, { error: 'Not found' });
@@ -117,5 +117,28 @@ app.http('dashboard-data', {
       const status = e.status || ([409, 412].includes(e.statusCode) ? 409 : 500);
       return json(status, { error: status === 500 ? 'The service could not complete this request. Refresh to verify whether a change was applied.' : e.message });
     }
+}
+app.http('dashboard-data', { methods: ['GET','PUT'], authLevel:'anonymous', route:'dashboard-api/{resource}', handler:dashboardData });
+
+app.http('dashboard-live', {
+  methods:['GET'], authLevel:'anonymous', route:'dashboard-live',
+  handler: async (request, context) => {
+    try {
+      await authenticate(request);
+      const url = new URL(request.url);
+      dateRange(url);
+      const resourcesByView = {
+        overview:['settings','leads','clubs','analytics','costs'],
+        leads:['settings','leads'], analytics:['settings','leads','analytics'],
+        costs:['settings','costs'], clubs:['settings','clubs'],
+        settings:['settings'], campaigns:['settings'], audit:['settings','audit']
+      };
+      const resources = resourcesByView[url.searchParams.get('view')];
+      if (!resources) return json(400,{error:'Invalid dashboard view.'});
+      const body = snapshotStream({ resources, read: resource => dashboardData({
+        method:'GET', params:{resource}, url:request.url, headers:request.headers
+      },context) });
+      return {status:200,headers:{...headers,'Content-Type':'text/event-stream; charset=utf-8','X-Accel-Buffering':'no'},body};
+    } catch(e) { return json(e.status || 500,{error:e.status ? e.message : 'Live connection unavailable.'}); }
   }
 });

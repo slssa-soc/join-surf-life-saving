@@ -3,8 +3,47 @@ const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let auth, scope, view = 'overview', currentSettings, records = [], clubs = [], serial = 0;
 const filterState = {};
+let stopLive = () => {}, liveReports = {}, liveErrors = {};
+function overviewMetrics(){return metric('Enquiries received',records.length,$('show-test-data').checked?'Includes test data':'Test data hidden') + metric('People enquiring',new Set(records.map(r=>String(r.email||'').toLowerCase()).filter(Boolean)).size,'Distinct email addresses; not members') + metric('Clubs receiving enquiries',new Set(records.map(r=>r.clubSlug)).size,'Within the reporting filter') + metric('Email failures',records.filter(r=>r.emailDeliveryStatus==='failed').length,$('show-test-data').checked?'Includes test data':'Test data hidden');}
+function liveState(text){const errors=Object.keys(liveErrors);$('live-status').textContent=errors.length&&text==='Live connection'?'Connected · report unavailable':text;$('live-status').dataset.connected=String(text==='Live connection'&&!errors.length);$('live-status').title=errors.length?errors.map(r=>titles[r]+': '+liveErrors[r]).join('\n'):'Reports update in place. Enquiries are checked about every 20 seconds, traffic about every 90 seconds. Billing uses cached source data.';}
+function applySnapshot(resource,data){
+  delete liveErrors[resource];
+  if($('status').dataset.liveError===resource){$('status').textContent='';delete $('status').dataset.liveError;}
+  liveReports[resource]=data;
+  if(resource==='settings'){banner(data);if(view!=='settings')currentSettings=data;else if(data.etag!==currentSettings.etag)$('status').textContent='Delivery settings changed elsewhere. Your form has been kept. Select Update now to load the latest version before saving.';}
+  if(resource==='clubs'){
+    if($('routing-health'))$('routing-health').innerHTML=routingWarning(data);
+    const versions=rows=>JSON.stringify(rows.map(r=>[r.rowKey,r.etag]).sort((a,b)=>a[0].localeCompare(b[0])));
+    if(view==='clubs'&&versions(data)!==versions(clubs))$('status').textContent='Club contacts changed. Your edits have been kept. Select Update now to load the latest contacts before saving.';
+  }
+  if(resource==='leads'){
+    records=data;
+    if($('overview-metrics'))$('overview-metrics').innerHTML=overviewMetrics();
+    if($('overview-clubs'))$('overview-clubs').innerHTML=bars(group(records,'clubName'));
+    if($('overview-email'))$('overview-email').innerHTML=bars(group(records,'emailDeliveryStatus'));
+    if($('lead-table')){
+      const existing=new Set([...$('club-filter').options].map(o=>o.value));
+      for(const [name] of group(records,'clubName'))if(!existing.has(name))$('club-filter').add(new Option(name,name));
+      filterLeads();
+    }
+  }
+  if((resource==='analytics'||resource==='leads')&&liveReports.analytics){
+    if(view==='overview'&&$('overview-insights'))$('overview-insights').innerHTML=analyticsReport(liveReports.analytics,true);
+    if(view==='analytics')$('content').innerHTML=analyticsReport(liveReports.analytics);
+  }
+  if(resource==='costs'){if(view==='overview'&&$('overview-costs'))$('overview-costs').innerHTML=costReport(data,true);if(view==='costs')$('content').innerHTML=costReport(data);}
+  if(resource==='audit'&&view==='audit')$('content').innerHTML=auditReport(data);
+  $('updated').textContent='Last data update '+time(new Date())+' · Traffic may take a few minutes to arrive. Billing refreshes at most every six hours.';
+}
+function auditReport(rows){return panel('Settings and contact changes',rows.length ? table(['Time (Adelaide)','Person','Action','Result','Details'],rows.map(r=>`<tr><td>${esc(time(r.at))}</td><td>${esc(r.actor)}</td><td>${esc(r.action)}</td><td>${esc(r.result)}</td><td>${esc(r.detail)}</td></tr>`)) : empty('No dashboard changes recorded for this period.'));}
+function connectLive(){
+  stopLive();liveErrors={};
+  const run=serial;
+  const query=new URLSearchParams({view,days:$('period').value,includeTest:String($('show-test-data').checked)});
+  stopLive=startDashboardLive({getToken:token,query,onStatus:liveState,onSnapshot:(resource,data)=>{if(run===serial)applySnapshot(resource,data);},onError:(resource,message)=>{if(run!==serial)return;liveErrors[resource]=message;$('status').dataset.liveError=resource;liveState('Live connection');$('status').textContent=(titles[resource]||resource)+': '+message+' Last available data is retained; retrying automatically.';}});
+}
 const filterIds = ['search','club-filter','mode-filter','status-filter','from-filter','to-filter'];
-const titles = { overview:'Overview', leads:'Enquiries', clubs:'Club contacts', analytics:'Website insights', costs:'System costs', settings:'Delivery settings', audit:'Activity log' };
+const titles = { overview:'Overview', leads:'Enquiries', clubs:'Club contacts', analytics:'Website insights', campaigns:'Campaign links', costs:'System costs', settings:'Delivery settings', audit:'Activity log' };
 const time = value => value ? new Date(value).toLocaleString('en-AU', { timeZone:'Australia/Adelaide', dateStyle:'medium', timeStyle:'short' }) : '—';
 async function token() {
   const account = auth.getAllAccounts()[0];
@@ -34,8 +73,7 @@ function leadTable(rows) {
   return table(['Received (Adelaide)','Enquirer','Club','Mode','Email status','Enquiry'], rows.map(row=>`<tr><td>${esc(time(row.submittedAt))}</td><td>${esc(row.name)}<small>${esc(row.email)}</small></td><td>${esc(row.clubName || row.clubSlug)}</td><td><span class="pill">${esc(row.leadApiMode || 'Unknown')}</span></td><td><span class="pill ${row.emailDeliveryStatus === 'failed' ? 'failed' : row.emailDeliveryStatus === 'sent' ? 'sent' : ''}">${esc(statusLabel(row))}</span></td><td><button class="secondary" data-lead="${esc(row.rowKey)}">View enquiry</button></td></tr>`));
 }
 function group(rows,key) { const counts = new Map(); rows.forEach(r=>counts.set(r[key] || 'Unknown',(counts.get(r[key] || 'Unknown') || 0)+1)); return [...counts].sort((a,b)=>b[1]-a[1]); }
-function banner() {
-  const s = currentSettings;
+function banner(s = currentSettings) {
   const isTest = s.mode === 'test';
   $('mode-banner').className = 'mode-notice ' + (isTest ? 'test-mode' : s.emailEnabled ? 'live-mode' : 'paused-mode');
   const heading = isTest ? 'TEST MODE IS ON' : s.emailEnabled ? 'PRODUCTION MODE' : 'EMAILS ARE PAUSED';
@@ -44,6 +82,10 @@ function banner() {
 }
 async function load() {
   const run = ++serial;
+  stopLive();liveReports={};
+  $('report-options').hidden=!['overview','leads','analytics'].includes(view);
+  $('period-control').hidden=!['overview','leads','analytics','audit'].includes(view);
+  $('report-scope').textContent=$('show-test-data').checked?'Data: includes test activity':'Data: production';
   $('title').textContent = titles[view];
   $('status').textContent = '';
   $('content').innerHTML = empty('Loading…');
@@ -58,7 +100,7 @@ async function load() {
       if (run !== serial) return;
       if (view === 'overview') {
         const production = records.filter(r=>r.leadApiMode === 'production');
-        $('content').innerHTML = '<div id="routing-health"></div><div class="metrics">' + metric('Enquiries received',records.length,$('show-test-data').checked?'Includes test data':'Test data hidden') + metric('People enquiring',new Set(records.map(r=>String(r.email||'').toLowerCase()).filter(Boolean)).size,'Distinct email addresses; not members') + metric('Clubs receiving enquiries',new Set(records.map(r=>r.clubSlug)).size,'Within the reporting filter') + metric('Email failures',records.filter(r=>r.emailDeliveryStatus==='failed').length,$('show-test-data').checked?'Includes test data':'Test data hidden') + '</div>' + panel('Website insights','<div id="overview-insights">' + empty('Loading website insights…') + '</div>') + panel('System costs','<div id="overview-costs">' + empty('Loading billing figures…') + '</div>') + panel('Latest enquiries','<p class="footnote">Enquiries express interest in membership. Completed memberships take place outside this website and are not recorded here.</p>'+enquiryFilters()) + '<div class="grid">' + panel('Enquiries by club',bars(group(records,'clubName'))) + panel('Email activity',bars(group(records,'emailDeliveryStatus')) + '<p class="footnote">“Sent” means accepted by the email service. Inbox delivery is not confirmed.</p>') + '</div>';
+        $('content').innerHTML = '<div id="routing-health"></div><div id="overview-metrics" class="metrics">' + overviewMetrics() + '</div>' + panel('Website insights','<div id="overview-insights">' + empty('Loading website insights…') + '</div>') + panel('System costs','<div id="overview-costs">' + empty('Loading billing figures…') + '</div>') + panel('Latest enquiries','<p class="footnote">Enquiries express interest in membership. Completed memberships take place outside this website and are not recorded here.</p>'+enquiryFilters()) + '<div class="grid">' + panel('Enquiries by club','<div id="overview-clubs">'+bars(group(records,'clubName'))+'</div>') + panel('Email activity','<div id="overview-email">'+bars(group(records,'emailDeliveryStatus'))+'</div>' + '<p class="footnote">“Sent” means accepted by the email service. Inbox delivery is not confirmed.</p>') + '</div>';
         bindFilters();
         const section = async (id, resource, render) => {
           try { const result = await api(resource); if (run===serial && $(id)) $(id).innerHTML=render(result); }
@@ -73,6 +115,8 @@ async function load() {
         $('content').innerHTML = panel('Enquiries',enquiryFilters());
         bindFilters();
       }
+    } else if (view === 'campaigns') {
+      $('content').innerHTML=campaignLinksPage();
     } else if (view === 'clubs') {
       clubs = await api('clubs');
       if (run !== serial) return;
@@ -95,8 +139,8 @@ async function load() {
       if (run !== serial) return;
       $('content').innerHTML = panel('Settings and contact changes', rows.length ? table(['Time (Adelaide)','Person','Action','Result','Details'],rows.map(r=>`<tr><td>${esc(time(r.at))}</td><td>${esc(r.actor)}</td><td>${esc(r.action)}</td><td>${esc(r.result)}</td><td>${esc(r.detail)}</td></tr>`)) : empty('No dashboard changes recorded for this period.'));
     }
-    if (run === serial) $('updated').textContent = `Updated ${time(new Date())} · Insights refresh every minute; billing is cached for six hours. Use Refresh to update enquiries.`;
-  } catch(e) { if (run === serial) { $('status').textContent = e.message; $('content').innerHTML = empty('Data could not be loaded. Check the message above and try Refresh.'); } }
+    if (run === serial) { $('updated').textContent = `Updated ${time(new Date())} · Reports update in place over a live connection. Traffic may take a few minutes to arrive; billing refreshes at most every six hours.`; connectLive(); }
+  } catch(e) { if (run === serial) { $('status').textContent = e.message; $('content').innerHTML = empty('Data could not be loaded. Check the message above and try Update now.'); } }
   finally { if(run === serial) $('refresh').disabled = false; }
 }
 function bindFilters() {
@@ -154,11 +198,10 @@ $('close-detail').onclick = ()=>$('detail').close();
 function navigate(next) { view=next; document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view)); load(); }
 document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>navigate(button.dataset.view));
 document.addEventListener('click',event=>{const button=event.target.closest('[data-open-view]'); if(button) navigate(button.dataset.openView);});
-$('show-test-data').onchange=()=>{filterState['mode-filter']='';load();};
+$('show-test-data').onchange=()=>{filterState['mode-filter']='';$('report-options').open=false;load();};
 $('period').onchange=load; $('refresh').onclick=load;
 $('sign-in').onclick=()=>auth.loginRedirect({scopes:[scope]});
 $('sign-out').onclick=()=>auth.logoutRedirect({postLogoutRedirectUri:location.origin+'/api/dashboard'});
-setInterval(()=>{if(auth?.getAllAccounts().length && !['settings','clubs','leads'].includes(view) && !document.activeElement?.closest('.filters, .form-stack') && !$('campaign-link-form')?.dataset.dirty && !$('detail').open && !document.hidden) load();},60000);
 (async()=>{
   try {
     const config = await (await fetch('/api/dashboard/config')).json();
