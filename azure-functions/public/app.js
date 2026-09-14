@@ -75,6 +75,7 @@ function leadTable(rows) {
 function group(rows,key) { const counts = new Map(); rows.forEach(r=>counts.set(r[key] || 'Unknown',(counts.get(r[key] || 'Unknown') || 0)+1)); return [...counts].sort((a,b)=>b[1]-a[1]); }
 function banner(s = currentSettings) {
   const isTest = s.mode === 'test';
+  if(!isTest && s.emailEnabled){$('mode-banner').className='production-status';$('mode-banner').innerHTML='<span>Production · Emails go to clubs</span><button class="link" data-open-view="settings">Manage delivery</button>';return;}
   $('mode-banner').className = 'mode-notice ' + (isTest ? 'test-mode' : s.emailEnabled ? 'live-mode' : 'paused-mode');
   const heading = isTest ? 'TEST MODE IS ON' : s.emailEnabled ? 'PRODUCTION MODE' : 'EMAILS ARE PAUSED';
   const message = !s.emailEnabled ? 'No enquiry emails are being sent. Enquiries are still saved.' : isTest ? 'No emails are sent to clubs.' : 'Enquiry emails are sent to club contacts.';
@@ -195,7 +196,10 @@ $('content').addEventListener('click',async event=>{
   }
 });
 $('close-detail').onclick = ()=>$('detail').close();
-function navigate(next) { view=next; document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view)); load(); }
+function setMenu(open){$('sidebar').classList.toggle('menu-open',open);$('menu-toggle').setAttribute('aria-expanded',String(open));$('menu-toggle').textContent=open?'Close menu':'Menu';}
+$('menu-toggle').onclick=()=>setMenu($('menu-toggle').getAttribute('aria-expanded')!=='true');
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('sidebar').classList.contains('menu-open')){setMenu(false);$('menu-toggle').focus();}});
+function navigate(next) { const mobileMenu=$('menu-toggle').getAttribute('aria-expanded')==='true';setMenu(false);if(mobileMenu)$('title').focus({preventScroll:true});view=next; document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view)); load(); }
 document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>navigate(button.dataset.view));
 document.addEventListener('click',event=>{const button=event.target.closest('[data-open-view]'); if(button) navigate(button.dataset.openView);});
 $('show-test-data').onchange=()=>{filterState['mode-filter']='';$('report-options').open=false;load();};
