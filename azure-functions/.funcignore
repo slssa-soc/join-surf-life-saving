@@ -2,3 +2,8 @@ node_modules/@azure/msal-browser/
 node_modules/@microsoft/
 local.settings.json
 *.log
+node_modules/quill/
+node_modules/dompurify/
+node_modules/marked/
+node_modules/yaml/
+tests/

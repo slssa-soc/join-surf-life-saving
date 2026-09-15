@@ -8,6 +8,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { authenticate } = require('../lib/auth');
 const settings = require('../lib/settings');
+const {store:clubPages,publicPage}=require('../lib/club-content');
 const { retryDelay, cachedReport } = require('../lib/report-cache');
 const { analyticsQuery } = require('../lib/analytics-query');
 const credential = new DefaultAzureCredential();
@@ -48,9 +49,9 @@ app.http('dashboard-assets', {
   handler: async request => {
     const asset = request.params.asset || 'index.html';
     if (asset === 'config') return json(200, { tenantId: process.env.DASHBOARD_TENANT_ID || '', clientId: process.env.DASHBOARD_CLIENT_ID || '' });
-    const allowed = { 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'live.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'attribution.js': 'text/javascript; charset=utf-8', 'campaign.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
+    const allowed = { 'editor.js':'text/javascript; charset=utf-8','editor.css':'text/css; charset=utf-8','quill.js':'text/javascript; charset=utf-8','quill.core.css':'text/css; charset=utf-8','purify.min.js':'text/javascript; charset=utf-8', 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'live.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'attribution.js': 'text/javascript; charset=utf-8', 'campaign.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
     if (!allowed[asset]) return json(404, { error: 'Not found' });
-    return { status: 200, headers: { ...headers, 'Content-Type': allowed[asset], 'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://login.microsoftonline.com; frame-src https://login.microsoftonline.com; frame-ancestors 'none'; base-uri 'none'; form-action 'self'", 'X-Frame-Options': 'DENY' }, body: fs.readFileSync(path.join(__dirname, '../../public', asset), 'utf8') };
+    return { status: 200, headers: { ...headers, 'Content-Type': allowed[asset], 'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https://join.surflifesavingsa.com.au; connect-src 'self' https://login.microsoftonline.com; frame-src https://login.microsoftonline.com; frame-ancestors 'none'; base-uri 'none'; form-action 'self'", 'X-Frame-Options': 'DENY' }, body: fs.readFileSync(path.join(__dirname, '../../public', asset), 'utf8') };
   }
 });
 async function dashboardData(request, context) {
@@ -60,7 +61,10 @@ async function dashboardData(request, context) {
       const url = new URL(request.url);
       if (request.method === 'PUT') {
         if (request.headers.get('content-type')?.split(';')[0] !== 'application/json') return json(415, { error: 'JSON required.' });
-        const body = await request.json();
+        const raw=await request.text();
+        if(raw.length>7500000)return json(413,{error:'The request is too large. Use a photo below 5 MB.'});
+        let body;try{body=JSON.parse(raw);}catch{return json(400,{error:'Invalid JSON.'});}
+        if(resource==='club-pages')return json(200,await clubPages.save(url.searchParams.get('slug'),body,actor));
         if (resource === 'settings') {
           let value;
           try { value = settings.validateSettings(body); } catch (e) { return json(400, { error: e.message }); }
@@ -87,6 +91,13 @@ async function dashboardData(request, context) {
         return json(404, { error: 'Not found' });
       }
       if (resource === 'me') return json(200, actor);
+      if(resource==='club-pages'){
+        const slug=url.searchParams.get('slug');
+        if(!slug)return json(200,(await clubPages.list()).map(p=>({slug:p.slug,title:p.content.title,updatedAt:p.updatedAt,updatedBy:p.updatedBy})));
+        if(url.searchParams.get('revision'))return json(200,await clubPages.revision(slug,url.searchParams.get('revision')));
+        if(url.searchParams.get('history')==='true')return json(200,await clubPages.history(slug));
+        return json(200,await clubPages.read(slug));
+      }
       if (resource === 'settings') return json(200, await settings.readSettings());
       if (resource === 'clubs') return json(200, await list(table(process.env.LEAD_ROUTE_TABLE_NAME || 'ClubLeadRouting'), odata`PartitionKey eq ${'club'}`));
       if (resource === 'leads') {
@@ -96,8 +107,8 @@ async function dashboardData(request, context) {
       }
       if (resource === 'audit') {
         const { since } = dateRange(url);
-        try { return json(200, (await list(table('JoinDashboardAudit'), odata`at ge ${since}`)).sort((a, b) => b.at.localeCompare(a.at))); }
-        catch (e) { if (e.statusCode === 404) return json(200, []); throw e; }
+        let rows=[];try{rows=await list(table('JoinDashboardAudit'),odata`at ge ${since}`);}catch(e){if(e.statusCode!==404)throw e;}
+        return json(200,[...rows,...await clubPages.audit(since)].sort((a,b)=>b.at.localeCompare(a.at)));
       }
       if (resource === 'analytics') {
         const { days } = dateRange(url);
@@ -131,7 +142,7 @@ app.http('dashboard-live', {
         overview:['settings','leads','clubs','analytics','costs'],
         leads:['settings','leads'], analytics:['settings','leads','analytics'],
         costs:['settings','costs'], clubs:['settings','clubs'],
-        settings:['settings'], campaigns:['settings'], audit:['settings','audit']
+        pages:['settings'], settings:['settings'], campaigns:['settings'], audit:['settings','audit']
       };
       const resources = resourcesByView[url.searchParams.get('view')];
       if (!resources) return json(400,{error:'Invalid dashboard view.'});
@@ -140,5 +151,22 @@ app.http('dashboard-live', {
       },context) });
       return {status:200,headers:{...headers,'Content-Type':'text/event-stream; charset=utf-8','X-Accel-Buffering':'no'},body};
     } catch(e) { return json(e.status || 500,{error:e.status ? e.message : 'Live connection unavailable.'}); }
+  }
+});
+app.http('public-club-pages',{
+  methods:['GET'],authLevel:'anonymous',route:'club-pages/{slug?}',
+  handler:async request=>{
+    try{
+      const slug=request.params.slug;
+      const value=slug?publicPage(await clubPages.read(slug)):(await clubPages.list()).map(p=>({slug:p.slug,version:p.version,content:Object.fromEntries(Object.entries(p.content).filter(([key])=>['title','summary','image','imageAlt','suburb','region','memberSize','gym','restaurant','accessibleFacilities','beachAccess'].includes(key)))}));
+      return {status:200,headers:{...headers,'Access-Control-Allow-Origin':'https://join.surflifesavingsa.com.au'},jsonBody:value};
+    }catch(e){return json(e.status||503,{error:e.status?e.message:'Club content is temporarily unavailable.'});}
+  }
+});
+app.http('public-club-image',{
+  methods:['GET'],authLevel:'anonymous',route:'club-images/{slug}/{file}',
+  handler:async request=>{
+    try{const result=await clubPages.image(request.params.slug,request.params.file);return {status:200,headers:{'Content-Type':'image/jpeg','Cache-Control':'public, max-age=31536000, immutable','X-Content-Type-Options':'nosniff'},body:result.readableStreamBody};}
+    catch(e){return json(e.status||503,{error:e.status?e.message:'Image temporarily unavailable.'});}
   }
 });

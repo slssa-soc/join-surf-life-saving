@@ -43,7 +43,7 @@ function connectLive(){
   stopLive=startDashboardLive({getToken:token,query,onStatus:liveState,onSnapshot:(resource,data)=>{if(run===serial)applySnapshot(resource,data);},onError:(resource,message)=>{if(run!==serial)return;liveErrors[resource]=message;$('status').dataset.liveError=resource;liveState('Live connection');$('status').textContent=(titles[resource]||resource)+': '+message+' Last available data is retained; retrying automatically.';}});
 }
 const filterIds = ['search','club-filter','mode-filter','status-filter','from-filter','to-filter'];
-const titles = { overview:'Overview', leads:'Enquiries', clubs:'Club contacts', analytics:'Website insights', campaigns:'Campaign links', costs:'System costs', settings:'Delivery settings', audit:'Activity log' };
+const titles = { overview:'Overview', leads:'Enquiries', clubs:'Club contacts', pages:'Club pages', analytics:'Website insights', campaigns:'Campaign links', costs:'System costs', settings:'Delivery settings', audit:'Activity log' };
 const time = value => value ? new Date(value).toLocaleString('en-AU', { timeZone:'Australia/Adelaide', dateStyle:'medium', timeStyle:'short' }) : '—';
 async function token() {
   const account = auth.getAllAccounts()[0];
@@ -116,6 +116,8 @@ async function load() {
         $('content').innerHTML = panel('Enquiries',enquiryFilters());
         bindFilters();
       }
+    } else if (view === 'pages') {
+      await mountClubEditor(run);
     } else if (view === 'campaigns') {
       $('content').innerHTML=campaignLinksPage();
     } else if (view === 'clubs') {
@@ -199,11 +201,11 @@ $('close-detail').onclick = ()=>$('detail').close();
 function setMenu(open){$('sidebar').classList.toggle('menu-open',open);$('menu-toggle').setAttribute('aria-expanded',String(open));$('menu-toggle').textContent=open?'Close menu':'Menu';}
 $('menu-toggle').onclick=()=>setMenu($('menu-toggle').getAttribute('aria-expanded')!=='true');
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('sidebar').classList.contains('menu-open')){setMenu(false);$('menu-toggle').focus();}});
-function navigate(next) { const mobileMenu=$('menu-toggle').getAttribute('aria-expanded')==='true';setMenu(false);if(mobileMenu)$('title').focus({preventScroll:true});view=next; document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view)); load(); }
+function navigate(next) { if(view==='pages'&&!canLeaveEditor())return;if(view==='pages')pageEditor=null;const mobileMenu=$('menu-toggle').getAttribute('aria-expanded')==='true';setMenu(false);if(mobileMenu)$('title').focus({preventScroll:true});view=next; document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view)); load(); }
 document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>navigate(button.dataset.view));
 document.addEventListener('click',event=>{const button=event.target.closest('[data-open-view]'); if(button) navigate(button.dataset.openView);});
 $('show-test-data').onchange=()=>{filterState['mode-filter']='';$('report-options').open=false;load();};
-$('period').onchange=load; $('refresh').onclick=load;
+$('period').onchange=load; $('refresh').onclick=()=>{if(view!=='pages'||canLeaveEditor())load();};
 $('sign-in').onclick=()=>auth.loginRedirect({scopes:[scope]});
 $('sign-out').onclick=()=>auth.logoutRedirect({postLogoutRedirectUri:location.origin+'/api/dashboard'});
 (async()=>{
