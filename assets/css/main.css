@@ -2326,3 +2326,8 @@ main {
     -webkit-font-smoothing: antialiased;
   }
 }
+/* Result sort control and location guidance. */
+.results-actions { display:grid; grid-template-columns:auto minmax(0,1fr); max-width:440px; }
+.results-actions select { width:100%; min-width:0; }
+[data-sort-note] { grid-column:1 / -1; margin:0; color:#475467; font-size:0.875rem; line-height:1.5; }
+@media(max-width:600px) { .results-actions { width:100%; max-width:none; } }

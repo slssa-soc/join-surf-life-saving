@@ -609,6 +609,9 @@ function updateFilterUrl(filters) {
     );
   }
 
+  const sortPreference = document.querySelector('[data-sort-clubs]')?.dataset.preference;
+  if (sortPreference) params.set('sort', sortPreference);
+
   const newUrl =
     params.toString()
       ? window.location.pathname +
@@ -749,6 +752,23 @@ function sortCards(cards, sortMode) {
   });
 }
 
+function updateSortControl(origin) {
+  const field = document.querySelector('[data-sort-clubs]');
+  if (!field) return 'name-asc';
+  const preference = field.dataset.preference;
+  const mode = origin && preference !== 'name-asc' ? 'distance' : 'name-asc';
+  field.value = mode;
+  const distanceOption = field.querySelector('option[value="distance"]');
+  if (distanceOption) distanceOption.disabled = !origin;
+  const note = document.querySelector('[data-sort-note]');
+  if (note) note.textContent = !origin
+    ? 'Select a suburb or use your location to sort by distance.'
+    : mode === 'distance'
+      ? 'Nearest first from ' + origin.label + ' (straight-line distance).'
+      : 'Club names from A to Z.';
+  return mode;
+}
+
 function applyFilters() {
   const cards =
     Array.from(
@@ -804,7 +824,7 @@ function applyFilters() {
   if (sortField) {
     sortCards(
       cards,
-      sortField.value
+      updateSortControl(origin)
     );
   }
 
@@ -881,6 +901,11 @@ function setFiltersFromUrl() {
     new URLSearchParams(
       window.location.search
     );
+
+  const sortField = document.querySelector('[data-sort-clubs]');
+  if (sortField && ['name-asc', 'distance'].includes(params.get('sort'))) {
+    sortField.dataset.preference = params.get('sort');
+  }
 
   const originField =
     document.querySelector(
@@ -971,6 +996,8 @@ function clearFilters() {
     );
 
   clearStoredCurrentLocation();
+  const sortField = document.querySelector('[data-sort-clubs]');
+  if (sortField) delete sortField.dataset.preference;
 
   applyFilters();
 }
@@ -1323,7 +1350,8 @@ function applyHelperFilters() {
 
   if (
     origin &&
-    sortField
+    sortField &&
+    sortField.dataset.preference !== 'name-asc'
   ) {
     sortField.value =
       "distance";
@@ -2051,6 +2079,7 @@ document.addEventListener(
         "[data-sort-clubs]"
       )
     ) {
+      event.target.dataset.preference = event.target.value;
       applyFilters();
     }
   }

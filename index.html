@@ -217,21 +217,23 @@ permalink: /
 
       <div class="results-actions">
         <label for="sort-clubs">
-          Sort by
+          Sort results
         </label>
 
         <select
           id="sort-clubs"
           data-sort-clubs
+          aria-describedby="sort-note"
         >
           <option value="name-asc">
-            Club name
+            Alphabetical (A–Z)
           </option>
 
           <option value="distance">
-            Distance
+            Distance (nearest first)
           </option>
         </select>
+        <p id="sort-note" data-sort-note role="status">Select a suburb or use your location to sort by distance.</p>
       </div>
     </div>
 
