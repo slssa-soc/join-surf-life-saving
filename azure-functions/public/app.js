@@ -88,6 +88,7 @@ async function load() {
   $('period-control').hidden=!['overview','leads','analytics','audit'].includes(view);
   $('report-scope').textContent=$('show-test-data').checked?'Data: includes test activity':'Data: production';
   $('title').textContent = titles[view];
+    $('subtitle').textContent = {"overview":"Enquiries, website activity and delivery health.","leads":"Find enquiries and check their email delivery status.","pages":"Manage the information shown on each club page.","clubs":"Manage club contacts and enquiry routing.","analytics":"Understand website visits, traffic sources and campaigns.","campaigns":"Create tracked links for your Join campaigns.","costs":"Reported spending and estimates for the Join system.","settings":"Manage delivery mode and where enquiry emails are sent.","audit":"Review changes to dashboard settings and club contacts."}[view];
   $('status').textContent = '';
   $('content').innerHTML = empty('Loading…');
   $('refresh').disabled = true;
