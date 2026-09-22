@@ -8,6 +8,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { authenticate } = require('../lib/auth');
 const settings = require('../lib/settings');
+const monthlyReport = require('../lib/monthly-report');
 const {store:clubPages,publicPage}=require('../lib/club-content');
 const { retryDelay, cachedReport } = require('../lib/report-cache');
 const { analyticsQuery } = require('../lib/analytics-query');
@@ -64,6 +65,19 @@ async function dashboardData(request, context) {
         const raw=await request.text();
         if(raw.length>7500000)return json(413,{error:'The request is too large. Use a photo below 5 MB.'});
         let body;try{body=JSON.parse(raw);}catch{return json(400,{error:'Invalid JSON.'});}
+        if(resource==='monthly-report-settings'){
+          monthlyReport.validate(body);
+          await audit(actor,'monthly-report-settings',{enabled:body.enabled},'requested');
+          const result=await monthlyReport.saveSettings(body);
+          await audit(actor,'monthly-report-settings',{enabled:result.enabled},'completed');
+          return json(200,result);
+        }
+        if(resource==='monthly-report-test'){
+          await audit(actor,'monthly-report-test',{},'requested');
+          const result=await monthlyReport.deliver({test:true,requestId:body.requestId});
+          await audit(actor,'monthly-report-test',result,'completed');
+          return json(200,result);
+        }
         if(resource==='club-pages')return json(200,await clubPages.save(url.searchParams.get('slug'),body,actor));
         if (resource === 'settings') {
           let value;
@@ -91,6 +105,7 @@ async function dashboardData(request, context) {
         return json(404, { error: 'Not found' });
       }
       if (resource === 'me') return json(200, actor);
+      if(resource==='monthly-report-settings')return json(200,{...await monthlyReport.readSettings(),latest:await monthlyReport.latest()});
       if(resource==='club-pages'){
         const slug=url.searchParams.get('slug');
         if(!slug)return json(200,(await clubPages.list()).map(p=>({slug:p.slug,title:p.content.title,updatedAt:p.updatedAt,updatedBy:p.updatedBy})));

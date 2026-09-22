@@ -5,6 +5,7 @@ const crypto = require("crypto");
 
 const { AsyncLocalStorage } = require('node:async_hooks');
 const { readSettings } = require('../lib/settings');
+const enquiryRating = require('../lib/enquiry-rating');
 const { normalise: normaliseAttribution } = require('../../public/attribution');
 const deliveryContext = new AsyncLocalStorage();
 
@@ -123,6 +124,7 @@ function normalisePayload(payload) {
     about: cleanMultiline(payload.about, 2000),
     filters: normaliseFilters(payload.filters),
     consent: Boolean(payload.consent),
+    wantExperienceRating: payload.wantExperienceRating === true,
     sourcePage: cleanString(payload.sourcePage, 500),
     attribution: normaliseAttribution(payload.attribution),
     submittedAt: cleanString(payload.submittedAt, 80)
@@ -1407,11 +1409,15 @@ app.http("lead", {
       );
     }
 
+    let ratingInvitation=null;
+    try {if(payload.wantExperienceRating)ratingInvitation=await enquiryRating.invite(payload.email,getApiMode());}
+    catch {context.warn('Rating invitation unavailable; enquiry succeeded.');}
     return jsonResponse(
       request,
       200,
       {
         ok: true,
+        ratingInvitation,
         mode: getApiMode(),
         message:
           deliveryResult.status === "sent"

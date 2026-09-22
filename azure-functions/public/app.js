@@ -1,6 +1,25 @@
 'use strict';
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function monthlyReportSettings() {
+  const run=serial;
+  let s=await api('monthly-report-settings');
+  if(run!==serial||view!=='settings')return;
+  const labels={'accepted':'Accepted by Microsoft 365 (inbox delivery is not confirmed)','not-sent':'Not sent','sending':'Send in progress or outcome uncertain — check sender mailbox','needs-review':'Needs review — check sender mailbox before any resend'};
+  $('content').insertAdjacentHTML('beforeend',panel('Monthly reporting',`<p>Send an anonymous summary for the previous calendar month on the first day of every month, from 9 am Adelaide time. Includes enquiries, clubs, selected age groups, interests and Enquiry Experience Rating.</p><form id="monthly-form" class="form-stack"><label class="check"><input id="monthly-enabled" type="checkbox" ${s.enabled?'checked':''}>Enable scheduled monthly reports</label><label>Report recipients<textarea id="monthly-recipients" rows="4" placeholder="One email address per line">${esc(s.recipients.join('\n'))}</textarea></label><p class="footnote">Up to 50 addresses. Recipients are hidden from one another.</p><label>Separate test email address<input id="monthly-test-recipient" type="email" maxlength="180" value="${esc(s.testRecipient)}"></label><button type="submit">Save reporting settings</button></form><p>Latest scheduled report (${esc(s.latest.month)}): ${esc(labels[s.latest.status]||s.latest.status)}.</p><p>Test emails use real data and are labelled “TEST — OUT-OF-SEQUENCE”. Save settings before testing. A test does not change the monthly schedule.</p><button id="monthly-send-test" class="secondary" ${s.testRecipient?'':'disabled'}>Send test report</button><p id="monthly-status" role="status"></p>`));
+  let requestId=crypto.randomUUID();
+  $('monthly-form').addEventListener('input',()=>{$('monthly-send-test').disabled=true;$('monthly-status').textContent='Save your reporting settings before sending a test.';});
+  $('monthly-form').onsubmit=async event=>{
+    event.preventDefault();const button=event.target.querySelector('button');button.disabled=true;
+    try {s=await api('monthly-report-settings',{enabled:$('monthly-enabled').checked,recipients:$('monthly-recipients').value.split(/[\n,;]+/).map(v=>v.trim()).filter(Boolean),testRecipient:$('monthly-test-recipient').value,etag:s.etag});if(run!==serial)return;$('monthly-send-test').disabled=!s.testRecipient;$('monthly-status').textContent='Reporting settings saved.';}
+    catch(e){if(run===serial)$('monthly-status').textContent=e.message;}finally{button.disabled=false;}
+  };
+  $('monthly-send-test').onclick=async event=>{
+    const button=event.target;button.disabled=true;$('monthly-status').textContent='Preparing the previous month’s report…';
+    try {const result=await api('monthly-report-test',{requestId});if(run!==serial)return;$('monthly-status').textContent=result.status==='accepted'?'Test report accepted by Microsoft 365. Inbox delivery is not confirmed.':labels[result.status]||result.status;if(result.status==='accepted')requestId=crypto.randomUUID();}
+    catch(e){if(run===serial)$('monthly-status').textContent=e.message;}finally{button.disabled=false;}
+  };
+}
 let auth, scope, view = 'overview', currentSettings, records = [], clubs = [], serial = 0;
 const filterState = {};
 let stopLive = () => {}, liveReports = {}, liveErrors = {};
@@ -129,6 +148,7 @@ async function load() {
       const s = currentSettings;
       $('content').innerHTML = panel('Email delivery', `<p>This controls the whole live Join system. Changes apply to enquiries that start after saving; emails already in progress may still complete using their original settings.</p><form id="settings-form" class="form-stack"><label>Delivery mode<select id="delivery-mode"><option value="test" ${s.mode==='test'?'selected':''}>Test — send to test recipient</option><option value="production" ${s.mode==='production'?'selected':''}>Production — send to clubs</option></select></label><label>Test recipient<input id="test-recipient" required type="email" maxlength="180" value="${esc(s.testRecipient)}"></label><label class="check"><input id="email-enabled" type="checkbox" ${s.emailEnabled?'checked':''}>Enable enquiry emails</label><div class="banner">In test mode, no emails will be sent to clubs. Enquiries remain saved and are marked as test enquiries.</div><button type="submit">Save delivery settings</button><p class="footnote">${s.updatedBy ? `Last changed by ${esc(s.updatedBy)} · ${esc(time(s.updatedAt))}` : 'Using the existing email configuration.'}</p></form>`);
       $('settings-form').addEventListener('submit',saveSettings);
+      await monthlyReportSettings();
     } else if (view === 'analytics') {
       const [result, leadRows] = await Promise.all([api('analytics?days='+days),api('leads?days='+days)]);
       if (run !== serial) return;

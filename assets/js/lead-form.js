@@ -444,6 +444,7 @@ function buildLeadPayload(form) {
 }
 
 async function submitLeadPayload(payload) {
+  payload.wantExperienceRating = window.joinWantsEnquiryRating?.() === true;
   const response = await fetch(
     LEAD_API_URL,
     {
@@ -511,6 +512,7 @@ async function handleLeadSubmit(event) {
       );
 
     window.joinTrackLead?.(result.mode);
+    setTimeout(() => window.joinShowEnquiryRating?.(result.ratingInvitation, form), 0);
 
     showLeadMessage(
       "Thanks — your details have been sent to " +
