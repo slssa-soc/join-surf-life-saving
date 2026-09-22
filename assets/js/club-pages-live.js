@@ -44,7 +44,7 @@
 
         const c=value.content;setText(profile,'h1',displayTitle(c.title));setText(profile,'.club-profile__summary',c.summary);image(profile,'.club-profile__image img',c);
 
-        document.title=displayTitle(c.title)+' | Join Surf Life Saving SA';
+        document.title=displayTitle(c.title)+' | Club Directory';
 
         const meta=profile.querySelector('.club-profile__meta');if(meta){meta.replaceChildren();for(const label of [c.suburb,c.region,c.memberSize].filter(Boolean)){const span=document.createElement('span');span.textContent=label;meta.append(span);}}
 

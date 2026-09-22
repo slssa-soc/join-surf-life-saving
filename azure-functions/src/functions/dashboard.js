@@ -134,7 +134,7 @@ async function dashboardData(request, context) {
       if (resource === 'costs') {
         return json(200, await cachedReport(`costs-${new Date().toISOString().slice(0,7)}`, 6*3600000, async () => {
         const data = await azure(`https://management.azure.com/subscriptions/${subscription}/providers/Microsoft.CostManagement/query?api-version=2025-03-01`, 'https://management.azure.com/.default', { type: 'ActualCost', timeframe: 'MonthToDate', dataset: { granularity: 'Daily', aggregation: { totalCost: { name: 'Cost', function: 'Sum' } }, grouping: [{ type: 'Dimension', name: 'ServiceName' }] } });
-        return { ...data, scope: 'Join system', note: 'Billing figures refresh at most every six hours. Billing data can be delayed. Projections use average daily spend from completed days this month; 6 and 12 months assume the same daily rate.' };
+        return { ...data, scope: 'Club Directory system', note: 'Billing figures refresh at most every six hours. Billing data can be delayed. Projections use average daily spend from completed days this month; 6 and 12 months assume the same daily rate.' };
         }));
       }
       return json(404, { error: 'Not found' });

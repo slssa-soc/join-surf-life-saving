@@ -684,7 +684,7 @@ function buildEmailContent(
                     line-height:1.55;
                   "
                 >
-                  A prospective member has asked to connect with your club through the Surf Life Saving SA Join website.
+                  A prospective member has asked to connect with your club through the Surf Life Saving SA Club Directory website.
                 </p>
               </td>
             </tr>

@@ -86,7 +86,7 @@ async function send(report,recipients,test) {
   const credential=new ClientSecretCredential(process.env.JOIN_MAIL_TENANT_ID,process.env.JOIN_MAIL_CLIENT_ID,process.env.JOIN_MAIL_CLIENT_SECRET);
   const token=await credential.getToken('https://graph.microsoft.com/.default');
   if(!process.env.JOIN_MAIL_SENDER)throw Error('Mail sender is not configured.');
-  const response=await fetch(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(process.env.JOIN_MAIL_SENDER)}/sendMail`,{method:'POST',headers:{Authorization:`Bearer ${token.token}`,'Content-Type':'application/json'},signal:AbortSignal.timeout(25000),body:JSON.stringify({message:{subject:`${test?'[TEST · OUT-OF-SEQUENCE] ':''}Join monthly report — ${report.period.label}`,body:{contentType:'HTML',content:render(report,test)},bccRecipients:recipients.map(address=>({emailAddress:{address}}))},saveToSentItems:true})});
+  const response=await fetch(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(process.env.JOIN_MAIL_SENDER)}/sendMail`,{method:'POST',headers:{Authorization:`Bearer ${token.token}`,'Content-Type':'application/json'},signal:AbortSignal.timeout(25000),body:JSON.stringify({message:{subject:`${test?'[TEST · OUT-OF-SEQUENCE] ':''}Club Directory monthly report — ${report.period.label}`,body:{contentType:'HTML',content:render(report,test)},bccRecipients:recipients.map(address=>({emailAddress:{address}}))},saveToSentItems:true})});
   if(response.status!==202)throw Error(`Report mail request returned ${response.status}.`);
 }
 async function deliver({test=false,requestId,now=new Date()}={}) {
