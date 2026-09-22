@@ -4,7 +4,7 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 async function monthlyReportSettings() {
   const run=serial;
   let s=await api('monthly-report-settings');
-  if(run!==serial||view!=='settings')return;
+  if(run!==serial||view!=='settings-monthly')return;
   const labels={'accepted':'Accepted by Microsoft 365 (inbox delivery is not confirmed)','not-sent':'Not sent','sending':'Send in progress or outcome uncertain — check sender mailbox','needs-review':'Needs review — check sender mailbox before any resend'};
   $('content').insertAdjacentHTML('beforeend',panel('Monthly reporting',`<p>Send an anonymous summary for the previous calendar month on the first day of every month, from 9 am Adelaide time. Includes enquiries, clubs, selected age groups, interests and Enquiry Experience Rating.</p><form id="monthly-form" class="form-stack"><label class="check"><input id="monthly-enabled" type="checkbox" ${s.enabled?'checked':''}>Enable scheduled monthly reports</label><label>Report recipients<textarea id="monthly-recipients" rows="4" placeholder="One email address per line">${esc(s.recipients.join('\n'))}</textarea></label><p class="footnote">Up to 50 addresses. Recipients are hidden from one another.</p><label>Separate test email address<input id="monthly-test-recipient" type="email" maxlength="180" value="${esc(s.testRecipient)}"></label><button type="submit">Save reporting settings</button></form><p>Latest scheduled report (${esc(s.latest.month)}): ${esc(labels[s.latest.status]||s.latest.status)}.</p><p>Test emails use real data and are labelled “TEST — OUT-OF-SEQUENCE”. Save settings before testing. A test does not change the monthly schedule.</p><button id="monthly-send-test" class="secondary" ${s.testRecipient?'':'disabled'}>Send test report</button><p id="monthly-status" role="status"></p>`));
   let requestId=crypto.randomUUID();
@@ -22,6 +22,9 @@ async function monthlyReportSettings() {
 }
 let auth, scope, view = 'overview', currentSettings, records = [], clubs = [], serial = 0;
 const filterState = {};
+const isSettingsView=()=>['settings','settings-monthly','settings-email'].includes(view);
+function settingsNavigation(){return '<nav class="settings-navigation" aria-label="Settings pages">'+[['settings','All settings'],['settings-monthly','Monthly report'],['settings-email','Email delivery']].map(([id,label])=>`<button class="secondary" data-open-view="${id}" ${view===id?'aria-current="page"':''}>${label}</button>`).join('')+'</nav>';}
+function settingsHome(){return '<div class="settings-options">'+[['settings-monthly','Monthly report','Choose report recipients, manage the monthly schedule and send a test report.'],['settings-email','Email delivery','Manage enquiry delivery mode, the test recipient and whether enquiry emails are enabled.']].map(([id,title,description])=>`<button class="settings-option" data-open-view="${id}"><span><strong>${title}</strong><span>${description}</span></span><span class="settings-option-arrow" aria-hidden="true">→</span></button>`).join('')+'</div>';}
 let stopLive = () => {}, liveReports = {}, liveErrors = {};
 function overviewMetrics(){return metric('Enquiries received',records.length,$('show-test-data').checked?'Includes test data':'Test data hidden') + metric('People enquiring',new Set(records.map(r=>String(r.email||'').toLowerCase()).filter(Boolean)).size,'Distinct email addresses; not members') + metric('Clubs receiving enquiries',new Set(records.map(r=>r.clubSlug)).size,'Within the reporting filter') + metric('Email failures',records.filter(r=>r.emailDeliveryStatus==='failed').length,$('show-test-data').checked?'Includes test data':'Test data hidden');}
 function liveState(text){const errors=Object.keys(liveErrors);$('live-status').textContent=errors.length&&text==='Live connection'?'Connected · report unavailable':text;$('live-status').dataset.connected=String(text==='Live connection'&&!errors.length);$('live-status').title=errors.length?errors.map(r=>titles[r]+': '+liveErrors[r]).join('\n'):'Reports update in place. Enquiries are checked about every 20 seconds, traffic about every 90 seconds. Billing uses cached source data.';}
@@ -29,7 +32,7 @@ function applySnapshot(resource,data){
   delete liveErrors[resource];
   if($('status').dataset.liveError===resource){$('status').textContent='';delete $('status').dataset.liveError;}
   liveReports[resource]=data;
-  if(resource==='settings'){banner(data);if(view!=='settings')currentSettings=data;else if(data.etag!==currentSettings.etag)$('status').textContent='Delivery settings changed elsewhere. Your form has been kept. Select Update now to load the latest version before saving.';}
+  if(resource==='settings'){banner(data);if(view!=='settings-email')currentSettings=data;else if(data.etag!==currentSettings.etag)$('status').textContent='Email delivery settings changed elsewhere. Your form has been kept. Select Update now to load the latest version before saving.';}
   if(resource==='clubs'){
     if($('routing-health'))$('routing-health').innerHTML=routingWarning(data);
     const versions=rows=>JSON.stringify(rows.map(r=>[r.rowKey,r.etag]).sort((a,b)=>a[0].localeCompare(b[0])));
@@ -58,11 +61,11 @@ function auditReport(rows){return panel('Settings and contact changes',rows.leng
 function connectLive(){
   stopLive();liveErrors={};
   const run=serial;
-  const query=new URLSearchParams({view,days:$('period').value,includeTest:String($('show-test-data').checked)});
+  const query=new URLSearchParams({view:isSettingsView()?'settings':view,days:$('period').value,includeTest:String($('show-test-data').checked)});
   stopLive=startDashboardLive({getToken:token,query,onStatus:liveState,onSnapshot:(resource,data)=>{if(run===serial)applySnapshot(resource,data);},onError:(resource,message)=>{if(run!==serial)return;liveErrors[resource]=message;$('status').dataset.liveError=resource;liveState('Live connection');$('status').textContent=(titles[resource]||resource)+': '+message+' Last available data is retained; retrying automatically.';}});
 }
 const filterIds = ['search','club-filter','mode-filter','status-filter','from-filter','to-filter'];
-const titles = { overview:'Overview', leads:'Enquiries', clubs:'Club contacts', pages:'Club pages', analytics:'Website insights', campaigns:'Campaign links', costs:'System costs', settings:'Delivery settings', audit:'Activity log' };
+const titles = { overview:'Overview', leads:'Enquiries', clubs:'Club contacts', pages:'Club pages', analytics:'Website insights', campaigns:'Campaign links', costs:'System costs', settings:'Settings', 'settings-monthly':'Monthly report', 'settings-email':'Email delivery', audit:'Activity log' };
 const time = value => value ? new Date(value).toLocaleString('en-AU', { timeZone:'Australia/Adelaide', dateStyle:'medium', timeStyle:'short' }) : '—';
 async function token() {
   const account = auth.getAllAccounts()[0];
@@ -94,11 +97,11 @@ function leadTable(rows) {
 function group(rows,key) { const counts = new Map(); rows.forEach(r=>counts.set(r[key] || 'Unknown',(counts.get(r[key] || 'Unknown') || 0)+1)); return [...counts].sort((a,b)=>b[1]-a[1]); }
 function banner(s = currentSettings) {
   const isTest = s.mode === 'test';
-  if(!isTest && s.emailEnabled){$('mode-banner').className='production-status';$('mode-banner').innerHTML='<span>Production · Emails go to clubs</span><button class="link" data-open-view="settings">Manage delivery</button>';return;}
+  if(!isTest && s.emailEnabled){$('mode-banner').className='production-status';$('mode-banner').innerHTML='<span>Production · Emails go to clubs</span><button class="link" data-open-view="settings-email">Manage delivery</button>';return;}
   $('mode-banner').className = 'mode-notice ' + (isTest ? 'test-mode' : s.emailEnabled ? 'live-mode' : 'paused-mode');
   const heading = isTest ? 'TEST MODE IS ON' : s.emailEnabled ? 'PRODUCTION MODE' : 'EMAILS ARE PAUSED';
   const message = !s.emailEnabled ? 'No enquiry emails are being sent. Enquiries are still saved.' : isTest ? 'No emails are sent to clubs.' : 'Enquiry emails are sent to club contacts.';
-  $('mode-banner').innerHTML = '<strong>' + heading + '</strong><span>' + message + '</span>' + (isTest ? '<span>Test recipient: <b>' + esc(s.testRecipient) + '</b></span>' : '') + '<button class="secondary" data-open-view="settings">Delivery settings</button>';
+  $('mode-banner').innerHTML = '<strong>' + heading + '</strong><span>' + message + '</span>' + (isTest ? '<span>Test recipient: <b>' + esc(s.testRecipient) + '</b></span>' : '') + '<button class="secondary" data-open-view="settings-email">Email delivery</button>';
 }
 async function load() {
   const run = ++serial;
@@ -107,7 +110,7 @@ async function load() {
   $('period-control').hidden=!['overview','leads','analytics','audit'].includes(view);
   $('report-scope').textContent=$('show-test-data').checked?'Data: includes test activity':'Data: production';
   $('title').textContent = titles[view];
-    $('subtitle').textContent = {"overview":"Enquiries, website activity and delivery health.","leads":"Find enquiries and check their email delivery status.","pages":"Manage the information shown on each club page.","clubs":"Manage club contacts and enquiry routing.","analytics":"Understand website visits, traffic sources and campaigns.","campaigns":"Create tracked links for your Join campaigns.","costs":"Reported spending and estimates for the Join system.","settings":"Manage delivery mode and where enquiry emails are sent.","audit":"Review changes to dashboard settings and club contacts."}[view];
+    $('subtitle').textContent = {"overview":"Enquiries, website activity and delivery health.","leads":"Find enquiries and check their email delivery status.","pages":"Manage the information shown on each club page.","clubs":"Manage club contacts and enquiry routing.","analytics":"Understand website visits, traffic sources and campaigns.","campaigns":"Create tracked links for your Join campaigns.","costs":"Reported spending and estimates for the Join system.","settings":"Manage monthly reports and enquiry email delivery.","settings-monthly":"Manage report recipients, scheduling and test reports.","settings-email":"Manage delivery mode and where enquiry emails are sent.","audit":"Review changes to dashboard settings and club contacts."}[view];
   $('status').textContent = '';
   $('content').innerHTML = empty('Loading…');
   $('refresh').disabled = true;
@@ -145,10 +148,15 @@ async function load() {
       if (run !== serial) return;
       $('content').innerHTML = routingWarning(clubs) + panel('Club email routing', '<p>Updates apply to new enquiries. Disabling a club stops its enquiry submissions.</p>'+table(['Club','Email recipient','Accepting enquiries',''],clubs.sort((a,b)=>(a.clubName || '').localeCompare(b.clubName || '')).map((c,i)=>`<tr class="${routingError(c) ? 'invalid-club' : ''}"><td>${esc(c.clubName)}<small>${esc(c.rowKey)}</small></td><td><input id="email-${i}" required aria-invalid="${Boolean(routingError(c))}" aria-label="${esc(c.clubName)} email" type="email" value="${esc(c.recipientEmail)}">${routingError(c) ? '<p class="field-error">' + esc(routingError(c)) + '</p>' : ''}</td><td><input id="enabled-${i}" aria-label="Accept enquiries for ${esc(c.clubName)}" type="checkbox" ${c.enabled ? 'checked':''}></td><td><button data-save-club="${i}">Save</button></td></tr>`)));
     } else if (view === 'settings') {
+      $('content').innerHTML=settingsHome();
+    } else if (view === 'settings-monthly') {
+      $('content').innerHTML=settingsNavigation();
+      await monthlyReportSettings();
+    } else if (view === 'settings-email') {
       const s = currentSettings;
       $('content').innerHTML = panel('Email delivery', `<p>This controls the whole live Join system. Changes apply to enquiries that start after saving; emails already in progress may still complete using their original settings.</p><form id="settings-form" class="form-stack"><label>Delivery mode<select id="delivery-mode"><option value="test" ${s.mode==='test'?'selected':''}>Test — send to test recipient</option><option value="production" ${s.mode==='production'?'selected':''}>Production — send to clubs</option></select></label><label>Test recipient<input id="test-recipient" required type="email" maxlength="180" value="${esc(s.testRecipient)}"></label><label class="check"><input id="email-enabled" type="checkbox" ${s.emailEnabled?'checked':''}>Enable enquiry emails</label><div class="banner">In test mode, no emails will be sent to clubs. Enquiries remain saved and are marked as test enquiries.</div><button type="submit">Save delivery settings</button><p class="footnote">${s.updatedBy ? `Last changed by ${esc(s.updatedBy)} · ${esc(time(s.updatedAt))}` : 'Using the existing email configuration.'}</p></form>`);
       $('settings-form').addEventListener('submit',saveSettings);
-      await monthlyReportSettings();
+      $('content').insertAdjacentHTML('afterbegin',settingsNavigation());
     } else if (view === 'analytics') {
       const [result, leadRows] = await Promise.all([api('analytics?days='+days),api('leads?days='+days)]);
       if (run !== serial) return;
@@ -222,7 +230,7 @@ $('close-detail').onclick = ()=>$('detail').close();
 function setMenu(open){$('sidebar').classList.toggle('menu-open',open);$('menu-toggle').setAttribute('aria-expanded',String(open));$('menu-toggle').textContent=open?'Close menu':'Menu';}
 $('menu-toggle').onclick=()=>setMenu($('menu-toggle').getAttribute('aria-expanded')!=='true');
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&$('sidebar').classList.contains('menu-open')){setMenu(false);$('menu-toggle').focus();}});
-function navigate(next) { if(view==='pages'&&!canLeaveEditor())return;if(view==='pages')pageEditor=null;const mobileMenu=$('menu-toggle').getAttribute('aria-expanded')==='true';setMenu(false);if(mobileMenu)$('title').focus({preventScroll:true});view=next; document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view)); load(); }
+function navigate(next) { if(view==='pages'&&!canLeaveEditor())return;if(view==='pages')pageEditor=null;const mobileMenu=$('menu-toggle').getAttribute('aria-expanded')==='true';setMenu(false);if(mobileMenu)$('title').focus({preventScroll:true});view=next; document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===(isSettingsView()?'settings':view))); load(); }
 document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>navigate(button.dataset.view));
 document.addEventListener('click',event=>{const button=event.target.closest('[data-open-view]'); if(button) navigate(button.dataset.openView);});
 $('show-test-data').onchange=()=>{filterState['mode-filter']='';$('report-options').open=false;load();};
