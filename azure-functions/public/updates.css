@@ -33,9 +33,18 @@ main{margin-left:236px;padding:40px clamp(24px,3.5vw,64px);max-width:none}header
 @media(max-width:760px){.q-review{padding:16px}.q-enquiry-body{padding-top:16px}.q-counts .q-status{font-size:12px}.q-flags{padding:14px}.q-review .q-destinations legend{font-size:18px}}
 
 main{max-width:none;min-width:0}.quarantine-metric{text-align:left;font-weight:400;width:100%;color:inherit}.quarantine-metric.has-waiting{background:#fff2cf;border-color:#efce7b}.quarantine-metric.has-waiting small,.quarantine-metric.has-waiting strong,.quarantine-metric.has-waiting span{color:#754900}.quarantine-metric:hover{box-shadow:0 3px 12px #22344a12;filter:none}.quarantine-metric:focus-visible{outline:3px solid #006fd6;outline-offset:3px}.quarantine-metric .metric-scope{display:block;margin-top:8px;font-size:11px}.sidebar-mode{padding:0 0 18px;margin-bottom:18px;border-bottom:1px solid #d8dee5}.sidebar-mode .sidebar-mode-button{display:flex;align-items:center;gap:9px;width:100%;margin:0;padding:0;background:transparent;color:#215c40;text-align:left;font-size:14px}.sidebar-mode-button>span:last-child{margin-left:auto;font-size:13px}.sidebar-mode .mode-dot{width:9px;height:9px;flex-shrink:0;background:#238554;border-radius:50%}.sidebar-mode small{display:block;font-size:11px;line-height:1.6;color:#596b7b;margin-top:8px}.sidebar-mode.mode-test .sidebar-mode-button,.sidebar-mode.mode-paused .sidebar-mode-button{color:#805400}.sidebar-mode.mode-test .mode-dot,.sidebar-mode.mode-paused .mode-dot{background:#b67b10}.bar-row>span{min-width:0;overflow-wrap:anywhere}
-/* Editable public directory options. */
-.directory-option{display:flex;align-items:end;gap:12px;margin-bottom:12px}
-.directory-option label{flex:1;min-width:0}
-.directory-option button{flex:none}
-#directory-settings-form fieldset{border:1px solid #dce2e9;border-radius:12px;padding:18px}
-@media(max-width:600px){.directory-option{align-items:stretch;flex-direction:column}.directory-option button{align-self:flex-start}}
+/* Familiar list rows keep labels readable and actions together. */
+#directory-settings-form fieldset{border:1px solid #dce2e9;border-radius:12px;padding:18px;min-width:0}
+.directory-list{list-style:none;padding:0;margin:0 0 16px;min-width:0}
+.directory-option{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #e3e3e8;min-width:0}
+.directory-option-name{min-width:0;overflow-wrap:anywhere;line-height:1.5;font-size:15px}
+.directory-option-actions{display:flex;gap:8px}
+.directory-option-actions button{min-height:44px;white-space:nowrap;margin:0}
+.directory-list-empty{padding:16px 0;color:var(--muted)}
+#directory-edit{width:min(520px,calc(100vw - 32px));padding:24px;box-sizing:border-box}
+#directory-edit h2{margin:0 0 20px}
+#directory-edit label{display:block;font-weight:600}
+#directory-label{width:100%;box-sizing:border-box}
+#directory-edit-error{color:#a73338}
+.directory-dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+@media(max-width:600px){#directory-settings-form fieldset{padding:14px}.directory-option{grid-template-columns:minmax(0,1fr);gap:8px}.directory-option-actions{justify-content:flex-start}.directory-dialog-actions button{width:auto}}
