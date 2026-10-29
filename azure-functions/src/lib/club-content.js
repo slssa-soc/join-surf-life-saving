@@ -5,10 +5,11 @@ const {BlobServiceClient}=require('@azure/storage-blob');
 const jpeg=require('jpeg-js');
 const {PNG}=require('pngjs');
 const baseline=require('../../data/club-pages.json');
+const {normaliseActivities}=require('./activity-taxonomy');
 const ROOT='https://join.surflifesavingsa.com.au';
 const fields={title:180,summary:1000,imageAlt:250,suburb:120,region:120,memberSize:120,website:500,junior:1500,youth:1500,patrolling:1500,adaptive:2000,multicultural:2000,firstNations:2000,otherPrograms:4000,accessibility:1000};
 const facilityFields=['gym','restaurant','accessibleFacilities','beachAccess'];
-const withFacilities=(content,slug)=>({activities:baseline[slug].content.activities||[],...Object.fromEntries(facilityFields.map(key=>[key,baseline[slug].content[key]])),...content});
+const withFacilities=(content,slug)=>({...Object.fromEntries(facilityFields.map(key=>[key,baseline[slug].content[key]])),...content,activities:normaliseActivities(content.activities??baseline[slug].content.activities??[])});
 const fail=(message,status=400)=>Object.assign(new Error(message),{status});
 const hash=value=>crypto.createHash('sha256').update(value).digest('hex');
 function cleanHtml(html){return sanitize(html,{allowedTags:['p','br','strong','b','em','i','u','h2','h3','ul','ol','li','blockquote','a'],allowedAttributes:{a:['href','title','rel']},allowedSchemes:['http','https','mailto','tel'],allowProtocolRelative:false,transformTags:{a:(tag,attrs)=>({tagName:'a',attribs:{...attrs,rel:'noopener noreferrer'}})}});}
@@ -18,7 +19,7 @@ function validateContent(input,slug){
   const result={};
   const activities=input.activities??baseline[slug].content.activities??[];
   if(!Array.isArray(activities)||activities.length>150||activities.some(id=>typeof id!=='string'||!/^[-a-z0-9]{1,80}$/.test(id)))throw fail('Choose valid club activities.');
-  result.activities=[...new Set(activities)];
+  result.activities=normaliseActivities(activities);
   for(const key of facilityFields){if(typeof input[key]!=='boolean')throw fail('Choose on or off for '+key+'.');result[key]=input[key];}
   for(const [name,max]of Object.entries(fields)){
     if(typeof input[name]!=='string'||input[name].length>max)throw fail(`Invalid ${name} (maximum ${max} characters).`);

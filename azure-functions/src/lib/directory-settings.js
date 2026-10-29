@@ -1,5 +1,6 @@
 const {TableClient}=require('@azure/data-tables');
 const defaults=require('../../data/directory-options.json');
+const {cleanImportedOptions}=require('./activity-taxonomy');
 const fail=(message,status=400)=>Object.assign(new Error(message),{status});
 const getTable=()=>TableClient.fromConnectionString(process.env.AzureWebJobsStorage,'JoinDashboardSettings');
 function validate(body){
@@ -18,7 +19,7 @@ function validate(body){
   return value;
 }
 function createStore(table=getTable){
-  async function read(){try{const row=await table().getEntity('settings','directory');return{...validate(JSON.parse(row.optionsJson)),etag:row.etag};}catch(e){if(e.statusCode===404)return{...structuredClone(defaults),etag:null};throw e;}}
+  async function read(){try{const row=await table().getEntity('settings','directory');return{...validate(cleanImportedOptions(JSON.parse(row.optionsJson))),etag:row.etag};}catch(e){if(e.statusCode===404)return{...structuredClone(defaults),etag:null};throw e;}}
   async function save(body){const value=validate(body),before=await read(),t=table();if((body.etag||null)!==before.etag)throw fail('Directory settings changed. Reload before saving.',409);await t.createTable().catch(e=>{if(e.statusCode!==409)throw e;});const row={partitionKey:'settings',rowKey:'directory',optionsJson:JSON.stringify(value)};if(before.etag)await t.updateEntity(row,'Replace',{etag:before.etag});else await t.createEntity(row);return read();}
   return{read,save};
 }
