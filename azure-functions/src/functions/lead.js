@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const { AsyncLocalStorage } = require('node:async_hooks');
 const { readSettings } = require('../lib/settings');
 const enquiryRating = require('../lib/enquiry-rating');
+const quarantine = require('../lib/quarantine');
 const { normalise: normaliseAttribution } = require('../../public/attribution');
 const deliveryContext = new AsyncLocalStorage();
 
@@ -320,8 +321,9 @@ async function storeLeadSubmission(payload, club) {
     createdAt,
 
     leadApiMode: apiMode,
+    ...(payload.quarantineMatches?.length ? {quarantineStatus:'held',quarantineMatchesJson:JSON.stringify(payload.quarantineMatches),quarantineNotificationStatus:'pending'} : {}),
 
-    emailDeliveryStatus: isEmailEnabled()
+    emailDeliveryStatus: payload.quarantineMatches?.length ? 'quarantined' : isEmailEnabled()
       ? "pending"
       : "disabled"
   };
@@ -1206,8 +1208,8 @@ app.http("lead", {
       return optionsResponse(request);
     }
 
-    let configuration;
-    try { configuration = await readSettings(); }
+    let configuration, quarantineConfig;
+    try { configuration = await readSettings(); quarantineConfig = await quarantine.readSettings(); }
     catch { return jsonResponse(request, 503, { ok: false, message: 'Enquiries are temporarily unavailable. Please try again shortly.' }); }
     return deliveryContext.run(configuration, async () => {
     let rawPayload;
@@ -1291,6 +1293,7 @@ app.http("lead", {
       );
     }
 
+    payload.quarantineMatches = quarantineConfig.enabled ? quarantine.matches(payload, quarantineConfig.keywords) : [];
     let storageResult;
 
     try {
@@ -1325,6 +1328,11 @@ app.http("lead", {
       );
     }
 
+    if (payload.quarantineMatches.length) {
+      try { await quarantine.notifyHeld(storageResult, quarantineConfig, configuration); }
+      catch { context.warn('Enquiry held; notification status needs review.'); }
+      return jsonResponse(request, 200, {ok:true, mode:getApiMode(), message:'Enquiry received successfully.',clubName:club.clubName,leadId:storageResult.rowKey});
+    }
     let deliveryResult;
 
     try {

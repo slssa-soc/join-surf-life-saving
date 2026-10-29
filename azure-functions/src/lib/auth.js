@@ -10,7 +10,7 @@ async function authenticate(request) {
   try {
     const { payload } = await jose.jwtVerify(header.slice(7), keys, { issuer: `https://login.microsoftonline.com/${tenant}/v2.0`, audience, algorithms: ['RS256'] });
     if (payload.tid !== tenant || !payload.oid || !(payload.scp || '').split(' ').includes('Dashboard.Access')) throw new Error('Missing access scope');
-    return { id: payload.oid, name: payload.name || payload.preferred_username || payload.oid };
+    return { id: payload.oid, name: payload.name || payload.preferred_username || payload.oid, email: payload.preferred_username || '' };
   } catch { throw Object.assign(new Error('Your SLSSA sign-in has expired or is not authorised.'), { status: 401 }); }
 }
 module.exports = { authenticate };

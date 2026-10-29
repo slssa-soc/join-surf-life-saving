@@ -23,7 +23,22 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b",
+        "activity-1fec24b6ee6025c0",
+        "activity-12ef27f43985434c"
+      ]
     }
   },
   "beachport-slsc": {
@@ -50,7 +65,12 @@
       "gym": false,
       "restaurant": false,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4"
+      ]
     }
   },
   "brighton-slsc": {
@@ -77,7 +97,20 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b"
+      ]
     }
   },
   "chiton-rocks-slsc": {
@@ -104,7 +137,15 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-413a3ff50701aa9b"
+      ]
     }
   },
   "christies-beach-slsc": {
@@ -131,7 +172,20 @@
       "gym": true,
       "restaurant": false,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b"
+      ]
     }
   },
   "elizabeth-lsc": {
@@ -158,7 +212,13 @@
       "gym": false,
       "restaurant": false,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-e17fe0ef83a080dd",
+        "activity-823d02e88fca7c59",
+        "activity-042b7d993a5d1ad0",
+        "activity-84dba1877ccca1d7"
+      ]
     }
   },
   "glenelg-slsc": {
@@ -185,7 +245,23 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b",
+        "activity-fa4e7347474e8bb4",
+        "activity-ad2f5366d1f60798",
+        "activity-023d9cca57d770f1",
+        "activity-615bd7ad08cb763c"
+      ]
     }
   },
   "goolwa-slsc": {
@@ -212,7 +288,17 @@
       "gym": false,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-413a3ff50701aa9b"
+      ]
     }
   },
   "grange-slsc": {
@@ -239,7 +325,19 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b"
+      ]
     }
   },
   "henley-slsc": {
@@ -266,7 +364,22 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b",
+        "activity-e42c167c9a7e4243",
+        "activity-25580fd536014bc0",
+        "activity-226fa8771689b924"
+      ]
     }
   },
   "moana-slsc": {
@@ -293,7 +406,21 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-413a3ff50701aa9b",
+        "activity-eb6c8b43c641ecf6",
+        "activity-91ad1cf8c9cceffc"
+      ]
     }
   },
   "murray-bridge-lsc": {
@@ -320,7 +447,16 @@
       "gym": false,
       "restaurant": false,
       "accessibleFacilities": false,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-413a3ff50701aa9b",
+        "activity-d242bd499b36fb86"
+      ]
     }
   },
   "normanville-slsc": {
@@ -347,7 +483,18 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-413a3ff50701aa9b",
+        "activity-34624b160b152fcb"
+      ]
     }
   },
   "north-haven-surf-life-saving-club": {
@@ -374,7 +521,15 @@
       "gym": true,
       "restaurant": false,
       "accessibleFacilities": false,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-6ac9a4dbec319176",
+        "activity-948420bfbe6610e2",
+        "activity-fbeb6d88367ec305",
+        "activity-fb6cd373360f7179",
+        "activity-882229aaf759a470"
+      ]
     }
   },
   "port-elliot-slsc": {
@@ -401,7 +556,18 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-413a3ff50701aa9b",
+        "activity-e42c167c9a7e4243"
+      ]
     }
   },
   "port-noarlunga-slsc": {
@@ -428,7 +594,23 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b",
+        "activity-d973f2b1eb23e6f3",
+        "activity-4fe3eccd03d73d10",
+        "activity-e1190ca7a41a0d8f"
+      ]
     }
   },
   "robe-slsc": {
@@ -455,7 +637,13 @@
       "gym": false,
       "restaurant": false,
       "accessibleFacilities": false,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459"
+      ]
     }
   },
   "seacliff-slsc": {
@@ -482,7 +670,20 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b"
+      ]
     }
   },
   "semaphore-slsc": {
@@ -509,7 +710,22 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b",
+        "activity-e42c167c9a7e4243",
+        "activity-9583a1be2a167a42",
+        "activity-98d46b628bb083eb"
+      ]
     }
   },
   "somerton-slsc": {
@@ -536,7 +752,21 @@
       "gym": true,
       "restaurant": true,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b",
+        "activity-e42c167c9a7e4243"
+      ]
     }
   },
   "south-port-slsc": {
@@ -563,7 +793,24 @@
       "gym": true,
       "restaurant": false,
       "accessibleFacilities": true,
-      "beachAccess": false
+      "beachAccess": false,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b",
+        "activity-d5a2ec93ad24ee48",
+        "activity-4fe3eccd03d73d10",
+        "activity-e1190ca7a41a0d8f",
+        "activity-2c4be8b323725134"
+      ]
     }
   },
   "west-beach-slsc": {
@@ -590,7 +837,23 @@
       "gym": true,
       "restaurant": false,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-54230802dfda0e8b",
+        "activity-580c2d287ecf57d0",
+        "activity-6468e50e80d7344b",
+        "activity-5de751e1129dd6d3",
+        "activity-042b7d993a5d1ad0",
+        "activity-413a3ff50701aa9b",
+        "activity-e42c167c9a7e4243",
+        "activity-25580fd536014bc0",
+        "activity-226fa8771689b924"
+      ]
     }
   },
   "whyalla-slsc": {
@@ -617,7 +880,16 @@
       "gym": false,
       "restaurant": false,
       "accessibleFacilities": true,
-      "beachAccess": true
+      "beachAccess": true,
+      "activities": [
+        "activity-500fe049327cf011",
+        "activity-823d02e88fca7c59",
+        "activity-4066ebce9b4725f4",
+        "activity-4fcd39dd9263c46f",
+        "activity-43022db2f1456459",
+        "activity-413a3ff50701aa9b",
+        "activity-e42c167c9a7e4243"
+      ]
     }
   }
 }

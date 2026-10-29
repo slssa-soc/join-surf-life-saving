@@ -40,9 +40,20 @@
 
       if(!response.ok)throw Error('unavailable');const value=await response.json();
 
+      let activities;
+      if((profile?value.content?.activities:value.some(p=>Array.isArray(p.content?.activities)))){
+        try{const response=await fetch(api+'/api/directory-options',{cache:'no-store',signal:AbortSignal.timeout(8000)});if(response.ok)activities=(await response.json()).activities;}catch{}
+      }
+      function activityTags(root,c,profile=false){
+        if(!activities||!Array.isArray(c.activities))return;
+        let tags=root.querySelector(profile?'[data-club-activities]':'.tag-list');
+        if(!tags){tags=document.createElement('div');tags.className='tag-list';tags.dataset.clubActivities='';(root.querySelector(profile?'.club-profile__intro':'.club-card__body')||root).append(tags);}
+        tags.replaceChildren();tags.setAttribute('aria-label','Club activities');
+        for(const item of activities.filter(item=>c.activities.includes(item.id))){const span=document.createElement('span');span.textContent=item.label;tags.append(span);}
+      }
       if(profile){
 
-        const c=value.content;setText(profile,'h1',displayTitle(c.title));setText(profile,'.club-profile__summary',c.summary);image(profile,'.club-profile__image img',c);
+        const c=value.content;activityTags(profile,c,true);setText(profile,'h1',displayTitle(c.title));setText(profile,'.club-profile__summary',c.summary);image(profile,'.club-profile__image img',c);
 
         document.title=displayTitle(c.title)+' | Club Directory';
 
@@ -60,7 +71,7 @@
 
         const pages=new Map(value.map(p=>[p.slug,p.content]));
 
-        for(const card of cards){const slug=card.querySelector('[data-lead-club]')?.dataset.leadClub,c=pages.get(slug);if(!c)continue;setText(card,'h2 a',c.title);setText(card,'.club-card__summary',c.summary);card.dataset.title=c.title;card.dataset.facilities=Object.entries({gym:'gym',restaurant:'restaurant',accessibleFacilities:'accessible-facilities',beachAccess:'beach-access'}).filter(([key])=>c[key]).map(([,id])=>id).join('|');image(card,'.club-card__image img',c);card.querySelector('.club-card__image')?.setAttribute('aria-label','View '+c.title);const meta=card.querySelector('.club-meta');if(meta){for(const span of [...meta.children])if(!span.hasAttribute('data-location-fallback')&&!span.hasAttribute('data-distance-label'))span.remove();for(const label of [c.suburb,c.region,c.memberSize].filter(Boolean)){const span=document.createElement('span');span.textContent=label;meta.insertBefore(span,meta.querySelector('[data-location-fallback]'));}}}
+        for(const card of cards){const slug=card.querySelector('[data-lead-club]')?.dataset.leadClub,c=pages.get(slug);if(!c)continue;activityTags(card,c);setText(card,'h2 a',c.title);setText(card,'.club-card__summary',c.summary);card.dataset.title=c.title;card.dataset.facilities=Object.entries({gym:'gym',restaurant:'restaurant',accessibleFacilities:'accessible-facilities',beachAccess:'beach-access'}).filter(([key])=>c[key]).map(([,id])=>id).join('|');image(card,'.club-card__image img',c);card.querySelector('.club-card__image')?.setAttribute('aria-label','View '+c.title);const meta=card.querySelector('.club-meta');if(meta){for(const span of [...meta.children])if(!span.hasAttribute('data-location-fallback')&&!span.hasAttribute('data-distance-label'))span.remove();for(const label of [c.suburb,c.region,c.memberSize].filter(Boolean)){const span=document.createElement('span');span.textContent=label;meta.insertBefore(span,meta.querySelector('[data-location-fallback]'));}}}
 
         if(typeof applyFilters==='function')applyFilters();
 

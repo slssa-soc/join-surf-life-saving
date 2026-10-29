@@ -1,0 +1,12 @@
+<fieldset class="lead-preferences">
+  <legend>What are you interested in?</legend>
+  <p class="lead-preferences__intro">Select any that apply. We’ll include these with your enquiry.</p>
+  <div class="lead-preferences__options" data-lead-interest-options>
+    {% for interest in site.data.taxonomy.interests %}
+      <label class="lead-preference-option">
+        <input type="checkbox" name="leadInterest" value="{{ interest.id | escape }}" data-lead-interest data-lead-interest-label="{{ interest.label | escape }}">
+        <span>{{ interest.label }}</span>
+      </label>
+    {% endfor %}
+  </div>
+</fieldset>

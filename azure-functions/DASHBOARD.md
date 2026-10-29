@@ -1,4 +1,40 @@
-# Join SLSSA dashboard
+# Club Directory SLSSA dashboard
+
+## Club activities, enquiry interests and change notifications
+
+Settings → Activities and interests manages two independent lists. Club activities are the labels selected in Club pages → Club activities; selected labels appear on results cards and profiles. Enquiry interests are the choices in the shared “What are you interested in?” section in both Send my details forms. Silver Salties is included by default. Labels have stable IDs: renaming preserves club selections; removing hides the option. Existing enquiry records retain their submitted labels. Reports continue to recognise only the documented fixed reporting taxonomy; custom interests are grouped as unrecognised there.
+
+The original per-club verified programs seed the activity catalogue and selections for all 23 clubs, including saved pages predating this feature. All selected activity labels are displayed; the previous six-label limit no longer applies when public content is loaded. Selection changes have the same immutable revisions, publication notes and stale-editor protection as other club page edits. Page prose remains independently editable: to add Silver Salties under “What this club offers”, use Club pages → select club → Club page text, edit that list, preview, review and publish with notes. Supporting program descriptions are under Location, website and supporting text → Other programs.
+
+Settings → Change notifications stores an independent list of up to 50 validated, deduplicated addresses. It starts empty. Successful saves to directory options, notification recipients, quarantine settings, monthly report settings, enquiry delivery settings, club contacts and club pages attempt a BCC notification to the list captured before saving. The first addition to an empty list sends no email; future changes notify that list. Notification-list edits notify the previous recipients. Notifications use existing JOIN_MAIL_* configuration and are independent of enquiry test mode and the enquiry email enable switch. Invalid, conflicting or failed saves do not notify. Merely previewing a page or loading a historical draft does not notify.
+
+`JoinDashboardSettings/settings/directory` and `settings/change-notifications` use optimistic concurrency. `JoinChangeNotifications` claims each send before Microsoft Graph is called. Page save retries use their immutable publication ID and cannot duplicate a notification. Settings saves use their successful save's unique ID. Accepted means Graph HTTP 202, not inbox delivery. Uncertain sends are retained as `needs-review` without automatic retry; the dashboard warns that the change was saved but its notification could not be confirmed. Check Sent Items and service records before manual recovery. Existing records and in-flight forms are not rewritten when options change.
+
+Deployment requires both this API and the website integration. Run `node integration/install-directory-options.cjs <Club Directory website repo>` to install the shared Liquid include, static Silver Salties fallback, configurable-interest reader and updated club-content reader. Publish the website through its normal workflow, and deploy the `api` folder using the existing Function deployment. The prepared local website is `deployment/join`; it is not automatically published. Public fallback HTML can remain older during API failures, as with other live club content. Recipient addresses, audit identities and change notes never appear in `/api/directory-options`.
+
+Run `node --test tests/*.test.cjs` with Node >=22.12. `integration/check-directory-ui.cjs` uses Playwright and a synthetic local fixture to verify desktop/mobile settings, saved activity selections, complete public activity labels and Silver Salties form payload selections. It sends no email. The customer email is prepared in `club-directory-email-draft.txt` for sending after deployment and live verification.
+
+## Enquiry quarantine
+
+Settings → Quarantine accepts up to 50 notification email addresses, entered one per line or separated by commas/semicolons. Addresses are validated and duplicate addresses are collapsed. No Azure directory lookup or User.Read.All permission is needed. Existing saved Azure reviewer addresses are preserved as notification recipients when reading old settings. Screening starts disabled; save at least one recipient and keyword before enabling. Existing JOIN_MAIL_* mail configuration is reused. Optional QUARANTINE_DASHBOARD_URL overrides the production dashboard link in notifications.
+
+Settings → Quarantine also supports adding and removing keywords or phrases, followed by Save quarantine settings. Each item is one complete phrase: “boat licence” matches those words together in order, not “boat” or “licence” separately. Up to 100 items of 120 characters each are supported. Blank/invalid entries are rejected and case/whitespace duplicates are collapsed. At least one keyword is required while screening is enabled. Saved lists are versioned with the other quarantine settings; existing settings without a saved list inherit the original 21 phrases. Changes apply to new submissions only and preserve the matched keywords on existing held enquiries.
+
+The saved phrases are checked against the enquiry message and selected preference values, independently of contact details and source URLs. Matching uses Unicode whole-word boundaries, ignores case and repeated whitespace, and supports compatibility Unicode forms. It does not infer synonyms, plurals or intent. For example, “work” matches but “network” does not. Overlapping phrases are all recorded.
+
+Matching enquiries are atomically stored with `quarantineStatus=held` and `emailDeliveryStatus=quarantined` before notification, and never enter normal club delivery. Notification emails contain the enquiry message, preferences, matched keywords, selected club, enquirer name, reference and an authenticated link to that exact enquiry (preserved through sign-in), sent BCC to the saved notification recipients. Notification failure leaves the enquiry held and shows a status requiring review. A quarantine settings read failure stops new intake before storage or sending. Disabling screening affects new enquiries only; existing held items remain available.
+
+The Quarantine queue includes all dates, with test/production labels and notification status. Anyone authenticated to the dashboard can release or block via the authenticated API, whether or not they receive notification emails. Release uses the selected club’s current enabled routing address. Block requires a forwarding address and notes, and sends the full enquiry plus notes. Forward and release requires a team address, notes identifying the component for the team, and an editable club handoff message. It forwards the full enquiry for context first, then releases to the club only after Microsoft 365 accepts the forward. Each delivery has its own stored outcome and Activity log entry; partial failures retain the accepted step and require manual investigation without automatic retries. The enquiries list, status filters and detail view preserve quarantine history, including released and forwarded/released statuses. Forwarding offers saved notification addresses or another valid email. Test leads always remain test deliveries; current test mode also restricts production leads to the test address. Paused enquiry emails suppress notifications and prevent review sends. Suppressed/failed notifications are not automatically retried when delivery resumes; review the queue directly.
+
+An ETag claim moves a held enquiry to `sending` before sending, preventing concurrent decisions or retries from duplicating emails. Graph acceptance records `released` or `blocked`; uncertain mail outcomes record `needs-review`. Crashes or storage failures after the claim can leave `sending`. Neither state can be resent through the queue: check the sender’s Sent Items and service logs before a manual recovery. Microsoft 365 acceptance does not confirm inbox delivery. The enquiry retains actor ID/name, decision time, notes, forwarding address, actual recipient and delivery mode. Settings/review requests and completions also enter Activity log. No historical enquiries are automatically quarantined or resent.
+
+Local checks: `node tests/quarantine.test.cjs`, `node tests/lead-delivery.test.cjs`, and `node tests/security.test.cjs`. Tests use synthetic records and mocked directory/mail services; live email delivery must be verified after deployment and recipient setup.
+
+## Activity log
+
+Activity log displays readable summaries with expandable details, Adelaide timestamps, and filters for person, activity type, outcome and free-text search. The existing period selector limits the source data; results display 50 at a time. Filters remain selected across live updates and navigation. Requested and completed records are retained separately: a request alone does not prove success.
+
+Authenticated dashboard startup records the verified Microsoft account name and username, server time and successful dashboard access in `JoinDashboardAudit`. Session IDs are generated per browser tab, retained through reloads and cleared on sign-out; atomic inserts prevent duplicate records on retries. Restored Microsoft sessions count as dashboard access. This is not an Entra sign-in audit: failed Microsoft sign-ins, IP addresses and historical logins are not collected. Recording begins after deployment. If logging fails, dashboard startup shows an error rather than silently losing the event.
 
 ## Monthly reports and experience ratings
 
@@ -12,13 +48,13 @@ Reports use the dashboard's pale grey background, white cards and blue accents. 
 
 Ratings have a fixed start date of **22 September 2026, 00:00 Adelaide** (`2026-09-21T14:30:00.000Z`). Invitations and submissions are gated by that date. Reports before it show “Not available”; September 2026 includes only responses from 22–30 September and is labelled partial. Later months use their full calendar window. Earlier stored ratings are excluded. The date is displayed in the email and never advances with “today”. Enquiry totals use the same neutral colour as other cards; monthly changes use green ▲ for increases, red ▼ for decreases and a neutral no-change label.
 
-The post-enquiry rating client is installed at `assets/js/enquiry-rating.js`, with submission hooks in `assets/js/lead-form.js`. Deploy the website through its existing workflow and deploy this API. Configure a randomly generated, stable `ENQUIRY_RATING_SECRET` of at least 32 characters in the Function app before activation. Keep that secret stable and back it up: changing it would reset email-based invitation suppression. If it is missing or the rating store fails, the enquiry still succeeds but no rating invitation is issued. Old website clients do not consume invitations.
+Install using `node integration/install-enquiry-rating.cjs <Club Directory website repository>`, then deploy that website through its existing workflow and deploy this API. Configure a randomly generated, stable `ENQUIRY_RATING_SECRET` of at least 32 characters in the Function app before activation. Keep that secret stable and back it up: changing it would reset email-based invitation suppression. If it is missing or the rating store fails, the enquiry still succeeds but no rating invitation is issued. Old website clients do not consume invitations.
 
 `JoinEnquiryRatings` atomically reserves one invitation per normalised email address per environment using a keyed fingerprint, alongside an independent random response token. The fingerprint row contains no email or response token; the response row contains only a random key, mode, timestamps and eventual rating, with no enquiry ID or contact fields. This is privacy-preserving duplicate suppression, not a claim that all operational metadata is anonymous. Ratings require an issued token, expire after 30 days, and can be recorded only once. Invitations are not repeated even if dismissed or unanswered. Browser storage adds suppression after the first production prompt; the server also suppresses repeat enquiries on other devices using the same email. A person using a different email on a different browser cannot be recognised without additional identity collection. Test invitations do not suppress production invitations. No survey email is sent.
 
 Run `node --test tests/monthly-report.test.cjs tests/enquiry-rating.test.cjs tests/lead-delivery.test.cjs` and the existing tests under Node >=22.12. `node integration/preview-monthly-report.cjs` creates a visibly labelled synthetic HTML preview without sending anything. Monthly reporting and the rating form require deployment; generating a preview does not activate either.
 
-Azure Functions dashboard using the existing Join Function app, Azure Tables, Application Insights and Cost Management. The public page is a sign-in shell; every dashboard API request validates an SLSSA-issued access token, audience and Dashboard.Access scope. All SLSSA directory users have read/write access as requested.
+Azure Functions dashboard using the existing Club Directory Function app, Azure Tables, Application Insights and Cost Management. The public page is a sign-in shell; every dashboard API request validates an SLSSA-issued access token, audience and Dashboard.Access scope. All SLSSA directory users have read/write access as requested.
 
 ## Deployment
 
@@ -26,7 +62,7 @@ Install with `npm ci` in `api`. Copy `node_modules/@azure/msal-browser/lib/msal-
 
 Dashboard URL: https://func-join-slssa-prod-d3hwbvgygng2cdeh.australiasoutheast-01.azurewebsites.net/api/dashboard
 
-Required settings: DASHBOARD_TENANT_ID, DASHBOARD_CLIENT_ID. Existing AzureWebJobsStorage, lead routing/storage and mail configuration are reused. DASHBOARD_SUBSCRIPTION_ID and DASHBOARD_INSIGHTS_APP_ID have defaults for Join System. The Function managed identity needs Monitoring Reader on Application Insights and Cost Management Reader on the subscription.
+Required settings: DASHBOARD_TENANT_ID, DASHBOARD_CLIENT_ID. Existing AzureWebJobsStorage, lead routing/storage and mail configuration are reused. DASHBOARD_SUBSCRIPTION_ID and DASHBOARD_INSIGHTS_APP_ID have defaults for Club Directory System. The Function managed identity needs Monitoring Reader on Application Insights and Cost Management Reader on the subscription.
 
 ## Delivery
 
@@ -36,7 +72,7 @@ No replay/resend is implemented, so changing modes cannot resend historical test
 
 ## Website integration
 
-`node integration/install-website.cjs <existing Join repo>` adds the Microsoft SDK, PII-free page/form event tracking and a `/dashboard` redirect. Publish those website changes via the existing GitHub Pages workflow. The SDK collects browser-based visitors and sessions using analytics cookies; page URLs are stripped of queries and fragments, and no lead field content is tracked. Source is referrer hostname only. Tracking starts at deployment; no historical traffic is invented.
+`node integration/install-website.cjs <existing Club Directory repo>` adds the Microsoft SDK, PII-free page/form event tracking and a `/dashboard` redirect. Publish those website changes via the existing GitHub Pages workflow. The SDK collects browser-based visitors and sessions using analytics cookies; page URLs are stripped of queries and fragments, and no lead field content is tracked. Source is referrer hostname only. Tracking starts at deployment; no historical traffic is invented.
 
 ## Validation
 
@@ -46,7 +82,7 @@ Billing uses Azure ActualCost month-to-date, independent of the enquiry date sel
 
 ## Source continuity
 
-The patched lead handler and shared settings helper must also be retained in the original Join API repository, otherwise a future publish from that repository could overwrite this dashboard and revert mode control.
+The patched lead handler and shared settings helper must also be retained in the original Club Directory API repository, otherwise a future publish from that repository could overwrite this dashboard and revert mode control.
 
 ## Club page editor
 
@@ -69,3 +105,5 @@ The dashboard uses authenticated fetch/SSE at `/api/dashboard-live`, with bearer
 Streaming checks: `node --test tests/live-stream.test.cjs tests/live-client.test.cjs`. The local preview fixture is not deployed and contains synthetic data only.
 
 The Club pages editor uses a searchable club sidebar (collapsible on mobile). Facility switches control gym, club restaurant, accessible facilities and accessible beach access. These are validated booleans, recorded in before/after history and supplied to public pages and browse-card facility filters. Existing saved pages inherit their original facility flags until edited. Switches do not rewrite prose; editors must update descriptions and opening/access details where needed.
+
+Quarantine review now starts with no delivery option selected. Reviewers explicitly choose Club only, Another email only, or Both, with a destination summary before sending. Every recipient receives the full enquiry; recipient notes do not split or redact it. The club note for Both is written by the reviewer, with no inference from screening keywords. Preferences are displayed as readable labels and metadata is collapsed under Record details. Existing stored action codes remain compatible.

@@ -1,0 +1,190 @@
+{
+  "activities": [
+    {
+      "id": "activity-500fe049327cf011",
+      "label": "Nippers"
+    },
+    {
+      "id": "activity-823d02e88fca7c59",
+      "label": "Youth program"
+    },
+    {
+      "id": "activity-4066ebce9b4725f4",
+      "label": "Lifesaving and patrolling"
+    },
+    {
+      "id": "activity-4fcd39dd9263c46f",
+      "label": "Boards"
+    },
+    {
+      "id": "activity-43022db2f1456459",
+      "label": "Beach sprints and flags"
+    },
+    {
+      "id": "activity-54230802dfda0e8b",
+      "label": "Swimming"
+    },
+    {
+      "id": "activity-580c2d287ecf57d0",
+      "label": "Ski paddling"
+    },
+    {
+      "id": "activity-6468e50e80d7344b",
+      "label": "Surf boats"
+    },
+    {
+      "id": "activity-5de751e1129dd6d3",
+      "label": "Inflatable Rescue Boat racing"
+    },
+    {
+      "id": "activity-042b7d993a5d1ad0",
+      "label": "Pool rescue"
+    },
+    {
+      "id": "activity-413a3ff50701aa9b",
+      "label": "Surf sports support"
+    },
+    {
+      "id": "activity-1fec24b6ee6025c0",
+      "label": "Adaptive Nippers program for children aged 7–13 with a disability."
+    },
+    {
+      "id": "activity-12ef27f43985434c",
+      "label": "Silver Salties 65+"
+    },
+    {
+      "id": "activity-e17fe0ef83a080dd",
+      "label": "Pool-based water-safety program"
+    },
+    {
+      "id": "activity-84dba1877ccca1d7",
+      "label": "Pool-based water-safety lessons for infants to teenagers"
+    },
+    {
+      "id": "activity-fa4e7347474e8bb4",
+      "label": "The club is seeking expressions of interest to establish an adaptive program for participants with diverse needs."
+    },
+    {
+      "id": "activity-ad2f5366d1f60798",
+      "label": "Education and awareness days can be delivered for multicultural community groups on request."
+    },
+    {
+      "id": "activity-023d9cca57d770f1",
+      "label": "Year-round swimming on Tuesday and Thursday evenings"
+    },
+    {
+      "id": "activity-615bd7ad08cb763c",
+      "label": "IRB racing with dedicated Nipper and Senior programs"
+    },
+    {
+      "id": "activity-e42c167c9a7e4243",
+      "label": "Adaptive program available."
+    },
+    {
+      "id": "activity-25580fd536014bc0",
+      "label": "Multicultural program available."
+    },
+    {
+      "id": "activity-226fa8771689b924",
+      "label": "First Nations program available."
+    },
+    {
+      "id": "activity-eb6c8b43c641ecf6",
+      "label": "Disabled surfing is offered on selected Sundays in October, February and March."
+    },
+    {
+      "id": "activity-91ad1cf8c9cceffc",
+      "label": "Wellness Tuesday, Tuesdays 1:00 pm–3:00 pm, a community music and social activity"
+    },
+    {
+      "id": "activity-d242bd499b36fb86",
+      "label": "Future Lifesavers"
+    },
+    {
+      "id": "activity-34624b160b152fcb",
+      "label": "Neurodivergent Nippers program available."
+    },
+    {
+      "id": "activity-6ac9a4dbec319176",
+      "label": "Seniors"
+    },
+    {
+      "id": "activity-948420bfbe6610e2",
+      "label": "Lifesaving training"
+    },
+    {
+      "id": "activity-fbeb6d88367ec305",
+      "label": "Gym"
+    },
+    {
+      "id": "activity-fb6cd373360f7179",
+      "label": "Hospitality"
+    },
+    {
+      "id": "activity-882229aaf759a470",
+      "label": "Sports Vouchers"
+    },
+    {
+      "id": "activity-d973f2b1eb23e6f3",
+      "label": "No specific adaptive program is currently listed."
+    },
+    {
+      "id": "activity-4fe3eccd03d73d10",
+      "label": "No specific multicultural program is currently listed."
+    },
+    {
+      "id": "activity-e1190ca7a41a0d8f",
+      "label": "No specific First Nations program is currently listed."
+    },
+    {
+      "id": "activity-9583a1be2a167a42",
+      "label": "No current dedicated multicultural program is listed."
+    },
+    {
+      "id": "activity-98d46b628bb083eb",
+      "label": "No current dedicated First Nations program is listed."
+    },
+    {
+      "id": "activity-d5a2ec93ad24ee48",
+      "label": "Adaptive participation is available; Starfish program details for 2026/27 are still to be confirmed."
+    },
+    {
+      "id": "activity-2c4be8b323725134",
+      "label": "Surf-sport training is scheduled across multiple weekdays; team-specific times vary."
+    }
+  ],
+  "interests": [
+    {
+      "id": "lifesaving-patrols",
+      "label": "Lifesaving and patrols"
+    },
+    {
+      "id": "surf-sports",
+      "label": "Surf sports"
+    },
+    {
+      "id": "nippers",
+      "label": "Nippers"
+    },
+    {
+      "id": "training",
+      "label": "Training and new skills"
+    },
+    {
+      "id": "volunteering",
+      "label": "Volunteering"
+    },
+    {
+      "id": "community",
+      "label": "Community involvement"
+    },
+    {
+      "id": "inclusive-programs",
+      "label": "Inclusive programs"
+    },
+    {
+      "id": "silver-salties",
+      "label": "Silver Salties"
+    }
+  ]
+}

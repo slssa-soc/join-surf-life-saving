@@ -8,7 +8,7 @@ const baseline=require('../../data/club-pages.json');
 const ROOT='https://join.surflifesavingsa.com.au';
 const fields={title:180,summary:1000,imageAlt:250,suburb:120,region:120,memberSize:120,website:500,junior:1500,youth:1500,patrolling:1500,adaptive:2000,multicultural:2000,firstNations:2000,otherPrograms:4000,accessibility:1000};
 const facilityFields=['gym','restaurant','accessibleFacilities','beachAccess'];
-const withFacilities=(content,slug)=>({...Object.fromEntries(facilityFields.map(key=>[key,baseline[slug].content[key]])),...content});
+const withFacilities=(content,slug)=>({activities:baseline[slug].content.activities||[],...Object.fromEntries(facilityFields.map(key=>[key,baseline[slug].content[key]])),...content});
 const fail=(message,status=400)=>Object.assign(new Error(message),{status});
 const hash=value=>crypto.createHash('sha256').update(value).digest('hex');
 function cleanHtml(html){return sanitize(html,{allowedTags:['p','br','strong','b','em','i','u','h2','h3','ul','ol','li','blockquote','a'],allowedAttributes:{a:['href','title','rel']},allowedSchemes:['http','https','mailto','tel'],allowProtocolRelative:false,transformTags:{a:(tag,attrs)=>({tagName:'a',attribs:{...attrs,rel:'noopener noreferrer'}})}});}
@@ -16,6 +16,9 @@ function validateContent(input,slug){
   if(!Object.hasOwn(baseline,slug))throw fail('Club page not found.',404);
   if(!input||typeof input!=='object')throw fail('Page content is required.');
   const result={};
+  const activities=input.activities??baseline[slug].content.activities??[];
+  if(!Array.isArray(activities)||activities.length>150||activities.some(id=>typeof id!=='string'||!/^[-a-z0-9]{1,80}$/.test(id)))throw fail('Choose valid club activities.');
+  result.activities=[...new Set(activities)];
   for(const key of facilityFields){if(typeof input[key]!=='boolean')throw fail('Choose on or off for '+key+'.');result[key]=input[key];}
   for(const [name,max]of Object.entries(fields)){
     if(typeof input[name]!=='string'||input[name].length>max)throw fail(`Invalid ${name} (maximum ${max} characters).`);
@@ -75,7 +78,7 @@ function createContentStore({getTable,uploadPhoto}={}){
     let photo;
     if(body.photo){photo=photoBytes(body.photo);const digest=hash(photo);content.image=`/api/club-images/${slug}/${digest}.jpg`;}
     else if(content.image.startsWith('/api/club-images/')){const key=content.image.split('/').pop().slice(0,-4);if(!await get(t,slug,'image-'+key))throw fail('This image is not a published photo for the selected club.');}
-    const changed=Object.keys(content).filter(key=>content[key]!==before.content[key]);
+    const changed=Object.keys(content).filter(key=>JSON.stringify(content[key])!==JSON.stringify(before.content[key]));
     if(!changed.length)throw fail('No changes to publish.');
     await t.createTable().catch(e=>{if(e.statusCode!==409)throw e;});
     if(photo)await uploadPhoto(slug,hash(photo),photo);

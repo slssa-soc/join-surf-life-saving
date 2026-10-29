@@ -1,4 +1,5 @@
 let pageEditor=null;
+let pageActivityOptions=[];
 
 const pageFields={title:'Club name',summary:'Short summary',imageAlt:'Image description',suburb:'Suburb',region:'Region',memberSize:'Membership size',website:'Club website',junior:'Nippers / junior activities',youth:'Youth',patrolling:'Lifesaving and patrols',accessibility:'Accessibility',adaptive:'Adaptive participation',multicultural:'Multicultural participation',firstNations:'First Nations participation',otherPrograms:'Other programs (one per line)'};
 
@@ -16,7 +17,7 @@ function safeEditorHtml(value){return DOMPurify.sanitize(value,{ALLOWED_TAGS:['p
 
 function pageField(key,value){const multi=['summary','junior','youth','patrolling','accessibility','adaptive','multicultural','firstNations','otherPrograms'].includes(key);return `<label>${esc(pageFields[key])}${multi?`<textarea id="page-${key}" rows="${key==='summary'?3:2}" maxlength="${pageLimits[key]}">${esc(value)}</textarea>`:`<input id="page-${key}" maxlength="${pageLimits[key]}" value="${esc(value)}" ${key==='website'?'type="url"':''}>`}</label>`;}
 
-function readPageDraft(){const content={...pageEditor.page.content,image:pageEditor.draftImage};for(const key of Object.keys(pageFields))content[key]=$('page-'+key).value;for(const key of Object.keys(pageFacilities))content[key]=$('page-facility-'+key).checked;content.html=safeEditorHtml(pageEditor.quill.getSemanticHTML());return content;}
+function readPageDraft(){const content={...pageEditor.page.content,image:pageEditor.draftImage};for(const key of Object.keys(pageFields))content[key]=$('page-'+key).value;for(const key of Object.keys(pageFacilities))content[key]=$('page-facility-'+key).checked;content.activities=[...document.querySelectorAll('[data-page-activity]:checked')].map(el=>el.value);content.html=safeEditorHtml(pageEditor.quill.getSemanticHTML());return content;}
 
 function markPageDirty(){if(!pageEditor)return;pageEditor.dirty=true;$('page-save-state').textContent='Unpublished changes';}
 
@@ -24,7 +25,7 @@ async function mountClubEditor(run){
 
   pageEditor=null;
 
-  const pages=await api('club-pages');if(run!==serial)return;
+  const [pages,options]=await Promise.all([api('club-pages'),api('directory-settings')]);pageActivityOptions=options.activities;if(run!==serial)return;
 
   $('content').innerHTML=panel('Club page editor','<p>Choose a club to update its public page text and main photo. Every publication requires a reason and records your name, time and the previous content.</p><p class="footnote">Changes apply regardless of enquiry delivery mode. Facility switches update the club listing and facility search filters. Other browse categories, map locations and enquiry email routing are managed separately.</p>')+`<div class="club-editor-layout"><details class="club-selector" id="club-selector" open><summary>Choose a club <span id="club-selection-label">${pages.length} clubs</span></summary><div class="club-selector-body"><label for="club-search">Find a club</label><input id="club-search" type="search" placeholder="Search club names" autocomplete="off"><p id="club-search-count" class="footnote" role="status">${pages.length} clubs</p><nav id="club-page-list" aria-label="Club pages">${pages.map(p=>`<button type="button" class="club-page-choice" data-club-slug="${esc(p.slug)}">${esc(p.title)}</button>`).join('')}</nav><p id="club-search-empty" hidden>No clubs match your search.</p></div></details><div id="page-editor-content"><section class="panel"><h2>Select a club to begin</h2><p>Choose a club from the list to view its page, edit its content and review its change history.</p></section></div></div>`;
 
@@ -76,6 +77,7 @@ function renderPageEditor(page){
 
     <section><h3 id="page-body-label">Club page text</h3><div id="page-toolbar" class="page-toolbar" role="toolbar" aria-label="Text formatting"><select class="ql-header" aria-label="Paragraph style"><option value="" selected>Paragraph</option><option value="2">Heading</option><option value="3">Subheading</option></select><button type="button" class="ql-bold" aria-label="Bold">Bold</button><button type="button" class="ql-italic" aria-label="Italic">Italic</button><button type="button" class="ql-underline" aria-label="Underline">Underline</button><button type="button" class="ql-list" value="bullet" aria-label="Bullet list">Bullets</button><button type="button" class="ql-list" value="ordered" aria-label="Numbered list">Numbers</button><button type="button" class="ql-blockquote" aria-label="Quotation">Quote</button><button type="button" class="ql-link" aria-label="Edit link">Link</button><button type="button" id="page-undo">Undo</button><button type="button" id="page-redo">Redo</button></div><div id="page-body" aria-labelledby="page-body-label"></div></section>
 
+    <fieldset class="page-facilities"><legend>Club activities</legend><p>Select activities offered by this club. These labels appear on its results card and profile. Manage available labels in Settings → Activities and interests.</p><div class="page-facility-grid">${pageActivityOptions.map(item=>`<label class="page-facility-toggle"><input type="checkbox" data-page-activity value="${esc(item.id)}" ${(c.activities||[]).includes(item.id)?'checked':''}><span>${esc(item.label)}</span></label>`).join('')}</div></fieldset>
     <fieldset class="page-facilities"><legend>Club facilities</legend><p>Turn on the facilities this club offers. These settings control the facilities shown on its page and whether it matches website facility filters.</p><div class="page-facility-grid">${Object.entries(pageFacilities).map(([key,label])=>`<label class="page-facility-toggle"><input type="checkbox" role="switch" id="page-facility-${key}" ${c[key]?'checked':''}><span>${esc(label)}</span><span class="facility-state" aria-hidden="true"></span></label>`).join('')}</div><p class="footnote">Also update any references in the page text, such as restaurant hours, gym access or accessibility details. Switching a facility off does not rewrite that text.</p></fieldset>
 
     <details class="page-support"><summary>Location, website and supporting text</summary><div class="page-field-grid">${Object.keys(pageFields).filter(k=>!['title','summary','imageAlt'].includes(k)).map(k=>pageField(k,c[k])).join('')}</div><p class="footnote">If session times or programs change, update both the main page text and these supporting details.</p></details>
@@ -148,7 +150,7 @@ async function choosePagePhoto(){
 
 }
 
-function pagePreview(c,photo){return `<article class="club-preview"><img src="${esc(photo||photoUrl(c.image))}" alt="${esc(c.imageAlt)}"><h2>${esc(c.title)}</h2><p class="page-preview-summary">${esc(c.summary)}</p><p>${[c.suburb,c.region,c.memberSize].filter(Boolean).map(esc).join(' · ')}</p><div class="page-prose">${safeEditorHtml(c.html)}</div><h3>Club facilities</h3><p>${Object.entries(pageFacilities).filter(([key])=>c[key]).map(([,label])=>esc(label)).join('  /  ')||'No facilities listed'}</p><h3>At a glance</h3><dl>${['junior','youth','patrolling','accessibility','adaptive','multicultural','firstNations','otherPrograms'].filter(k=>c[k]&&(k!=='accessibility'||c.accessibleFacilities||c.beachAccess)).map(k=>`<dt>${esc(pageFields[k])}</dt><dd>${esc(c[k])}</dd>`).join('')}</dl></article>`;}
+function pagePreview(c,photo){return `<article class="club-preview"><img src="${esc(photo||photoUrl(c.image))}" alt="${esc(c.imageAlt)}"><h2>${esc(c.title)}</h2><p class="page-preview-summary">${esc(c.summary)}</p><p>${[c.suburb,c.region,c.memberSize].filter(Boolean).map(esc).join(' · ')}</p><div class="page-prose">${safeEditorHtml(c.html)}</div><h3>Club activities</h3><p>${pageActivityOptions.filter(item=>(c.activities||[]).includes(item.id)).map(item=>esc(item.label)).join(' / ')||'No activities listed'}</p><h3>Club facilities</h3><p>${Object.entries(pageFacilities).filter(([key])=>c[key]).map(([,label])=>esc(label)).join('  /  ')||'No facilities listed'}</p><h3>At a glance</h3><dl>${['junior','youth','patrolling','accessibility','adaptive','multicultural','firstNations','otherPrograms'].filter(k=>c[k]&&(k!=='accessibility'||c.accessibleFacilities||c.beachAccess)).map(k=>`<dt>${esc(pageFields[k])}</dt><dd>${esc(c[k])}</dd>`).join('')}</dl></article>`;}
 
 function reviewPage(event){
 
@@ -158,13 +160,13 @@ function reviewPage(event){
 
   if(!pageEditor.quill.getText().trim()){$('status').textContent='Add the club page text before publishing.';return;}
 
-  const changed=Object.keys(draft).filter(k=>draft[k]!==pageEditor.page.content[k]);if(pageEditor.photo)changed.push('image');
+  const changed=Object.keys(draft).filter(k=>JSON.stringify(draft[k])!==JSON.stringify(pageEditor.page.content[k]));if(pageEditor.photo)changed.push('image');
 
   if(!changed.length){$('status').textContent='No changes to publish.';return;}
 
   pageEditor.pending={content:draft,photo:pageEditor.photo};pageEditor.requestId=crypto.randomUUID();
 
-  $('page-review-summary').textContent=pageEditor.page.content.title+' — changed: '+changed.map(k=>pageFields[k]||pageFacilities[k]||({html:'Page text',image:'Main photo'})[k]||k).join(', ')+'.';
+  $('page-review-summary').textContent=pageEditor.page.content.title+' — changed: '+changed.map(k=>pageFields[k]||pageFacilities[k]||({html:'Page text',image:'Main photo',activities:'Club activities'})[k]||k).join(', ')+'.';
 
   $('page-publish-status').textContent='';$('page-change-notes').value='';$('page-change-notes').readOnly=false;$('page-review').showModal();$('page-change-notes').focus();
 
@@ -198,7 +200,7 @@ async function loadPageHistory(){
 
   try{const rows=await api('club-pages?slug='+encodeURIComponent(session.page.slug)+'&history=true');if(pageEditor!==session)return;
 
-    $('page-history').innerHTML=rows.length?table(['Published','Editor','Change notes',''],rows.map(r=>`<tr><td>${esc(time(r.at))}</td><td>${esc(r.actor)}</td><td>${esc(r.notes)}<small>${r.changed.map(k=>esc(pageFields[k]||pageFacilities[k]||({html:'Page text',image:'Main photo'})[k]||k)).join(', ')}</small></td><td><button type="button" class="secondary" data-page-revision="${esc(r.version)}">View change</button></td></tr>`)):empty('No changes recorded through the editor yet.');
+    $('page-history').innerHTML=rows.length?table(['Published','Editor','Change notes',''],rows.map(r=>`<tr><td>${esc(time(r.at))}</td><td>${esc(r.actor)}</td><td>${esc(r.notes)}<small>${r.changed.map(k=>esc(pageFields[k]||pageFacilities[k]||({html:'Page text',image:'Main photo',activities:'Club activities'})[k]||k)).join(', ')}</small></td><td><button type="button" class="secondary" data-page-revision="${esc(r.version)}">View change</button></td></tr>`)):empty('No changes recorded through the editor yet.');
 
     $('page-history').onclick=async e=>{const button=e.target.closest('[data-page-revision]');if(button)await viewPageRevision(button.dataset.pageRevision);};
 

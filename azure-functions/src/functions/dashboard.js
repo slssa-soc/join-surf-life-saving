@@ -7,7 +7,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const { authenticate } = require('../lib/auth');
+const { recordLogin } = require('../lib/login-audit');
 const settings = require('../lib/settings');
+const directory = require('../lib/directory-settings');
+const changeNotifications = require('../lib/change-notifications');
+const quarantine = require('../lib/quarantine');
 const monthlyReport = require('../lib/monthly-report');
 const {store:clubPages,publicPage}=require('../lib/club-content');
 const { retryDelay, cachedReport } = require('../lib/report-cache');
@@ -50,7 +54,7 @@ app.http('dashboard-assets', {
   handler: async request => {
     const asset = request.params.asset || 'index.html';
     if (asset === 'config') return json(200, { tenantId: process.env.DASHBOARD_TENANT_ID || '', clientId: process.env.DASHBOARD_CLIENT_ID || '' });
-    const allowed = { 'editor.js':'text/javascript; charset=utf-8','editor.css':'text/css; charset=utf-8','quill.js':'text/javascript; charset=utf-8','quill.core.css':'text/css; charset=utf-8','purify.min.js':'text/javascript; charset=utf-8', 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'live.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'attribution.js': 'text/javascript; charset=utf-8', 'campaign.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
+    const allowed = { 'directory-settings.js':'text/javascript; charset=utf-8', 'activity.js':'text/javascript; charset=utf-8', 'editor.js':'text/javascript; charset=utf-8','editor.css':'text/css; charset=utf-8','quill.js':'text/javascript; charset=utf-8','quill.core.css':'text/css; charset=utf-8','purify.min.js':'text/javascript; charset=utf-8', 'index.html': 'text/html; charset=utf-8', 'app.js': 'text/javascript; charset=utf-8', 'live.js': 'text/javascript; charset=utf-8', 'reports.js': 'text/javascript; charset=utf-8', 'attribution.js': 'text/javascript; charset=utf-8', 'campaign.js': 'text/javascript; charset=utf-8', 'style.css': 'text/css; charset=utf-8', 'updates.css': 'text/css; charset=utf-8', 'favicon.svg': 'image/svg+xml', 'msal-browser.min.js': 'text/javascript; charset=utf-8' };
     if (!allowed[asset]) return json(404, { error: 'Not found' });
     return { status: 200, headers: { ...headers, 'Content-Type': allowed[asset], 'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob: https://join.surflifesavingsa.com.au; connect-src 'self' https://login.microsoftonline.com; frame-src https://login.microsoftonline.com; frame-ancestors 'none'; base-uri 'none'; form-action 'self'", 'X-Frame-Options': 'DENY' }, body: fs.readFileSync(path.join(__dirname, '../../public', asset), 'utf8') };
   }
@@ -65,12 +69,34 @@ async function dashboardData(request, context) {
         const raw=await request.text();
         if(raw.length>7500000)return json(413,{error:'The request is too large. Use a photo below 5 MB.'});
         let body;try{body=JSON.parse(raw);}catch{return json(400,{error:'Invalid JSON.'});}
+        const changeAreas={'directory-settings':'Activities and enquiry interests','change-notifications':'Change notification recipients','quarantine-settings':'Quarantine settings','monthly-report-settings':'Monthly report settings',settings:'Email delivery settings',clubs:'Club contacts', 'club-pages':'Club page'};
+        const notifyRecipients=changeAreas[resource]?(await changeNotifications.read()).recipients:[];
+        async function saved(value){
+          const notification=await changeNotifications.notify({id:resource==='club-pages'?url.searchParams.get('slug')+'-'+value.savedVersion:crypto.randomUUID(),area:changeAreas[resource],actor:actor.name,at:new Date().toISOString(),slug:resource==='club-pages'?url.searchParams.get('slug'):body.slug,notes:resource==='club-pages'?body.notes:undefined},notifyRecipients);
+          return json(200,{...value,notification});
+        }
+        if(resource==='directory-settings'||resource==='change-notifications'){
+          const service=resource==='directory-settings'?directory:changeNotifications;
+          service.validate(body);
+          const before=await service.read();
+          await audit(actor,resource,{before:service.validate(before),after:service.validate(body)},'requested');
+          const result=await service.save(body);
+          await audit(actor,resource,{before:service.validate(before),after:service.validate(result)},'completed');
+          return saved(result);
+        }
+        if(resource==='quarantine-settings' || resource==='quarantine-decision') {
+          await audit(actor,resource,{enquiry:body.rowKey,action:body.action},'requested');
+          const result=resource==='quarantine-settings'?await quarantine.saveSettings(body,actor):await quarantine.decide(body,actor,(detail,result)=>audit(actor,'quarantine-delivery',detail,result));
+          await audit(actor,resource,resource==='quarantine-settings'?{enabled:result.enabled,keywords:result.keywords,recipients:result.recipients}:{enquiry:body.rowKey,action:body.action,...result},'completed');
+          return resource==='quarantine-settings'?saved(result):json(200,result);
+        }
+        if(resource==='login')return json(200,await recordLogin(table('JoinDashboardAudit'),actor,body.sessionId));
         if(resource==='monthly-report-settings'){
           monthlyReport.validate(body);
           await audit(actor,'monthly-report-settings',{enabled:body.enabled},'requested');
           const result=await monthlyReport.saveSettings(body);
           await audit(actor,'monthly-report-settings',{enabled:result.enabled},'completed');
-          return json(200,result);
+          return saved(result);
         }
         if(resource==='monthly-report-test'){
           await audit(actor,'monthly-report-test',{},'requested');
@@ -78,7 +104,11 @@ async function dashboardData(request, context) {
           await audit(actor,'monthly-report-test',result,'completed');
           return json(200,result);
         }
-        if(resource==='club-pages')return json(200,await clubPages.save(url.searchParams.get('slug'),body,actor));
+        if(resource==='club-pages'){
+          const allowed=new Set((await directory.read()).activities.map(a=>a.id));
+          if(!Array.isArray(body.content?.activities)||body.content.activities.some(id=>!allowed.has(id)))return json(400,{error:'Choose activities from the current settings list. Reload the club editor if the list changed.'});
+          return saved(await clubPages.save(url.searchParams.get('slug'),body,actor));
+        }
         if (resource === 'settings') {
           let value;
           try { value = settings.validateSettings(body); } catch (e) { return json(400, { error: e.message }); }
@@ -90,7 +120,7 @@ async function dashboardData(request, context) {
           const entity = { partitionKey: 'settings', rowKey: 'delivery', ...value, updatedAt: new Date().toISOString(), updatedBy: actor.name };
           if (before.etag) await t.updateEntity(entity, 'Replace', { etag: before.etag }); else await t.createEntity(entity);
           await audit(actor, 'delivery-settings', value, 'completed');
-          return json(200, await settings.readSettings());
+          return saved(await settings.readSettings());
         }
         if (resource === 'clubs') {
           if (typeof body.slug !== 'string' || typeof body.recipientEmail !== 'string' || body.recipientEmail.length > 180 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.recipientEmail) || typeof body.enabled !== 'boolean' || !body.etag) return json(400, { error: 'A valid club, email, enabled flag and current version are required.' });
@@ -100,11 +130,16 @@ async function dashboardData(request, context) {
           await audit(actor, 'club-routing', { slug: body.slug, before: { recipientEmail: before.recipientEmail, enabled: before.enabled }, after: { recipientEmail: body.recipientEmail, enabled: body.enabled } });
           await t.updateEntity({ partitionKey: 'club', rowKey: body.slug, recipientEmail: body.recipientEmail.trim(), enabled: body.enabled }, 'Merge', { etag: before.etag });
           await audit(actor, 'club-routing', { slug: body.slug, recipientEmail: body.recipientEmail, enabled: body.enabled }, 'completed');
-          return json(200, { ok: true });
+          return saved({ ok: true });
         }
         return json(404, { error: 'Not found' });
       }
+      if(resource==='directory-settings')return json(200,await directory.read());
+      if(resource==='change-notifications')return json(200,await changeNotifications.read());
       if (resource === 'me') return json(200, actor);
+      if (resource === 'quarantine-settings') return json(200,await quarantine.readSettings());
+      if (resource === 'quarantine-summary') return json(200,{awaitingReview:(await quarantine.list()).filter(r=>r.quarantineStatus==='held').length});
+      if (resource === 'quarantine') return json(200,await quarantine.list());
       if(resource==='monthly-report-settings')return json(200,{...await monthlyReport.readSettings(),latest:await monthlyReport.latest()});
       if(resource==='club-pages'){
         const slug=url.searchParams.get('slug');
@@ -154,7 +189,7 @@ app.http('dashboard-live', {
       const url = new URL(request.url);
       dateRange(url);
       const resourcesByView = {
-        overview:['settings','leads','clubs','analytics','costs'],
+        overview:['settings','leads','clubs','analytics','costs','quarantine-summary'],
         leads:['settings','leads'], analytics:['settings','leads','analytics'],
         costs:['settings','costs'], clubs:['settings','clubs'],
         pages:['settings'], settings:['settings'], campaigns:['settings'], audit:['settings','audit']
@@ -173,7 +208,7 @@ app.http('public-club-pages',{
   handler:async request=>{
     try{
       const slug=request.params.slug;
-      const value=slug?publicPage(await clubPages.read(slug)):(await clubPages.list()).map(p=>({slug:p.slug,version:p.version,content:Object.fromEntries(Object.entries(p.content).filter(([key])=>['title','summary','image','imageAlt','suburb','region','memberSize','gym','restaurant','accessibleFacilities','beachAccess'].includes(key)))}));
+      const value=slug?publicPage(await clubPages.read(slug)):(await clubPages.list()).map(p=>({slug:p.slug,version:p.version,content:Object.fromEntries(Object.entries(p.content).filter(([key])=>['title','summary','image','imageAlt','suburb','region','memberSize','gym','restaurant','accessibleFacilities','beachAccess','activities'].includes(key)))}));
       return {status:200,headers:{...headers,'Access-Control-Allow-Origin':'https://join.surflifesavingsa.com.au'},jsonBody:value};
     }catch(e){return json(e.status||503,{error:e.status?e.message:'Club content is temporarily unavailable.'});}
   }
@@ -185,3 +220,5 @@ app.http('public-club-image',{
     catch(e){return json(e.status||503,{error:e.status?e.message:'Image temporarily unavailable.'});}
   }
 });
+
+app.http('directory-options',{methods:['GET'],authLevel:'anonymous',route:'directory-options',handler:async()=>{try{const {activities,interests}=await directory.read();return{status:200,headers:{...headers,'Access-Control-Allow-Origin':'https://join.surflifesavingsa.com.au'},jsonBody:{activities,interests}};}catch{return json(503,{error:'Directory options are temporarily unavailable.'});}}});

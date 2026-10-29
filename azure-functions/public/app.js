@@ -1,4 +1,48 @@
 'use strict';
+async function quarantineSettingsPage(run) {
+  let s=await api('quarantine-settings');if(run!==serial)return;
+  let keywords=[...s.keywords];
+  $('content').innerHTML=settingsNavigation()+panel('Quarantine',`<form id="q-settings" class="form-stack"><label class="check"><input id="q-enabled" type="checkbox" ${s.enabled?'checked':''}>Hold enquiries containing a listed word or phrase</label><p>Notifications go to the addresses below. Anyone signed into the dashboard can release enquiries to the selected club, send them to another email address, or send to both with notes. Turning screening off affects new enquiries only.</p><label>Notification email addresses<textarea id="q-recipients" rows="5" placeholder="One email address per line">${esc(s.recipients.join('\n'))}</textarea></label><p>Up to 50 addresses, separated by new lines, commas or semicolons. Recipients are hidden from one another.</p><h3>Words and phrases</h3><label>Add a keyword or phrase<input id="q-keyword" maxlength="120" placeholder="For example, School programs"></label><button type="button" id="q-add-keyword" class="secondary">Add keyword</button><div id="q-keywords"></div><p>Up to 100 keywords or phrases, each up to 120 characters. Add or remove items, then save. Each item is matched as one complete keyword or phrase: “boat licence” does not match “boat” or “licence” alone. Changes apply to new enquiries only.</p><button type="submit">Save quarantine settings</button><p id="q-message" role="status"></p></form><p>Checks the enquiry message and selected preferences. Matching ignores capitalisation and repeated spaces, and matches whole words. Test mode sends notifications only to the test address. Paused email delivery also pauses notifications.</p>`);
+  const renderKeywords=()=>{$('q-keywords').innerHTML=keywords.map((word,i)=>`<p>${esc(word)} <button type="button" class="secondary" data-remove-keyword="${i}" aria-label="Remove ${esc(word)}">Remove</button></p>`).join('')||'<p>No keywords added. Add a keyword before enabling quarantine.</p>';};renderKeywords();
+  $('q-keywords').onclick=e=>{const b=e.target.closest('[data-remove-keyword]');if(b){keywords.splice(Number(b.dataset.removeKeyword),1);renderKeywords();$('q-message').textContent='Keyword removed. Save to apply changes.';}};
+  const addKeyword=()=>{const word=$('q-keyword').value.normalize('NFKC').replace(/\s+/g,' ').trim();if(!word||word.length>120||/[\p{Cc}\p{Cf}]/u.test(word)||!/[\p{L}\p{N}]/u.test(word)){$('q-message').textContent='Enter a keyword containing a letter or number, up to 120 characters.';return;}if(keywords.some(k=>k.toLowerCase()===word.toLowerCase())){$('q-message').textContent='That keyword is already in the list.';return;}if(keywords.length>=100){$('q-message').textContent='You can save up to 100 keywords.';return;}keywords.push(word);renderKeywords();$('q-keyword').value='';$('q-keyword').focus();$('q-message').textContent='Keyword added. Save to apply changes.';};
+  $('q-add-keyword').onclick=addKeyword;
+  $('q-keyword').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();addKeyword();}};
+  $('q-settings').onsubmit=async e=>{e.preventDefault();if($('q-keyword').value.trim()){$('q-message').textContent='Select Add keyword to include the typed phrase before saving, or clear the field.';return;}const b=e.submitter;b.disabled=true;try{s=await api('quarantine-settings',{enabled:$('q-enabled').checked,recipients:$('q-recipients').value.split(/[\n,;]+/).map(v=>v.trim()).filter(Boolean),keywords,etag:s.etag});if(run===serial){keywords=[...s.keywords];renderKeywords();$('q-message').textContent='Quarantine settings saved.';}}catch(e){if(run===serial)$('q-message').textContent=e.message;}finally{b.disabled=false;}};
+}
+function quarantineState(row){
+  return ({held:{tone:'pending',icon:'◷',label:'Awaiting review'},released:{tone:'complete',icon:'✓',label:'Released to club'},blocked:{tone:'complete',icon:'✓',label:'Sent to other email only'},'forwarded-released':{tone:'complete',icon:'✓',label:'Forwarded and released'},sending:{tone:'progress',icon:'↻',label:'Sending — check outcome'},'needs-review':{tone:'attention',icon:'!',label:'Needs attention'}})[row.quarantineStatus]||{tone:'progress',icon:'?',label:'Check review status'};
+}
+function quarantineBadge(row){const s=quarantineState(row);return `<span class="q-status q-status-${s.tone}"><span aria-hidden="true">${s.icon}</span> ${esc(s.label)}</span>`;}
+function quarantinePreferences(row){
+  try{return JSON.parse(row.filtersJson||'[]').map(f=>`<span class="q-chip">${esc(f.name)}: ${esc(f.value)}</span>`).join('')||'<span>None selected</span>';}catch{return esc(row.filtersJson||'None selected');}
+}
+function quarantineReviewForm(r,i){
+  const choices=[['release','Club only','✓ Send','✕ Don’t send'],['block','Another email only','✕ Don’t send','✓ Send'],['forward-release','Both','✓ Send','✓ Send']];
+  return `<form data-review="${i}" class="q-review form-stack"><div class="q-action-heading"><span class="q-step">Your next step</span></div><fieldset class="q-destinations"><legend>Choose who receives this enquiry</legend><p>Select one option. Club delivery goes to ${esc(r.clubName)}.</p><div class="q-choice-grid">${choices.map(([value,title,club,other])=>`<label class="q-choice"><span class="q-choice-title"><input type="radio" name="action" value="${value}" required><strong>${title}</strong></span><span class="q-route"><span>Club</span><span>${club}</span></span><span class="q-route"><span>Another email</span><span>${other}</span></span></label>`).join('')}</div></fieldset><p class="q-explanation">Every selected recipient receives the <strong>full enquiry</strong> and contact details. Notes add context; they do not remove or split the original message.</p><div data-forward-field hidden class="q-note-section"><label>Forward to another email address (e.g. SLSSA team)<input name="forwardTo" type="email" maxlength="180" list="q-addresses" autocomplete="off"></label><label>Note to this recipient<textarea name="notes" maxlength="4000" rows="3" placeholder="Explain why you are forwarding this enquiry and what you would like them to follow up."></textarea></label></div><div data-club-notice hidden class="q-note-section"><label>Note to the club<textarea name="clubNotice" maxlength="2000" rows="3" placeholder="Explain who else is receiving this enquiry and what you would like the club to follow up."></textarea></label><p>Write this from your review of the enquiry. Matched keywords are screening flags, not a summary of the person’s request. This note appears above the full enquiry in the club email.</p></div><div class="q-send-footer"><p data-send-summary role="status">Choose who should receive this enquiry.</p><button type="submit" disabled>Choose recipients to continue</button><p data-review-error role="alert"></p></div></form>`;
+}
+async function quarantinePage(run) {
+  const [rows,config]=await Promise.all([api('quarantine'),api('quarantine-settings')]);if(run!==serial)return;
+  const priority={held:0,'needs-review':1,sending:2};rows.sort((a,b)=>(priority[a.quarantineStatus]??3)-(priority[b.quarantineStatus]??3));
+  const completed=rows.filter(r=>quarantineState(r).tone==='complete').length,attention=rows.filter(r=>['attention','progress'].includes(quarantineState(r).tone)).length;
+  $('content').innerHTML=panel('Quarantine',`<div class="q-heading"><div class="q-counts"><span class="q-status q-status-pending">◷ ${rows.filter(r=>r.quarantineStatus==='held').length} awaiting review</span><span class="q-status q-status-complete">✓ ${completed} actioned</span>${attention?`<span class="q-status q-status-attention">! ${attention} to check</span>`:''}<small>All dates · Production and test enquiries</small></div><button class="secondary" data-open-view="settings-quarantine">Manage notifications</button></div><p id="q-result" role="status"></p><div id="q-items">${rows.map((r,i)=>`<details class="panel q-enquiry q-enquiry-${quarantineState(r).tone}" data-q-item="${i}"><summary><span><strong>${esc(r.name)}</strong><span class="q-summary-club">${esc(r.clubName)}</span></span>${quarantineBadge(r)}<span class="q-summary-time">${esc(time(r.submittedAt))} · ${esc(r.leadApiMode)}</span></summary><div class="q-enquiry-body"><div class="q-flags"><strong>Reason for quarantine</strong> ${JSON.parse(r.quarantineMatchesJson||'[]').map(k=>`<span class="q-chip">${esc(k)}</span>`).join('')}<span class="q-reason-help">These keywords triggered a review. Read the full enquiry before choosing recipients.</span></div><div class="q-contact">${esc(r.email)} · ${esc(r.phone||'No phone provided')} · ${esc(r.suburb||'No suburb provided')}</div><section class="q-message"><h3>Enquiry</h3><p>${esc(r.about)}</p></section><div class="q-preferences"><h3>Selected preferences</h3>${quarantinePreferences(r)}</div><details class="q-record"><summary>Record details</summary><p>Reviewer notification: ${esc(r.quarantineNotificationStatus||'unknown')}</p><p>Reference: ${esc(r.rowKey)}</p></details>${r.quarantineStatus==='held'?quarantineReviewForm(r,i):`<div class="q-review"><h3>Review outcome</h3><p>Reviewed by: ${esc(r.quarantineReviewedBy||'—')} · ${esc(r.quarantineReviewedAt||'')}</p><p>Forwarded to: ${esc(r.quarantineForwardTo||'—')} · ${esc(r.quarantineForwardStatus||'—')}</p><p>Club delivery: ${esc(r.quarantineClubStatus||'—')}</p><p>Note to other recipient: ${esc(r.quarantineNotes||'—')}</p><p>Note to club: ${esc(r.quarantineClubNotice||'—')}</p>${['sending','needs-review'].includes(r.quarantineStatus)?'<p>Check the sender’s Sent Items and service records before taking further action. Automatic resend is disabled.</p>':''}</div>`}</div></details>`).join('')||empty('No quarantined enquiries.')}<datalist id="q-addresses">${config.recipients.map(address=>`<option value="${esc(address)}"></option>`).join('')}</datalist></div>`);
+  document.querySelectorAll('[data-review]').forEach(form=>{
+    const r=rows[Number(form.dataset.review)],button=form.querySelector('button[type="submit"]');
+    const update=()=>{
+      const action=form.elements.action.value,forwards=['block','forward-release'].includes(action),both=action==='forward-release';
+      form.querySelector('[data-forward-field]').hidden=!forwards;
+      for(const name of ['forwardTo','notes']){form.elements[name].required=forwards;form.elements[name].disabled=!forwards;}
+      form.querySelector('[data-club-notice]').hidden=!both;form.elements.clubNotice.required=both;form.elements.clubNotice.disabled=!both;
+      button.disabled=!action;button.textContent=({release:'Send to club only',block:'Send to other email only','forward-release':'Send to both recipients'})[action]||'Choose recipients to continue';
+      const other=form.elements.forwardTo.value.trim()||'the email address you enter';
+      form.querySelector('[data-send-summary]').textContent=action?(action==='release'?`Full enquiry → ${r.clubName}.`:action==='block'?`Full enquiry → ${other}. No email will be sent to ${r.clubName}.`:`Full enquiry → ${other} and ${r.clubName}, each with their own note.`)+(r.leadApiMode==='test'||currentSettings?.mode==='test'?' Test delivery: emails go only to the configured test address.':''):'Choose who should receive this enquiry.';
+    };
+    form.querySelectorAll('input[name="action"]').forEach(input=>input.onchange=update);form.elements.forwardTo.oninput=update;update();
+    form.onsubmit=async e=>{e.preventDefault();if(!form.elements.action.value)return;button.disabled=true;try{const result=await api('quarantine-decision',{partitionKey:r.partitionKey,rowKey:r.rowKey,etag:r.etag,action:form.elements.action.value,forwardTo:form.elements.forwardTo.value.trim(),notes:form.elements.notes.value,clubNotice:form.elements.clubNotice.value});await load();$('status').textContent=`${quarantineLabel({quarantineStatus:result.status})}. Email accepted by Microsoft 365${result.mode==='test'?' at the test address':''}.`;}catch(e){form.querySelector('[data-review-error]').textContent=e.message;button.disabled=false;}};
+  });
+  if(enquiryTarget){const index=rows.findIndex(r=>r.partitionKey===enquiryTarget.partitionKey&&r.rowKey===enquiryTarget.rowKey);if(index>=0){const item=document.querySelector(`[data-q-item="${index}"]`);item.open=true;item.scrollIntoView({block:'start'});sessionStorage.removeItem('quarantine-target');}else $('q-result').textContent='The linked enquiry was not found in quarantine. Check the reference or refresh.';}
+}
+
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function monthlyReportSettings() {
@@ -20,18 +64,23 @@ async function monthlyReportSettings() {
     catch(e){if(run===serial)$('monthly-status').textContent=e.message;}finally{button.disabled=false;}
   };
 }
-let auth, scope, view = 'overview', currentSettings, records = [], clubs = [], serial = 0;
+let enquiryTarget=null;
+try{const params=new URLSearchParams(location.hash.startsWith('#quarantine?')?location.hash.split('?')[1]:'');if(params.get('partitionKey')&&params.get('rowKey')){enquiryTarget={partitionKey:params.get('partitionKey'),rowKey:params.get('rowKey')};sessionStorage.setItem('quarantine-target',JSON.stringify(enquiryTarget));}else enquiryTarget=JSON.parse(sessionStorage.getItem('quarantine-target')||'null');}catch{}
+let auth, scope, view = (enquiryTarget||location.hash === '#quarantine') ? 'quarantine' : 'overview', currentSettings, records = [], clubs = [], serial = 0;
 const filterState = {};
-const isSettingsView=()=>['settings','settings-monthly','settings-email'].includes(view);
-function settingsNavigation(){return '<nav class="settings-navigation" aria-label="Settings pages">'+[['settings','All settings'],['settings-monthly','Monthly report'],['settings-email','Email delivery']].map(([id,label])=>`<button class="secondary" data-open-view="${id}" ${view===id?'aria-current="page"':''}>${label}</button>`).join('')+'</nav>';}
-function settingsHome(){return '<div class="settings-options">'+[['settings-monthly','Monthly report','Choose report recipients, manage the monthly schedule and send a test report.'],['settings-email','Email delivery','Manage enquiry delivery mode, the test recipient and whether enquiry emails are enabled.']].map(([id,title,description])=>`<button class="settings-option" data-open-view="${id}"><span><strong>${title}</strong><span>${description}</span></span><span class="settings-option-arrow" aria-hidden="true">→</span></button>`).join('')+'</div>';}
+const isSettingsView=()=>['settings','settings-monthly','settings-email','settings-quarantine','settings-directory','settings-changes'].includes(view);
+function settingsNavigation(){return '<nav class="settings-navigation" aria-label="Settings pages">'+[['settings','All settings'],['settings-directory','Activities and interests'],['settings-changes','Change notifications'],['settings-quarantine','Quarantine'],['settings-monthly','Monthly report'],['settings-email','Email delivery']].map(([id,label])=>`<button class="secondary" data-open-view="${id}" ${view===id?'aria-current="page"':''}>${label}</button>`).join('')+'</nav>';}
+function settingsHome(){return '<div class="settings-options">'+[['settings-directory','Activities and interests','Manage club activity labels and the options in both enquiry forms.'],['settings-changes','Change notifications','Choose who receives an email when settings or club details change.'],['settings-quarantine','Quarantine','Choose notification recipients and enable keyword screening.'],['settings-monthly','Monthly report','Choose report recipients, manage the monthly schedule and send a test report.'],['settings-email','Email delivery','Manage enquiry delivery mode, the test recipient and whether enquiry emails are enabled.']].map(([id,title,description])=>`<button class="settings-option" data-open-view="${id}"><span><strong>${title}</strong><span>${description}</span></span><span class="settings-option-arrow" aria-hidden="true">→</span></button>`).join('')+'</div>';}
 let stopLive = () => {}, liveReports = {}, liveErrors = {};
-function overviewMetrics(){return metric('Enquiries received',records.length,$('show-test-data').checked?'Includes test data':'Test data hidden') + metric('People enquiring',new Set(records.map(r=>String(r.email||'').toLowerCase()).filter(Boolean)).size,'Distinct email addresses; not members') + metric('Clubs receiving enquiries',new Set(records.map(r=>r.clubSlug)).size,'Within the reporting filter') + metric('Email failures',records.filter(r=>r.emailDeliveryStatus==='failed').length,$('show-test-data').checked?'Includes test data':'Test data hidden');}
+let quarantineWaiting=null;
+function quarantineMetric(){const count=quarantineWaiting;return `<button class="metric quarantine-metric ${count>0?'has-waiting':''}" data-open-view="quarantine"><small>Quarantined — awaiting review</small><strong>${count===null?'—':count}</strong><span>${count===null?'Checking queue…':count>0?'Review enquiries →':'No enquiries awaiting review'}</span><span class="metric-scope">All dates · Includes test enquiries</span></button>`;}
+function overviewMetrics(){return metric('Enquiries received',records.length,$('show-test-data').checked?'Includes test data':'Test data hidden') + metric('People enquiring',new Set(records.map(r=>String(r.email||'').toLowerCase()).filter(Boolean)).size,'Distinct email addresses; not members') + metric('Clubs receiving enquiries',new Set(records.map(r=>r.clubSlug)).size,'Within the reporting filter') + quarantineMetric();}
 function liveState(text){const errors=Object.keys(liveErrors);$('live-status').textContent=errors.length&&text==='Live connection'?'Connected · report unavailable':text;$('live-status').dataset.connected=String(text==='Live connection'&&!errors.length);$('live-status').title=errors.length?errors.map(r=>titles[r]+': '+liveErrors[r]).join('\n'):'Reports update in place. Enquiries are checked about every 20 seconds, traffic about every 90 seconds. Billing uses cached source data.';}
 function applySnapshot(resource,data){
   delete liveErrors[resource];
   if($('status').dataset.liveError===resource){$('status').textContent='';delete $('status').dataset.liveError;}
   liveReports[resource]=data;
+  if(resource==='quarantine-summary'){quarantineWaiting=data.awaitingReview;if($('overview-metrics'))$('overview-metrics').innerHTML=overviewMetrics();}
   if(resource==='settings'){banner(data);if(view!=='settings-email')currentSettings=data;else if(data.etag!==currentSettings.etag)$('status').textContent='Email delivery settings changed elsewhere. Your form has been kept. Select Update now to load the latest version before saving.';}
   if(resource==='clubs'){
     if($('routing-health'))$('routing-health').innerHTML=routingWarning(data);
@@ -54,18 +103,18 @@ function applySnapshot(resource,data){
     if(view==='analytics')$('content').innerHTML=analyticsReport(liveReports.analytics);
   }
   if(resource==='costs'){if(view==='overview'&&$('overview-costs'))$('overview-costs').innerHTML=costReport(data,true);if(view==='costs')$('content').innerHTML=costReport(data);}
-  if(resource==='audit'&&view==='audit')$('content').innerHTML=auditReport(data);
+  if(resource==='audit'&&view==='audit'&&$('activity-rows'))dashboardActivity.update(data);
   $('updated').textContent='Last data update '+time(new Date())+' · Traffic may take a few minutes to arrive. Billing refreshes at most every six hours.';
 }
-function auditReport(rows){return panel('Settings and contact changes',rows.length ? table(['Time (Adelaide)','Person','Action','Result','Details'],rows.map(r=>`<tr><td>${esc(time(r.at))}</td><td>${esc(r.actor)}</td><td>${esc(r.action)}</td><td>${esc(r.result)}</td><td>${esc(r.detail)}</td></tr>`)) : empty('No dashboard changes recorded for this period.'));}
 function connectLive(){
+  if(view==='quarantine'){liveState('Use Update now to refresh quarantine');return;}
   stopLive();liveErrors={};
   const run=serial;
   const query=new URLSearchParams({view:isSettingsView()?'settings':view,days:$('period').value,includeTest:String($('show-test-data').checked)});
   stopLive=startDashboardLive({getToken:token,query,onStatus:liveState,onSnapshot:(resource,data)=>{if(run===serial)applySnapshot(resource,data);},onError:(resource,message)=>{if(run!==serial)return;liveErrors[resource]=message;$('status').dataset.liveError=resource;liveState('Live connection');$('status').textContent=(titles[resource]||resource)+': '+message+' Last available data is retained; retrying automatically.';}});
 }
 const filterIds = ['search','club-filter','mode-filter','status-filter','from-filter','to-filter'];
-const titles = { overview:'Overview', leads:'Enquiries', clubs:'Club contacts', pages:'Club pages', analytics:'Website insights', campaigns:'Campaign links', costs:'System costs', settings:'Settings', 'settings-monthly':'Monthly report', 'settings-email':'Email delivery', audit:'Activity log' };
+const titles = { 'settings-directory':'Activities and interests', 'settings-changes':'Change notifications', quarantine:'Quarantine', 'settings-quarantine':'Quarantine settings', overview:'Overview', leads:'Enquiries', clubs:'Club contacts', pages:'Club pages', analytics:'Website insights', campaigns:'Campaign links', costs:'System costs', settings:'Settings', 'settings-monthly':'Monthly report', 'settings-email':'Email delivery', audit:'Activity log' };
 const time = value => value ? new Date(value).toLocaleString('en-AU', { timeZone:'Australia/Adelaide', dateStyle:'medium', timeStyle:'short' }) : '—';
 async function token() {
   const account = auth.getAllAccounts()[0];
@@ -78,6 +127,11 @@ async function api(resource, body) {
   const response = await fetch(`/api/dashboard-api/${resource}`, { method:body ? 'PUT':'GET', headers:{ Authorization:`Bearer ${await token()}`, ...(body ? {'Content-Type':'application/json'} : {}) }, ...(body ? {body:JSON.stringify(body)} : {}) });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || 'Request failed');
+  if(data.notification?.status==='needs-review'){
+    let warning=document.getElementById('change-notification-warning');
+    if(!warning){warning=document.createElement('p');warning.id='change-notification-warning';warning.className='banner';warning.setAttribute('role','alert');$('content').before(warning);}
+    warning.textContent='Your change was saved, but the notification email could not be confirmed. Check the sender’s Sent Items and service records before resending.';
+  }
   return data;
 }
 function metric(label, value, note='') { return `<div class="metric"><small>${esc(label)}</small><strong>${esc(value)}</strong><span>${esc(note)}</span></div>`; }
@@ -89,28 +143,27 @@ function bars(entries) {
   return entries.map(([label,value])=>`<div class="bar-row"><span>${esc(label || 'Direct / unknown')}</span><progress max="${max}" value="${value}" aria-label="${esc(label)}"></progress><b>${esc(value)}</b></div>`).join('');
 }
 function table(headers, rows) { return `<div class="table-wrap"><table><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`; }
-function statusLabel(row) { return row.emailDeliveryStatus === 'sent' ? 'Accepted by email service' : row.emailDeliveryStatus || 'Unknown'; }
+function quarantineLabel(row){return ({held:'Quarantined — awaiting review',released:'Quarantined → released to club',blocked:'Quarantined → sent to other email only','forwarded-released':'Quarantined → forwarded and released',sending:'Quarantine review — sending','needs-review':'Quarantine review — needs attention'})[row.quarantineStatus]||row.quarantineStatus;}
+function statusLabel(row) { if(row.quarantineStatus)return quarantineLabel(row);return row.emailDeliveryStatus === 'sent' ? 'Accepted by email service' : row.emailDeliveryStatus || 'Unknown'; }
 function leadTable(rows) {
   if (!rows.length) return empty('No enquiries match this period and filters.');
   return table(['Received (Adelaide)','Enquirer','Club','Mode','Email status','Enquiry'], rows.map(row=>`<tr><td>${esc(time(row.submittedAt))}</td><td>${esc(row.name)}<small>${esc(row.email)}</small></td><td>${esc(row.clubName || row.clubSlug)}</td><td><span class="pill">${esc(row.leadApiMode || 'Unknown')}</span></td><td><span class="pill ${row.emailDeliveryStatus === 'failed' ? 'failed' : row.emailDeliveryStatus === 'sent' ? 'sent' : ''}">${esc(statusLabel(row))}</span></td><td><button class="secondary" data-lead="${esc(row.rowKey)}">View enquiry</button></td></tr>`));
 }
 function group(rows,key) { const counts = new Map(); rows.forEach(r=>counts.set(r[key] || 'Unknown',(counts.get(r[key] || 'Unknown') || 0)+1)); return [...counts].sort((a,b)=>b[1]-a[1]); }
 function banner(s = currentSettings) {
-  const isTest = s.mode === 'test';
-  if(!isTest && s.emailEnabled){$('mode-banner').className='production-status';$('mode-banner').innerHTML='<span>Production · Emails go to clubs</span><button class="link" data-open-view="settings-email">Manage delivery</button>';return;}
-  $('mode-banner').className = 'mode-notice ' + (isTest ? 'test-mode' : s.emailEnabled ? 'live-mode' : 'paused-mode');
-  const heading = isTest ? 'TEST MODE IS ON' : s.emailEnabled ? 'PRODUCTION MODE' : 'EMAILS ARE PAUSED';
-  const message = !s.emailEnabled ? 'No enquiry emails are being sent. Enquiries are still saved.' : isTest ? 'No emails are sent to clubs.' : 'Enquiry emails are sent to club contacts.';
-  $('mode-banner').innerHTML = '<strong>' + heading + '</strong><span>' + message + '</span>' + (isTest ? '<span>Test recipient: <b>' + esc(s.testRecipient) + '</b></span>' : '') + '<button class="secondary" data-open-view="settings-email">Email delivery</button>';
+  const isTest=s.mode==='test',paused=!s.emailEnabled;
+  $('mode-banner').className='sidebar-mode '+(paused?'mode-paused':isTest?'mode-test':'mode-production');
+  $('mode-banner').innerHTML=`<button class="sidebar-mode-button" data-open-view="settings-email" aria-label="${isTest?'Test':'Production'} mode${paused?', emails paused':''}. Manage email delivery"><span class="mode-dot" aria-hidden="true"></span><strong>${isTest?'Test':'Production'}</strong><span aria-hidden="true">↗</span></button><small>${paused?'Emails paused':isTest?'Emails go to the test address':'Enquiry delivery is enabled'}</small>`;
 }
+
 async function load() {
   const run = ++serial;
   stopLive();liveReports={};
   $('report-options').hidden=!['overview','leads','analytics'].includes(view);
   $('period-control').hidden=!['overview','leads','analytics','audit'].includes(view);
-  $('report-scope').textContent=$('show-test-data').checked?'Data: includes test activity':'Data: production';
+  $('report-scope').textContent=$('show-test-data').checked?'Data: includes test activity':'Data: test excluded';
   $('title').textContent = titles[view];
-    $('subtitle').textContent = {"overview":"Enquiries, website activity and delivery health.","leads":"Find enquiries and check their email delivery status.","pages":"Manage the information shown on each club page.","clubs":"Manage club contacts and enquiry routing.","analytics":"Understand website visits, traffic sources and campaigns.","campaigns":"Create tracked links for your Club Directory campaigns.","costs":"Reported spending and estimates for the Club Directory system.","settings":"Manage monthly reports and enquiry email delivery.","settings-monthly":"Manage report recipients, scheduling and test reports.","settings-email":"Manage delivery mode and where enquiry emails are sent.","audit":"Review changes to dashboard settings and club contacts."}[view];
+    $('subtitle').textContent = {"quarantine":"Review enquiries and choose who should receive them.","settings-quarantine":"Choose notification email addresses and manage keyword screening.","overview":"Enquiries, website activity and delivery health.","leads":"Find enquiries and check their email delivery status.","pages":"Manage the information shown on each club page.","clubs":"Manage club contacts and enquiry routing.","analytics":"Understand website visits, traffic sources and campaigns.","campaigns":"Create tracked links for your Club Directory campaigns.","costs":"Reported spending and estimates for the Club Directory system.","settings-directory":"Manage public activities and enquiry form options.","settings-changes":"Choose recipients for settings and page changes.","settings":"Manage activities, notifications, reports and enquiry email delivery.","settings-monthly":"Manage report recipients, scheduling and test reports.","settings-email":"Manage delivery mode and where enquiry emails are sent.","audit":"Review dashboard logins, club page edits and settings changes."}[view];
   $('status').textContent = '';
   $('content').innerHTML = empty('Loading…');
   $('refresh').disabled = true;
@@ -123,7 +176,7 @@ async function load() {
       records = await api(`leads?days=${days}`);
       if (run !== serial) return;
       if (view === 'overview') {
-        const production = records.filter(r=>r.leadApiMode === 'production');
+        quarantineWaiting=null;
         $('content').innerHTML = '<div id="routing-health"></div><div id="overview-metrics" class="metrics">' + overviewMetrics() + '</div>' + panel('Website insights','<div id="overview-insights">' + empty('Loading website insights…') + '</div>') + panel('System costs','<div id="overview-costs">' + empty('Loading billing figures…') + '</div>') + panel('Latest enquiries','<p class="footnote">Enquiries express interest in membership. Completed memberships take place outside this website and are not recorded here.</p>'+enquiryFilters()) + '<div class="grid">' + panel('Enquiries by club','<div id="overview-clubs">'+bars(group(records,'clubName'))+'</div>') + panel('Email activity','<div id="overview-email">'+bars(group(records,'emailDeliveryStatus'))+'</div>' + '<p class="footnote">“Sent” means accepted by the email service. Inbox delivery is not confirmed.</p>') + '</div>';
         bindFilters();
         const section = async (id, resource, render) => {
@@ -131,6 +184,7 @@ async function load() {
           catch(e) { if (run===serial && $(id)) $(id).innerHTML='<div class="banner error">'+esc(e.message)+'</div>'; }
         };
         await Promise.allSettled([
+          section('overview-metrics','quarantine-summary',data=>{quarantineWaiting=data.awaitingReview;return overviewMetrics();}),
           section('routing-health','clubs',routingWarning),
           section('overview-insights','analytics?days='+days,r=>analyticsReport(r,true)),
           section('overview-costs','costs',r=>costReport(r,true))
@@ -139,6 +193,10 @@ async function load() {
         $('content').innerHTML = panel('Enquiries',enquiryFilters());
         bindFilters();
       }
+    } else if (view === 'quarantine') {
+      await quarantinePage(run);
+    } else if (view === 'settings-quarantine') {
+      await quarantineSettingsPage(run);
     } else if (view === 'pages') {
       await mountClubEditor(run);
     } else if (view === 'campaigns') {
@@ -147,6 +205,8 @@ async function load() {
       clubs = await api('clubs');
       if (run !== serial) return;
       $('content').innerHTML = routingWarning(clubs) + panel('Club email routing', '<p>Updates apply to new enquiries. Disabling a club stops its enquiry submissions.</p>'+table(['Club','Email recipient','Accepting enquiries',''],clubs.sort((a,b)=>(a.clubName || '').localeCompare(b.clubName || '')).map((c,i)=>`<tr class="${routingError(c) ? 'invalid-club' : ''}"><td>${esc(c.clubName)}<small>${esc(c.rowKey)}</small></td><td><input id="email-${i}" required aria-invalid="${Boolean(routingError(c))}" aria-label="${esc(c.clubName)} email" type="email" value="${esc(c.recipientEmail)}">${routingError(c) ? '<p class="field-error">' + esc(routingError(c)) + '</p>' : ''}</td><td><input id="enabled-${i}" aria-label="Accept enquiries for ${esc(c.clubName)}" type="checkbox" ${c.enabled ? 'checked':''}></td><td><button data-save-club="${i}">Save</button></td></tr>`)));
+    } else if (view === 'settings-directory' || view === 'settings-changes') {
+      await mountDirectorySettings(run);
     } else if (view === 'settings') {
       $('content').innerHTML=settingsHome();
     } else if (view === 'settings-monthly') {
@@ -169,7 +229,7 @@ async function load() {
     } else if (view === 'audit') {
       const rows = await api(`audit?days=${days}`);
       if (run !== serial) return;
-      $('content').innerHTML = panel('Settings and contact changes', rows.length ? table(['Time (Adelaide)','Person','Action','Result','Details'],rows.map(r=>`<tr><td>${esc(time(r.at))}</td><td>${esc(r.actor)}</td><td>${esc(r.action)}</td><td>${esc(r.result)}</td><td>${esc(r.detail)}</td></tr>`)) : empty('No dashboard changes recorded for this period.'));
+      dashboardActivity.mount($('content'),rows);
     }
     if (run === serial) { $('updated').textContent = `Updated ${time(new Date())} · Reports update in place over a live connection. Traffic may take a few minutes to arrive; billing refreshes at most every six hours.`; connectLive(); }
   } catch(e) { if (run === serial) { $('status').textContent = e.message; $('content').innerHTML = empty('Data could not be loaded. Check the message above and try Update now.'); } }
@@ -190,7 +250,7 @@ function filterLeads() {
   const dayFormat = new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Adelaide',year:'numeric',month:'2-digit',day:'2-digit'});
   const matches = records.filter(r=>{
     const day = dayFormat.format(new Date(r.submittedAt));
-    return (!from || day>=from) && (!to || day<=to) && (!club || r.clubName===club) && (!mode || r.leadApiMode===mode) && (!status || r.emailDeliveryStatus===status) && [r.name,r.email,r.phone,r.suburb,r.about,r.filtersJson].join(' ').toLowerCase().includes(text);
+    return (!from || day>=from) && (!to || day<=to) && (!club || r.clubName===club) && (!mode || r.leadApiMode===mode) && (!status || (status.startsWith('q:') ? r.quarantineStatus===status.slice(2) : r.emailDeliveryStatus===status)) && [r.name,r.email,r.phone,r.suburb,r.about,r.filtersJson].join(' ').toLowerCase().includes(text);
   });
   const displayed=view==='overview' ? matches.slice(0,10) : matches;
   $('enquiry-count').textContent='Showing '+displayed.length+' of '+matches.length+' matching enquiries within the selected reporting period.';
@@ -211,7 +271,7 @@ $('content').addEventListener('click',async event=>{
     const row = records.find(r=>r.rowKey===lead.dataset.lead);
     let preferences = row.filtersJson;
     try { preferences = JSON.parse(row.filtersJson || '[]').map(f=>f.name+': '+f.value).join('\n'); } catch {}
-    const fields = [['Received',time(row.submittedAt)],['Name',row.name],['Email',row.email],['Phone',row.phone],['Suburb',row.suburb],['Club',row.clubName],['About',row.about],['Preferences',preferences],['Consent',row.consent?'Given':'Not recorded'],['Traffic source',row.source||'Not recorded'],['Channel',row.channel||'Not recorded'],['Campaign',row.campaign||'Not recorded'],['Landing page',row.landingPage||'Not recorded'],['Source page',row.sourcePage],['Mode',row.leadApiMode],['Email status',statusLabel(row)],['Reference',row.rowKey]];
+    const fields = [['Received',time(row.submittedAt)],['Name',row.name],['Email',row.email],['Phone',row.phone],['Suburb',row.suburb],['Club',row.clubName],['About',row.about],['Preferences',preferences],['Consent',row.consent?'Given':'Not recorded'],['Traffic source',row.source||'Not recorded'],['Channel',row.channel||'Not recorded'],['Campaign',row.campaign||'Not recorded'],['Landing page',row.landingPage||'Not recorded'],['Source page',row.sourcePage],['Mode',row.leadApiMode],['Email status',statusLabel(row)],['Quarantine keywords',row.quarantineMatchesJson],['Reviewed by',row.quarantineReviewedBy],['Reviewed at',row.quarantineReviewedAt],['Forwarded to',row.quarantineForwardTo],['Forwarding outcome',row.quarantineForwardStatus],['Club outcome',row.quarantineClubStatus],['Forwarding notes',row.quarantineNotes],['Club handoff',row.quarantineClubNotice],['Reference',row.rowKey]];
     $('detail-content').innerHTML = `<h2>Enquiry details</h2><dl>${fields.map(([key,value])=>`<dt>${esc(key)}</dt><dd>${esc(value || '—')}</dd>`).join('')}</dl>`;
     $('detail').showModal();
   }
@@ -236,7 +296,7 @@ document.addEventListener('click',event=>{const button=event.target.closest('[da
 $('show-test-data').onchange=()=>{filterState['mode-filter']='';$('report-options').open=false;load();};
 $('period').onchange=load; $('refresh').onclick=()=>{if(view!=='pages'||canLeaveEditor())load();};
 $('sign-in').onclick=()=>auth.loginRedirect({scopes:[scope]});
-$('sign-out').onclick=()=>auth.logoutRedirect({postLogoutRedirectUri:location.origin+'/api/dashboard'});
+$('sign-out').onclick=()=>{sessionStorage.removeItem('dashboard-session');return auth.logoutRedirect({postLogoutRedirectUri:location.origin+'/api/dashboard'});};
 (async()=>{
   try {
     const config = await (await fetch('/api/dashboard/config')).json();
@@ -246,7 +306,10 @@ $('sign-out').onclick=()=>auth.logoutRedirect({postLogoutRedirectUri:location.or
     await auth.initialize(); await auth.handleRedirectPromise();
     if (auth.getAllAccounts().length) {
       const me = await api('me'); $('user').textContent = me.name;
-      $('login').hidden=true; $('workspace').hidden=false; load();
+      let sessionId=sessionStorage.getItem('dashboard-session');
+      if(!sessionId){sessionId=crypto.randomUUID();sessionStorage.setItem('dashboard-session',sessionId);}
+      await api('login',{sessionId});
+      $('login').hidden=true; $('workspace').hidden=false; navigate(view);
     }
   } catch(e) { $('login-status').textContent=e.message; $('sign-in').disabled=!auth; }
 })();
