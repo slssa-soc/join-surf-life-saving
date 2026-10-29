@@ -1,5 +1,6 @@
 const {TableClient}=require('@azure/data-tables');
 const {ClientSecretCredential}=require('@azure/identity');
+const {render,subject}=require('./change-email');
 const table=name=>TableClient.fromConnectionString(process.env.AzureWebJobsStorage,name);
 const fail=(message,status=400)=>Object.assign(new Error(message),{status});
 function validate(body){
@@ -12,8 +13,8 @@ async function send(recipients,change){
   const credential=new ClientSecretCredential(process.env.JOIN_MAIL_TENANT_ID,process.env.JOIN_MAIL_CLIENT_ID,process.env.JOIN_MAIL_CLIENT_SECRET);
   const token=await credential.getToken('https://graph.microsoft.com/.default');
   if(!process.env.JOIN_MAIL_SENDER)throw Error('Mail sender missing');
-  const content=`A Club Directory change was saved.\n\nChanged by: ${change.actor}\nTime: ${change.at}\nArea: ${change.area}\n${change.slug?'Club: '+change.slug+'\n':''}${change.notes?'Reason: '+change.notes+'\n':''}\nReview changes in the dashboard Activity log.\nhttps://func-join-slssa-prod-d3hwbvgygng2cdeh.australiasoutheast-01.azurewebsites.net/api/dashboard`;
-  const res=await fetch(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(process.env.JOIN_MAIL_SENDER)}/sendMail`,{method:'POST',headers:{Authorization:`Bearer ${token.token}`,'Content-Type':'application/json'},signal:AbortSignal.timeout(25000),body:JSON.stringify({message:{subject:'Club Directory change — '+change.area,body:{contentType:'Text',content},bccRecipients:recipients.map(address=>({emailAddress:{address}}))},saveToSentItems:true})});
+  const content=render(change);
+  const res=await fetch(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(process.env.JOIN_MAIL_SENDER)}/sendMail`,{method:'POST',headers:{Authorization:`Bearer ${token.token}`,'Content-Type':'application/json'},signal:AbortSignal.timeout(25000),body:JSON.stringify({message:{subject:subject(change),body:{contentType:'HTML',content},bccRecipients:recipients.map(address=>({emailAddress:{address}}))},saveToSentItems:true})});
   if(res.status!==202)throw Error('Mail service did not accept the notification');
 }
 function createStore({getTable=table,sendMail=send}={}){

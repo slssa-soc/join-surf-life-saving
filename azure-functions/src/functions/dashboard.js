@@ -71,8 +71,14 @@ async function dashboardData(request, context) {
         let body;try{body=JSON.parse(raw);}catch{return json(400,{error:'Invalid JSON.'});}
         const changeAreas={'directory-settings':'Activities and enquiry interests','change-notifications':'Change notification recipients','quarantine-settings':'Quarantine settings','monthly-report-settings':'Monthly report settings',settings:'Email delivery settings',clubs:'Club contacts', 'club-pages':'Club page'};
         const notifyRecipients=changeAreas[resource]?(await changeNotifications.read()).recipients:[];
-        async function saved(value){
-          const notification=await changeNotifications.notify({id:resource==='club-pages'?url.searchParams.get('slug')+'-'+value.savedVersion:crypto.randomUUID(),area:changeAreas[resource],actor:actor.name,at:new Date().toISOString(),slug:resource==='club-pages'?url.searchParams.get('slug'):body.slug,notes:resource==='club-pages'?body.notes:undefined},notifyRecipients);
+        async function saved(value,details={}){
+          let notification={status:'no-recipients'};
+          if(notifyRecipients.length){
+            try{
+              const info=typeof details==='function'?await details():details;
+              notification=await changeNotifications.notify({id:resource==='club-pages'?url.searchParams.get('slug')+'-'+value.savedVersion:crypto.randomUUID(),resource,area:changeAreas[resource],actor:actor.name,at:new Date().toISOString(),slug:resource==='club-pages'?url.searchParams.get('slug'):body.slug,notes:resource==='club-pages'?body.notes:undefined,...info},notifyRecipients);
+            }catch{notification={status:'needs-review'};}
+          }
           return json(200,{...value,notification});
         }
         if(resource==='directory-settings'||resource==='change-notifications'){
@@ -82,21 +88,23 @@ async function dashboardData(request, context) {
           await audit(actor,resource,{before:service.validate(before),after:service.validate(body)},'requested');
           const result=await service.save(body);
           await audit(actor,resource,{before:service.validate(before),after:service.validate(result)},'completed');
-          return saved(result);
+          return saved(result,{before:service.validate(before),after:service.validate(result)});
         }
         if(resource==='quarantine-settings' || resource==='quarantine-decision') {
+          const beforeSettings=resource==='quarantine-settings'?await quarantine.readSettings():null;
           await audit(actor,resource,{enquiry:body.rowKey,action:body.action},'requested');
           const result=resource==='quarantine-settings'?await quarantine.saveSettings(body,actor):await quarantine.decide(body,actor,(detail,result)=>audit(actor,'quarantine-delivery',detail,result));
           await audit(actor,resource,resource==='quarantine-settings'?{enabled:result.enabled,keywords:result.keywords,recipients:result.recipients}:{enquiry:body.rowKey,action:body.action,...result},'completed');
-          return resource==='quarantine-settings'?saved(result):json(200,result);
+          return resource==='quarantine-settings'?saved(result,{before:beforeSettings,after:result}):json(200,result);
         }
         if(resource==='login')return json(200,await recordLogin(table('JoinDashboardAudit'),actor,body.sessionId));
         if(resource==='monthly-report-settings'){
           monthlyReport.validate(body);
+          const before=await monthlyReport.readSettings();
           await audit(actor,'monthly-report-settings',{enabled:body.enabled},'requested');
           const result=await monthlyReport.saveSettings(body);
           await audit(actor,'monthly-report-settings',{enabled:result.enabled},'completed');
-          return saved(result);
+          return saved(result,{before:monthlyReport.validate(before),after:monthlyReport.validate(result)});
         }
         if(resource==='monthly-report-test'){
           await audit(actor,'monthly-report-test',{},'requested');
@@ -105,9 +113,13 @@ async function dashboardData(request, context) {
           return json(200,result);
         }
         if(resource==='club-pages'){
-          const allowed=new Set((await directory.read()).activities.map(a=>a.id));
+          const options=await directory.read(),allowed=new Set(options.activities.map(a=>a.id));
           if(!Array.isArray(body.content?.activities)||body.content.activities.some(id=>!allowed.has(id)))return json(400,{error:'Choose activities from the current settings list. Reload the club editor if the list changed.'});
-          return saved(await clubPages.save(url.searchParams.get('slug'),body,actor));
+          const result=await clubPages.save(url.searchParams.get('slug'),body,actor);
+          return saved(result,async()=>{
+            const revision=await clubPages.revision(url.searchParams.get('slug'),result.savedVersion);
+            return{before:revision.before,after:revision.content,notes:revision.notes,actor:revision.actor,at:revision.at,clubTitle:revision.content.title,activityLabels:options.activities};
+          });
         }
         if (resource === 'settings') {
           let value;
@@ -120,7 +132,7 @@ async function dashboardData(request, context) {
           const entity = { partitionKey: 'settings', rowKey: 'delivery', ...value, updatedAt: new Date().toISOString(), updatedBy: actor.name };
           if (before.etag) await t.updateEntity(entity, 'Replace', { etag: before.etag }); else await t.createEntity(entity);
           await audit(actor, 'delivery-settings', value, 'completed');
-          return saved(await settings.readSettings());
+          return saved(await settings.readSettings(),{before:settings.validateSettings(before),after:value});
         }
         if (resource === 'clubs') {
           if (typeof body.slug !== 'string' || typeof body.recipientEmail !== 'string' || body.recipientEmail.length > 180 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.recipientEmail) || typeof body.enabled !== 'boolean' || !body.etag) return json(400, { error: 'A valid club, email, enabled flag and current version are required.' });
@@ -130,7 +142,7 @@ async function dashboardData(request, context) {
           await audit(actor, 'club-routing', { slug: body.slug, before: { recipientEmail: before.recipientEmail, enabled: before.enabled }, after: { recipientEmail: body.recipientEmail, enabled: body.enabled } });
           await t.updateEntity({ partitionKey: 'club', rowKey: body.slug, recipientEmail: body.recipientEmail.trim(), enabled: body.enabled }, 'Merge', { etag: before.etag });
           await audit(actor, 'club-routing', { slug: body.slug, recipientEmail: body.recipientEmail, enabled: body.enabled }, 'completed');
-          return saved({ ok: true });
+          return saved({ ok: true },{clubTitle:before.clubName||body.slug,before:{recipientEmail:before.recipientEmail,enabled:before.enabled},after:{recipientEmail:body.recipientEmail.trim(),enabled:body.enabled}});
         }
         return json(404, { error: 'Not found' });
       }
